@@ -1,0 +1,6 @@
+@JournalerBackend_HostAddress = http://localhost:5209
+
+GET {{JournalerBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
