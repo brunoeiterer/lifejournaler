@@ -1,4 +1,4 @@
-name: Build and Package Next.js App
+name: Build and package frontend
 
 on:
   workflow_dispatch:
