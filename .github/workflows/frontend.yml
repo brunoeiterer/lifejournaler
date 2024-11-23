@@ -1,0 +1,39 @@
+name: Build and Package Next.js App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Build the App
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Package the App
+        run: |
+          mkdir -p deployable_package
+          cp -r frontend/.next frontend/package.json frontend/package-lock.json deployable_package/
+          cd deployable_package
+          tar -czf ../lifejournaler-frontend.tar.gz .
+      - name: Upload Package as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: lifejournaler-frontend
+          path: lifejournaler-frontend.tar.gz
