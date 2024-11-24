@@ -1,0 +1,44 @@
+name: Build and package backend
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout Code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Setup .NET SDK
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0'
+
+      # Step 3: Restore Dependencies
+      - name: Restore Dependencies
+        run: |
+          cd backend
+          dotnet restore
+
+      # Step 4: Build the Application
+      - name: Build the Application
+        run: |
+          cd backend
+          dotnet publish -c Release -o publish
+
+      # Step 5: Package the Application
+      - name: Package the Application
+        run: |
+          cd backend/publish
+          zip -r ../../aspnetcore-backend.zip .
+
+      # Step 6: Upload Package as Artifact
+      - name: Upload Package as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: lifejournaler-backend
+          path: backend/lifejournaler-backend.zip
