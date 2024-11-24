@@ -34,7 +34,7 @@ jobs:
       - name: Package the Application
         run: |
           cd backend/publish
-          zip -r ../../lifejournaler-backend.zip .
+          zip -r ../lifejournaler-backend.zip .
 
       # Step 6: Upload Package as Artifact
       - name: Upload Package as Artifact
@@ -42,3 +42,5 @@ jobs:
         with:
           name: lifejournaler-backend
           path: backend/lifejournaler-backend.zip
+
+
