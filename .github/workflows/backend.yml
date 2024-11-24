@@ -34,7 +34,7 @@ jobs:
       - name: Package the Application
         run: |
           cd backend/publish
-          zip -r ../../aspnetcore-backend.zip .
+          zip -r ../../lifejournaler-backend.zip .
 
       # Step 6: Upload Package as Artifact
       - name: Upload Package as Artifact
