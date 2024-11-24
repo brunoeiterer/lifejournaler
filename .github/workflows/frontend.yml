@@ -29,7 +29,7 @@ jobs:
       - name: Package the App
         run: |
           mkdir -p deployable_package
-          cp -r frontend/.next frontend/package.json frontend/package-lock.json deployable_package/
+          cp -r frontend/.next frontend/node_modules frontend/package.json frontend/package-lock.json deployable_package/
           cd deployable_package
           tar -czf ../lifejournaler-frontend.tar.gz .
       - name: Upload Package as Artifact
