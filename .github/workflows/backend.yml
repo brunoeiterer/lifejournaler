@@ -18,11 +18,11 @@ jobs:
         with:
           dotnet-version: '8.0'
 
-      # Step 3: Install EF Core CLI Tools
-      - name: Install EF Core CLI Tools
-        run: dotnet tool install --global dotnet-ef
-        env:
-          PATH: $PATH:/home/runner/.dotnet/tools
+      # Step 3: Restore EF Core CLI Tools locally
+      - name: Install EF Core CLI Tools locally
+        run: |
+          cd backend
+          dotnet tool restore
 
       # Step 4: Restore Dependencies
       - name: Restore Dependencies
