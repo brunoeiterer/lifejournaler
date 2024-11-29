@@ -18,31 +18,37 @@ jobs:
         with:
           dotnet-version: '8.0'
 
-      # Step 3: Restore Dependencies
+      # Step 3: Install EF Core CLI Tools
+      - name: Install EF Core CLI Tools
+        run: dotnet tool install --global dotnet-ef
+        env:
+          PATH: $PATH:/home/runner/.dotnet/tools
+
+      # Step 4: Restore Dependencies
       - name: Restore Dependencies
         run: |
           cd backend
           dotnet restore
 
-      # Step 4: Ensure Migrations Are Part of the Build
-      - name: Ensure Migrations Are Part of the Build
+      # Step 5: Generate Migration SQL Script
+      - name: Generate Migration SQL Script
         run: |
           cd backend
           dotnet ef migrations script -o publish/migration.sql
 
-      # Step 5: Build the Application
+      # Step 6: Build the Application
       - name: Build the Application
         run: |
           cd backend
           dotnet publish -c Release -o publish
 
-      # Step 6: Package the Application
+      # Step 7: Package the Application
       - name: Package the Application
         run: |
           cd backend/publish
           zip -r ../lifejournaler-backend.zip .
 
-      # Step 7: Upload Package as Artifact
+      # Step 8: Upload Package as Artifact
       - name: Upload Package as Artifact
         uses: actions/upload-artifact@v3
         with:
