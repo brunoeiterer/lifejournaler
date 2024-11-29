@@ -34,6 +34,7 @@ jobs:
       - name: Generate Migration SQL Script
         run: |
           cd backend
+          echo "DatabaseConnectionString=${{ secrets.DATABASE_CONNECTION_STRING }}" >> $GITHUB_ENV
           dotnet ef migrations script -o publish/migration.sql
 
       # Step 6: Build the Application
