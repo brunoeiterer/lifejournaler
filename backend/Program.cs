@@ -51,7 +51,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<JournalerDbContext>();
 
 builder.Services.AddDbContext<JournalerDbContext>(options => 
-    options.UseNpgsql(Environment.GetEnvironmentVariable("DatabaseConnectionString", EnvironmentVariableTarget.User)));
+    options.UseNpgsql(Environment.GetEnvironmentVariable("DatabaseConnectionString")));
 
 var app = builder.Build();
 
