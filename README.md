@@ -41,9 +41,13 @@ cd frontend
 npm install
 npm run dev
 ```
-Set up and run the backend:
+- Apply the database migrations:
 ```
 cd ../backend
+dotnet ef database update
+```
+- Set up and run the backend:
+```
 dotnet run
 ```
 
