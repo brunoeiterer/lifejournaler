@@ -89,7 +89,7 @@ const Dashboard: React.FC = () => {
 
     const handleDeleteAccountConfirmation = async (confirm: boolean) => {
         if(confirm) {
-            var success = await deleteAccount(sessionStorage.getItem('loginToken') ?? '');
+            const success = await deleteAccount(sessionStorage.getItem('loginToken') ?? '');
             if(success) {
                 handleSignOut();
             }
