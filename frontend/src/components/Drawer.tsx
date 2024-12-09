@@ -12,8 +12,11 @@ const Drawer: React.FC<DrawerProps> = ({ onSelect }) => {
       <button onClick={() => onSelect('journal')} style={{ display: 'block', marginBottom: '20px' }}>
         {translations['JournalEntries']}
       </button>
-      <button onClick={() => onSelect('statistics')} style={{ display: 'block' }}>
+      <button onClick={() => onSelect('statistics')} style={{ display: 'block', marginBottom: '20px' }}>
         {translations['MoodStatistics']}
+      </button>
+      <button onClick={() => onSelect('privacyPolice')} style={{ display: 'block', marginBottom: '20px' }}>
+        {translations['PrivacyPolicyTitle']}
       </button>
     </div>
   );

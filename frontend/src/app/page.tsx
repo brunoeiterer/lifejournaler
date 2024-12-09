@@ -12,6 +12,7 @@ import ResetPassword from '@/components/ResetPassword';
 import { css } from '@emotion/css';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useLanguage } from './contexts/LanguageContext';
+import PrivacyPolicy from '@/components/PrivacyPolicy';
 
 const Dashboard: React.FC = () => {
     const [view, setView] = useState('journal');
@@ -162,10 +163,14 @@ const Dashboard: React.FC = () => {
                                 <h2>{translations['JournalEntries']}</h2>
                                 <JournalEntries entries={entries} addEntry={addEntry} removeEntry={removeEntry} editEntry={editEntry} />
                             </>
-                        ) : (
+                        ) : view === 'statistics' ? (
                             <>
                                 <h2>{translations['MoodStatistics']}</h2>
                                 <MoodStatistics moods={moodsArray} />
+                            </>
+                        ) : (
+                            <>
+                                <PrivacyPolicy />
                             </>
                         )}
                     </div>
