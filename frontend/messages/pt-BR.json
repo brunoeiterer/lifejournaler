@@ -2,6 +2,8 @@
     "Calm": "Calmo",
     "ConfirmNewPassword": "Confirme a nova senha",
     "Date": "Data",
+    "DeleteAccount": "Remover Conta",
+    "DeleteAccountConfirmation": "Você realmente deseja remover sua conta? Todas as suas entradas serão removidas. Esta ação não pode ser desfeita.",
     "DeleteEntryConfirmation": "Deletar registro? Esta ação não pode ser desfeita.",
     "EnterYourEmail": "Digite seu email",
     "EnterResetCode": "Digite o código de recuperação",

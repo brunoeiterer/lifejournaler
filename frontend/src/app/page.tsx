@@ -4,10 +4,10 @@ import { useState } from 'react';
 import Drawer from '../components/Drawer';
 import MoodStatistics, { moods } from '../components/MoodStatistics';
 import JournalEntries, { JournalEntry } from '../components/JournalEntries';
-import { AppBar, Box, Button, Modal, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Dialog, Modal, Toolbar, Typography } from '@mui/material';
 import SignIn from '@/components/SignIn';
 import SignUp from '@/components/SignUp';
-import { getEntries } from '@/services/BackendApiService'; 
+import { deleteAccount, getEntries } from '@/services/BackendApiService'; 
 import ResetPassword from '@/components/ResetPassword';
 import { css } from '@emotion/css';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -21,6 +21,10 @@ const Dashboard: React.FC = () => {
     const [moodsArray, setMoodsArray] = useState<number[]>(new Array<number>(moods.length).fill(0));
 
     const [showSignInButton, setShowSignInButton] = useState(true);
+    const [showDeleteAccountButton, setShowDeleteAccountButton] = useState(false);
+
+    const [showDeleteAccountDialog, setShowDeleteAccountDialog] = useState(false);
+    const handleOpenDeleteAccountDialog = () => setShowDeleteAccountDialog(true);
 
     const [showSignInModal, setShowSignInModal] = useState(false);
     const handleOpenSignInModal = () => setShowSignInModal(true);
@@ -57,6 +61,7 @@ const Dashboard: React.FC = () => {
     const onSignedIn = async (username: string) => {
         handleCloseSignInModal();
         setShowSignInButton(false);
+        setShowDeleteAccountButton(true);
         setUserName(username);
         const userEntries = await getEntries(sessionStorage.getItem('loginToken') ?? '');
         for (const entry of userEntries) {
@@ -71,6 +76,7 @@ const Dashboard: React.FC = () => {
 
     const handleSignOut = () => {
         setShowSignInButton(true);
+        setShowDeleteAccountButton(false);
         sessionStorage.clear();
         setEntries([]);
         setMoodsArray(new Array<number>(moods.length).fill(0));
@@ -79,6 +85,17 @@ const Dashboard: React.FC = () => {
     const onForgotPassword = () => {
         handleCloseSignInModal();
         handleOpenResetPasswordModal();
+    }
+
+    const handleDeleteAccountConfirmation = async (confirm: boolean) => {
+        if(confirm) {
+            var success = await deleteAccount(sessionStorage.getItem('loginToken') ?? '');
+            if(success) {
+                handleSignOut();
+            }
+        }
+
+        setShowDeleteAccountDialog(false);
     }
 
     const { translations } = useLanguage();
@@ -104,6 +121,11 @@ const Dashboard: React.FC = () => {
                                 <Button color="inherit"
                                     onClick={handleOpenSignUpModal}
                                 >{translations['SignUp']}</Button>
+                            </div>
+                            <div className={showDeleteAccountButton ? undefined : 'hidden'}>
+                                <Button color="inherit"
+                                    onClick={handleOpenDeleteAccountDialog}
+                                >{translations['DeleteAccount']}</Button>
                             </div>
                         </div>
 
@@ -154,6 +176,16 @@ const Dashboard: React.FC = () => {
                             <ResetPassword />
                         </Box>
                 </Modal>
+
+                <Dialog open={showDeleteAccountDialog}>
+                    {translations['DeleteAccountConfirmation']}
+                    <Button onClick={() => handleDeleteAccountConfirmation(true)}>
+                        {translations['Yes']}
+                    </Button>
+                    <Button onClick={() => handleDeleteAccountConfirmation(false)}>
+                        {translations['No']}
+                    </Button>
+                </Dialog>
 
                 <div style={{ display: 'flex'}}>
                     <Drawer onSelect={setView} />

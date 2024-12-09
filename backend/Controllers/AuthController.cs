@@ -10,6 +10,7 @@ using JournalerBackend.Entities;
 using System.Security.Cryptography;
 using System.Net.Mail;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JournalerBackend.Controllers {
     [Route("api/auth")]
@@ -100,6 +101,26 @@ namespace JournalerBackend.Controllers {
             }
 
             user.PasswordHash = _passwordHasher.HashPassword(null, resetPasswordModel.NewPassword);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpDelete("delete-account")]
+        public async Task<IActionResult> DeleteAccount() {
+            if(!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId)) {
+                return BadRequest("The user was not found in the request");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if(user == null) {
+                return BadRequest("Username is not registered.");
+            }
+
+            var entriesToRemove = await _context.Entries.Where(e => e.User == user).ToListAsync();
+            _context.Entries.RemoveRange(entriesToRemove);
+            _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
             return Ok();

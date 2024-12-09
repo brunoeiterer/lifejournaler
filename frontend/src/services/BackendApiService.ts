@@ -81,6 +81,11 @@ export const editEntry = async (entry: string, mood: string, date: dayjs.Dayjs, 
     return resposeData['id'];
 }
 
+export const deleteAccount = async (token: string) => {
+    const response = await fetchWrapper('api/auth/delete-account', 'DELETE', '', token);
+    return response && response.ok;
+}
+
 const fetchWrapper = async (url: string, method: string = 'GET', data: string = '', token: string = '') => {
     const headers: Headers = new Headers();
     if (data != '') {

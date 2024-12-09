@@ -2,6 +2,8 @@
     "Calm": "Calm",
     "ConfirmNewPassword": "Confirm New Password",
     "Date": "Date",
+    "DeleteAccount": "Delete Account",
+    "DeleteAccountConfirmation": "Are you sure you want to delete your account? All your entries will be deleted. This action can't be undone.",
     "DeleteEntryConfirmation": "Delete entry? This action can't be undone.",
     "EnterYourEmail": "Enter your email",
     "EnterResetCode": "Enter verification code",
