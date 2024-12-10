@@ -5,10 +5,10 @@ interface MoodStatisticsProps {
     moods: number[];
 }
 
-export const moods = ['Happy', 'Sad', 'Excited', 'Calm']
+export const moods = ['Happy', 'Sad', 'Excited', 'Calm', 'Angry']
 
 const MoodStatistics: React.FC<MoodStatisticsProps> = (moodStatisticsProps: MoodStatisticsProps) => {
-    const moodColors: string[] = ['#36a2eb', '#ff6384', '#ffce56', '#4bc0c0'];
+    const moodColors: string[] = ['#36a2eb', '#ff6384', '#ffce56', '#4bc0c0', '#b82f2f'];
 
     const { translations } = useLanguage();
 

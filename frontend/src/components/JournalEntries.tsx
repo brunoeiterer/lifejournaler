@@ -184,6 +184,7 @@ const JournalEntries: React.FC<JournalEntriesProps> = (journalEntriesProps: Jour
                     <MenuItem value="Sad">{translations['Sad']}</MenuItem>
                     <MenuItem value="Excited">{translations['Excited']}</MenuItem>
                     <MenuItem value="Calm">{translations['Calm']}</MenuItem>
+                    <MenuItem value="Angry">{translations['Angry']}</MenuItem>
                 </Select>
             </FormControl>
             <FormControl fullWidth>
