@@ -8,6 +8,11 @@ The app provides mood statistics based on the user's entries.
 - Mood Statistics: Analyze trends and gain insights into your mood over time
 - Simple & Intuitive: Focused on providing a clean and minimalistic journaling experience
 
+### Planned Features and Improvements
+- Allow adding audio to entries
+- Allow classification of entries by topic and provide topic statistics
+- Overhaul the frontend
+
 ## Usage
 - The app is still in its early stages, but can already be accessed and used at [lifejournaler.com](https://lifejournaler.com).
 - Register as a user and begin entering daily thoughts and behaviors.
