@@ -9,8 +9,9 @@ The app provides mood statistics based on the user's entries.
 - Simple & Intuitive: Focused on providing a clean and minimalistic journaling experience
 
 ### Planned Features and Improvements
-- Allow adding audio to entries
-- Allow classification of entries by topic and provide topic statistics
+- Adding audio to entries
+- Classification of entries by topic and provide topic statistics
+- Exporting entries and statistics
 - Overhaul the frontend
 
 ## Usage
