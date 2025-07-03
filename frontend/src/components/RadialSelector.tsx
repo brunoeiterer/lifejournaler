@@ -22,6 +22,12 @@ const Emojis: Record<string, string> = {
     Pleasant: '😊',
     Hot: '😓',
     ExtremelyHot: '🥵',
+    Yes: '✅',
+    No: '❌',
+    VeryBad: '😵',
+    Bad: '😪',
+    Good: '😴',
+    VeryGood: '🛌',
 };
 
 export default function RadialSelector({
@@ -34,7 +40,7 @@ export default function RadialSelector({
     return (
         <div className="w-full max-w-xl p-6 bg-white rounded-xl shadow-md border">
             <h2 className="text-xl font-semibold mb-4 text-center">{title}</h2>
-            <div className="flex flex-row gap-4 justify-between">
+            <div className="flex flex-row gap-4 justify-center">
                 {options.map((option) => {
                     const emoji = Emojis[option];
                     const isSelected = value === option;
