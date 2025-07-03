@@ -1,6 +1,7 @@
 'use client';
 
 import ScaleSection from '@/components/SUDSScale';
+import RadialSelector from '@/components/RadialSelector';
 import { useLanguage } from './contexts/LanguageContext';
 
 const Dashboard: React.FC = () => {
@@ -12,6 +13,9 @@ const Dashboard: React.FC = () => {
             <ScaleSection title={translations['DepressiveThoughts']} />
             <ScaleSection title={translations['Autocriticism']} />
             <ScaleSection title={translations['SensorialOverload']} />
+
+            <RadialSelector title={translations['Mood']} options={["Happy", "Sad", "Excited", "Calm", "Angry"]}/>
+            <RadialSelector title={translations['Weather']} options={["ExtremelyCold", "Cold", "Pleasant", "Hot", "ExtremelyHot"]}/>
         </div>
     );
 };

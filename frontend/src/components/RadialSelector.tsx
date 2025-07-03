@@ -17,6 +17,11 @@ const Emojis: Record<string, string> = {
     Angry: '😠',
     Calm: '😌',
     Excited: '🤩',
+    ExtremelyCold: '🥶',
+    Cold: '😬',
+    Pleasant: '😊',
+    Hot: '😓',
+    ExtremelyHot: '🥵',
 };
 
 export default function RadialSelector({
