@@ -2,6 +2,7 @@
 
 import ScaleSection from '@/components/SUDSScale';
 import RadialSelector from '@/components/RadialSelector';
+import Notes from '@/components/Notes';
 import { useLanguage } from './contexts/LanguageContext';
 
 const Dashboard: React.FC = () => {
@@ -19,6 +20,8 @@ const Dashboard: React.FC = () => {
             <ScaleSection title={translations['DepressiveThoughts']} />
             <ScaleSection title={translations['Autocriticism']} />
             <ScaleSection title={translations['SensorialOverload']} />
+
+            <Notes title={translations['Notes']} />
         </div>
     );
 };

@@ -30,10 +30,7 @@ const Emojis: Record<string, string> = {
     VeryGood: '🛌',
 };
 
-export default function RadialSelector({
-    title,
-    options
-}: RadialSelectorProps) {
+export default function RadialSelector({ title, options }: RadialSelectorProps) {
     const [value, setValue] = useState(options[0]);
     const { translations } = useLanguage();
 
