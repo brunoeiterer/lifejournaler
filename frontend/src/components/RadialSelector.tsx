@@ -40,7 +40,7 @@ export default function RadialSelector({
                     const isSelected = value === option;
 
                     return (
-                        <div className='flex flex-col text-center gap-2' key={option}>
+                        <div className='flex flex-col text-center gap-2 w-20' key={option}>
                             <label
                                 className={clsx(
                                     'text-3xl cursor-pointer p-3 rounded-full border transition',
