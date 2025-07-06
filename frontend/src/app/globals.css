@@ -19,3 +19,34 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+input.suds-slider::-webkit-slider-thumb {
+  appearance: none;
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 9999px;
+  background-color: currentColor;
+  border: 0px solid black;
+  cursor: pointer;
+  position: relative;
+}
+
+input.suds-slider::-moz-range-thumb {
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 9999px;
+  background-color: currentColor;
+  border: 0px solid black;
+  cursor: pointer;
+}
+
+.suds-value-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+  pointer-events: none;
+}
