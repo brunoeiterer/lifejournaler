@@ -1,23 +1,25 @@
 import { useLanguage } from "@/app/contexts/LanguageContext";
+import clsx from 'clsx';
 
 interface DrawerProps {
+  isVisible : boolean;
   onSelect: (view: string) => void;
 }
 
-const Drawer: React.FC<DrawerProps> = ({ onSelect }) => {
+const Drawer: React.FC<DrawerProps> = ({ isVisible, onSelect }) => {
   const { translations } = useLanguage();
 
   return (
-    <div style={{ borderRight: '1px solid #ddd', padding: '20px', height: '100vh', width: '200px' }}>
-      <button onClick={() => onSelect('journal')} style={{ display: 'block', marginBottom: '20px' }}>
-        {translations['JournalEntries']}
-      </button>
-      <button onClick={() => onSelect('statistics')} style={{ display: 'block', marginBottom: '20px' }}>
-        {translations['MoodStatistics']}
-      </button>
-      <button onClick={() => onSelect('privacyPolice')} style={{ display: 'block', marginBottom: '20px' }}>
-        {translations['PrivacyPolicyTitle']}
-      </button>
+    <div className={clsx(
+        "fixed pt-14 top-0 left-0 h-full w-64 bg-white shadow-md z-40 transform transition-transform duration-300",
+        isVisible ? "translate-x-0" : "-translate-x-full"
+        )}>
+        <div className="p-4 text-sm text-gray-600">{translations['SignedInAs']} <b>{}</b></div>
+        <nav className="flex flex-col gap-2 p-4">
+            <button >📈 {translations['MoodStatistics']}</button>
+            <button >🚪 {translations['SignOut']}</button>
+            <button  className="text-red-600">🗑️ {translations['DeleteAccount']}</button>
+        </nav>
     </div>
   );
 };
