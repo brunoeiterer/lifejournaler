@@ -22,6 +22,7 @@ export default function SignUpForm({ onSuccess, onError }: SignUpFormProps) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirm, setConfirm] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const { translations } = useLanguage();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -38,6 +39,8 @@ export default function SignUpForm({ onSuccess, onError }: SignUpFormProps) {
             return;
         }
 
+        setIsLoading(true);
+
         const result = await register(username, password);
 
         if (result) {
@@ -45,6 +48,8 @@ export default function SignUpForm({ onSuccess, onError }: SignUpFormProps) {
         } else {
             onError(translations['SignUpError']);
         }
+
+        setIsLoading(false);
     };
 
     const criteria = getPasswordCriteria(password);
@@ -81,8 +86,12 @@ export default function SignUpForm({ onSuccess, onError }: SignUpFormProps) {
                     onChange={(e) => setConfirm(e.target.value)}
                     placeholder={translations['ConfirmPassword']}
                 />
-                <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
-                    {translations['SignUp']}
+                <button type="submit" disabled={isLoading} className="w-full bg-blue-600 flex justify-center items-center text-white py-2 rounded">
+                    {isLoading ? (
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"/>
+                    ) : (
+                        translations['SignUp']
+                    )}
                 </button>
             </form>
 
