@@ -43,6 +43,7 @@
     "NoEntriesYet": "No entries yet. Start by adding your first entry above!",
     "Notes": "Notes",
     "Password": "Password",
+    "PasswordDoesntMeetAllCriteria": "The password doesn't meet all criteria",
     "PasswordsDoNotMatch": "The passwords do not match.",
     "PasswordLengthCriteria": "At least 8 characters",
     "PasswordLowerCaseCriteria" : "At least one lowercase letter",

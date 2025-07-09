@@ -43,6 +43,7 @@
     "NoEntriesYet": "Nenhum registro anterior. Começe adicionando um registro acima!",
     "Notes": "Anotações",
     "Password": "Senha",
+    "PasswordDoesntMeetAllCriteria": "A senha não satisfaz todos os critérios",
     "PasswordLengthCriteria": "Pelo menos 8 caracteres",
     "PasswordLowerCaseLetterCriteria" : "Pelo menos uma letra minúscula",
     "PasswordUpperCaseCriteria": "Pelo menos uma letra maíuscula",

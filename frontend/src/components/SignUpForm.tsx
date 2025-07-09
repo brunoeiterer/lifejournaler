@@ -32,6 +32,12 @@ export default function SignUpForm({ onSuccess, onError }: SignUpFormProps) {
             return;
         }
 
+        const failed = Object.entries(criteria).find(([_, met]) => !met);
+        if (failed) {
+            onError('Password does not meet all criteria');
+            return;
+        }
+
         const result = await register(username, password);
 
         if (result) {
