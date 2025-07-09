@@ -11,12 +11,14 @@ import SignInModal from '@/components/SignInModal';
 import { useState } from 'react';
 import EntryEditor from '@/components/EntryEditor';
 import Drawer from '@/components/Drawer';
+import SignUpModal from '@/components/SignUpModal';
 
 const Dashboard: React.FC = () => {
     const { translations } = useLanguage();
     const [ currentDate, setCurrentDate ] = useState<string | null>(null);
     const [ isDrawerVisible, setIsDrawerVisible ] = useState(true);
     const [ isSignInVisibile, setIsSignInVisible ] = useState(false);
+    const [ isSignUpVisibile, setIsSignUpVisible ] = useState(false);
 
     const showEntryEditor = currentDate != null;
 
@@ -34,7 +36,8 @@ const Dashboard: React.FC = () => {
                 </svg>
             </button>
 
-            <Drawer isVisible={isDrawerVisible} onSignInClick={() => setIsSignInVisible(true)} />
+            <Drawer isVisible={isDrawerVisible} onSignInClick={() => setIsSignInVisible(true)}
+                onSignUpClick={() => setIsSignUpVisible(true)} />
 
             <div className="flex flex-col items-center justify-center gap-4">
                 <h1 className="text-2xl font-semibold text-center mb-4">LifeJournaler</h1>
@@ -46,6 +49,7 @@ const Dashboard: React.FC = () => {
                 </div>
                 {showEntryEditor && <EntryEditor date={currentDate} onClose={() => setCurrentDate(null)}/>}
                 {isSignInVisibile && <SignInModal onClose={() => setIsSignInVisible(false)} />}
+                {isSignUpVisibile && <SignUpModal onClose={() => setIsSignUpVisible(false)} />}
             </div>
         </div>
     );

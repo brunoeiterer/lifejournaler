@@ -4,11 +4,11 @@ import clsx from 'clsx';
 
 interface DrawerProps {
   isVisible : boolean;
-  onSelect: (view: string) => void;
   onSignInClick: () => void;
+  onSignUpClick: () => void;
 }
 
-const Drawer: React.FC<DrawerProps> = ({ isVisible, onSelect, onSignInClick }) => {
+const Drawer: React.FC<DrawerProps> = ({ isVisible, onSignInClick, onSignUpClick }) => {
   const { translations } = useLanguage();
   const { isSignedIn, username, signOut } = useAuth();
 
@@ -26,7 +26,10 @@ const Drawer: React.FC<DrawerProps> = ({ isVisible, onSelect, onSignInClick }) =
               <button  className="text-red-600">🗑️ {translations['DeleteAccount']}</button>
             </>
             ) : (
-              <button onClick={onSignInClick}>🚪 {translations['SignIn']}</button>
+              <>
+                <button onClick={onSignInClick}>🚪 {translations['SignIn']}</button>
+                <button onClick={onSignUpClick}>📝 {translations['SignUp']}</button>
+              </>
             )}
         </nav>
     </div>
