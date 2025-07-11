@@ -1,5 +1,4 @@
-import { JournalEntry } from "@/components/JournalEntries";
-import dayjs from "dayjs";
+import { DailyEntry } from "@/app/models/DailyEntry";
 import { env } from 'next-runtime-env';
 
 const API_BASE_URL = env('NEXT_PUBLIC_API_BASE_URL');
@@ -29,23 +28,24 @@ export const register = async (username: string, password: string) => {
 export const getEntries = async (token: string) => {
     const response = await fetchWrapper('api/journaler', 'GET', '', token);
     if(response == undefined) {
-        return new Array<JournalEntry>();
+        return {};
     }
     const data = await response.json();
-    const entries: JournalEntry[] = (data['entries']).map((x: {id: number, entry: string, mood: number, date: dayjs.Dayjs}) => 
-        ({id: x.id, entry: x.entry, mood: x.mood, date: x.date}));
-    return entries;
+    return data['entries'];
 }
 
-export const addEntry = async (entry: string, mood: string, date: dayjs.Dayjs, token: string) => {
-    const response = await fetchWrapper('api/journaler', 'POST', JSON.stringify({ 
-        Entry: entry, Mood: mood, Date: date }), token);
-    if(response == undefined || !response.ok) {
-        return -1;
+export const addEntry = async (date: string, entry: DailyEntry) => {
+    const token = sessionStorage.getItem("loginToken");
+    if(token == null) {
+        return false;
     }
 
-    const resposeData = await response.json();
-    return resposeData['id'];
+    const response = await fetchWrapper('api/journaler', 'POST', JSON.stringify({ entry: entry, date: date}), token);
+    if(response == undefined || !response.ok) {
+        return false;
+    }
+
+    return true;
 }
 
 export const requestPasswordReset = async (email: string) => {
@@ -69,16 +69,20 @@ export const deleteEntry = async (id: number, token: string) => {
     return response && response.ok;
 }
 
-export const editEntry = async (entry: string, mood: string, date: dayjs.Dayjs, id: number, token: string) => {
-    const response = await fetchWrapper('api/journaler', 'PUT', JSON.stringify({ 
-        Entry: entry, Mood: mood, Date: date, Id: id}), token);
-    
-    if(response == undefined || !response.ok) {
-        return -1;
+export const editEntry = async (date: string, entry: DailyEntry) => {
+    const token = sessionStorage.getItem('loginToken');
+
+    if(token == null) {
+        return false;
     }
 
-    const resposeData = await response.json();
-    return resposeData['id'];
+    const response = await fetchWrapper('api/journaler', 'PUT', JSON.stringify({ date: date, entry: entry}), token);
+    
+    if(response == undefined || !response.ok) {
+        return false
+    }
+
+    return true;
 }
 
 export const deleteAccount = async (token: string) => {

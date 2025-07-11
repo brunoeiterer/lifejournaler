@@ -1,10 +1,13 @@
 'use client';
 
 import { useLanguage } from '@/app/contexts/LanguageContext';
+import { DailyEntry } from '@/app/models/DailyEntry';
 import React, { useEffect, useRef, useState } from 'react';
 
 type SUDSScaleProps = {
     title: string;
+    label : string;
+    onChange: <K extends keyof DailyEntry>(key: K, value: DailyEntry[K]) => void;
 };
 
 const zones = [
@@ -19,18 +22,18 @@ const colorClasses: Record<string, string> = {
     red: 'text-red-600 bg-red-600',
 };
 
-export default function SUDSScale({ title }: SUDSScaleProps) {
+export default function SUDSScale({ title, label, onChange }: SUDSScaleProps) {
     const [value, setValue] = useState(0);
     const { translations } = useLanguage();
     const sliderRef = useRef<HTMLInputElement>(null);
     const [thumbX, setThumbX] = useState(0);
 
     const currentZone = zones.find(({ range }) => value >= range[0] && value <= range[1]) ?? zones[0];
-    const textColor = colorClasses[currentZone.color].split(' ')[0];
     const bgColor = colorClasses[currentZone.color].split(' ')[1];
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue(Number(e.target.value));
+        onChange(label as keyof DailyEntry, value);
     };
 
     const updateThumbPosition = () => {

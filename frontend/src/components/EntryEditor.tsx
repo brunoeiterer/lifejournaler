@@ -4,15 +4,25 @@ import Notes from "./Notes";
 import RadialSelector from "./RadialSelector";
 import SaveButton from "./SaveButton";
 import SUDSScale from "./SUDSScale";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { DailyEntry } from "@/app/models/DailyEntry";
+import { addEntry, editEntry } from "@/services/BackendApiService";
+import Toast from "./Toast";
 
 interface EntryEditorProps {
     date: string;
+    originalEntry: DailyEntry;
     onClose: () => void;
+    updateEntry: (date: string, entry: DailyEntry) => void;
 }
 
-export default function EntryEditor({date, onClose} : EntryEditorProps) {
+export default function EntryEditor({date, originalEntry, onClose, updateEntry} : EntryEditorProps) {
+    const [ errorMessage, setErrorMessage ] = useState('');
     const {translations} = useLanguage();
+    let entry = originalEntry ?? { Mood: 'Happy', Weather: 'ExtremelyCold', SleepQuality: 'VeryBad',
+        Menstruation: true, Exercise: true, AnxietyThoughts: 0, DepressiveThoughts: 0, Autocriticism: 0, SensorialOverload: 0,
+        Notes: ''
+    };
 
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
@@ -21,6 +31,28 @@ export default function EntryEditor({date, onClose} : EntryEditorProps) {
         window.addEventListener('keydown', handleEscape);
         return () => window.removeEventListener('keydown', handleEscape);
     }, [onClose]);
+
+    const saveEntry = async () => {
+        let result = true;
+        if(originalEntry == null) {
+            result = await addEntry(date, entry);
+        }
+        else {
+            result = await editEntry(date, entry);
+        }
+
+        if(!result) {
+            setErrorMessage(translations['ErrorSavingEntry']);
+        }
+        else {
+            updateEntry(date, entry);
+            onClose();
+        }
+    }
+
+    const onEntryUpdated = <K extends keyof DailyEntry>(key: K, value: DailyEntry[K]) => {
+        entry[key] = value;
+    };
 
     return (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center">
@@ -35,21 +67,27 @@ export default function EntryEditor({date, onClose} : EntryEditorProps) {
                 <div className="flex flex-col gap-4 bg-white rounded-xl pt-10 p-6 shadow-lg max-h-[80vh] overflow-y-auto">
                     <EntryDate title={translations['Date']} date={date} />
 
-                    <RadialSelector title={translations['Mood']} options={["Happy", "Sad", "Excited", "Calm", "Angry"]}/>
-                    <RadialSelector title={translations['Weather']} options={["ExtremelyCold", "Cold", "Pleasant", "Hot", "ExtremelyHot"]}/>
-                    <RadialSelector title={translations['SleepQuality']} options={["VeryBad", "Bad", "Good", "VeryGood"]}/>
-                    <RadialSelector title={translations['MenstrualCycle']} options={['Yes', 'No']} />
-                    <RadialSelector title={translations['Exercise']} options={['Yes', 'No']} />
+                    <RadialSelector title={translations['Mood']} options={["Happy", "Sad", "Excited", "Calm", "Angry"]} 
+                        label='Mood' onChange={onEntryUpdated}/>
+                    <RadialSelector title={translations['Weather']} options={["ExtremelyCold", "Cold", "Pleasant", "Hot", 
+                        "ExtremelyHot"]} label='Weather' onChange={onEntryUpdated}/>
+                    <RadialSelector title={translations['SleepQuality']} options={["VeryBad", "Bad", "Good", "VeryGood"]}
+                        label='SleepQuality' onChange={onEntryUpdated}/>
+                    <RadialSelector title={translations['MenstrualCycle']} options={['Yes', 'No']} label='Menstruation'
+                        onChange={onEntryUpdated} />
+                    <RadialSelector title={translations['Exercise']} options={['Yes', 'No']} label='Exercise' onChange={onEntryUpdated} />
 
-                    <SUDSScale title={translations['AnxietyThoughts']} />
-                    <SUDSScale title={translations['DepressiveThoughts']} />
-                    <SUDSScale title={translations['Autocriticism']} />
-                    <SUDSScale title={translations['SensorialOverload']} />
+                    <SUDSScale title={translations['AnxietyThoughts']} label='AnxietyThoughts' onChange={onEntryUpdated} />
+                    <SUDSScale title={translations['DepressiveThoughts']} label='DepressiveThoughts' onChange={onEntryUpdated} />
+                    <SUDSScale title={translations['Autocriticism']} label='Autocriticism' onChange={onEntryUpdated} />
+                    <SUDSScale title={translations['SensorialOverload']} label='SensorialOverload' onChange={onEntryUpdated} />
 
-                    <Notes title={translations['Notes']} />
+                    <Notes title={translations['Notes']} label='Notes' onChange={onEntryUpdated} />
 
-                    <SaveButton label={translations['SaveEntry']} />
+                    <SaveButton onClick={saveEntry} label={translations['SaveEntry']} />
                 </div>
+
+                {errorMessage != '' && <Toast message={errorMessage} />}
             </div>
         </div>
     )

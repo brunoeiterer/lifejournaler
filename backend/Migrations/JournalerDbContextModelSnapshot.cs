@@ -30,17 +30,41 @@ namespace JournalerBackend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<int>("AnxietyThoughts")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Entry")
+                    b.Property<int>("AutoCriticism")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Date")
                         .HasColumnType("text");
+
+                    b.Property<int>("DepressiveThoughts")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Exercise")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("Menstruation")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Mood")
                         .HasColumnType("text");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<int>("SensorialOverload")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SleepQuality")
+                        .HasColumnType("text");
+
                     b.Property<int?>("UserId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Weather")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

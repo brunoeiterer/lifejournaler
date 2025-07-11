@@ -3,12 +3,13 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import { useLanguage } from '@/app/contexts/LanguageContext';
+import { DailyEntry } from '@/app/models/DailyEntry';
 
 type RadialSelectorProps = {
     title: string;
     options: string[];
-    value?: string;
-    onChange?: (value: string) => void;
+    label : string;
+    onChange: <K extends keyof DailyEntry>(key: K, value: DailyEntry[K]) => void;
 };
 
 const Emojis: Record<string, string> = {
@@ -30,9 +31,20 @@ const Emojis: Record<string, string> = {
     VeryGood: '🛌',
 };
 
-export default function RadialSelector({ title, options }: RadialSelectorProps) {
+export default function RadialSelector({ title, options, label, onChange }: RadialSelectorProps) {
     const [value, setValue] = useState(options[0]);
     const { translations } = useLanguage();
+
+    const updateValue = (newValue: string) => {
+        setValue(newValue);
+        if(newValue == 'Yes' || newValue == 'No') {
+            onChange(label as keyof DailyEntry, newValue == 'Yes');
+        }
+        else {
+            onChange(label as keyof DailyEntry, value);
+        }
+        
+    };
 
     return (
         <div className="w-full max-w-xl p-6 bg-white rounded-xl shadow-md border">
@@ -54,7 +66,7 @@ export default function RadialSelector({ title, options }: RadialSelectorProps) 
                                     type="radio"
                                     value={option}
                                     checked={isSelected}
-                                    onChange={() => setValue(option)}
+                                    onChange={() => updateValue(option)}
                                     className="hidden"
                                 />
                                 <span>{emoji}</span>

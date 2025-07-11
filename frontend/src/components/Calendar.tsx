@@ -9,13 +9,6 @@ export interface CalendarProps {
   onDateClick: (date: string) => void;
 };
 
-export interface DailyEntry {
-  mood?: string;
-  suds?: number;
-  sleep?: string;
-  hasNote?: boolean;
-};
-
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export default function Calendar({ entries, onDateClick }: CalendarProps) {

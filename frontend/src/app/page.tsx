@@ -1,17 +1,15 @@
 'use client';
 
-import ScaleSection from '@/components/SUDSScale';
-import RadialSelector from '@/components/RadialSelector';
-import Notes from '@/components/Notes';
 import { useLanguage } from './contexts/LanguageContext';
-import EntryDate from '@/components/EntryDate';
-import SaveButton from '@/components/SaveButton';
-import Calendar, { DailyEntry } from '@/components/Calendar';
+import { DailyEntry } from './models/DailyEntry';
+import Calendar from '@/components/Calendar';
 import SignInModal from '@/components/SignInModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EntryEditor from '@/components/EntryEditor';
 import Drawer from '@/components/Drawer';
 import SignUpModal from '@/components/SignUpModal';
+import { useAuth } from './contexts/AuthContext';
+import { getEntries } from '@/services/BackendApiService';
 
 const Dashboard: React.FC = () => {
     const { translations } = useLanguage();
@@ -19,8 +17,33 @@ const Dashboard: React.FC = () => {
     const [ isDrawerVisible, setIsDrawerVisible ] = useState(true);
     const [ isSignInVisibile, setIsSignInVisible ] = useState(false);
     const [ isSignUpVisibile, setIsSignUpVisible ] = useState(false);
+    const [ entries, setEntries ] = useState<Record<string, DailyEntry>>({})
+    const { isSignedIn } = useAuth();
 
     const showEntryEditor = currentDate != null;
+
+    useEffect(() => {
+        if(!isSignedIn) {
+            return;
+        }
+
+        const fetchEntries = async () => {
+            var token = sessionStorage.getItem('loginToken');
+            if(token == null) {
+                return;
+            }
+
+            setEntries(await getEntries(token));
+        }
+
+        fetchEntries();
+    }, [isSignedIn]);
+
+    const updateEntry = (date: string, entry: DailyEntry) => {
+        const entryData = Object.assign({}, entries);
+        entryData[date] = entry;
+        setEntries(entryData);
+    }
 
     return (
         <div className="relative min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
@@ -43,11 +66,11 @@ const Dashboard: React.FC = () => {
                 <h1 className="text-2xl font-semibold text-center mb-4">LifeJournaler</h1>
                 <p className="text-gray-500 text-center mb-8">{translations['ClickTip']}</p>
 
-
                 <div className="bg-white p-6 rounded-2xl shadow-md max-w-md mx-auto">
-                    <Calendar entries={{}} onDateClick={(date) => setCurrentDate(date)} />
+                    <Calendar entries={entries} onDateClick={(date) => setCurrentDate(date)} />
                 </div>
-                {showEntryEditor && <EntryEditor date={currentDate} onClose={() => setCurrentDate(null)}/>}
+                {showEntryEditor && <EntryEditor date={currentDate} originalEntry={entries[currentDate]} 
+                    onClose={() => setCurrentDate(null)} updateEntry={updateEntry}/>}
                 {isSignInVisibile && <SignInModal onClose={() => setIsSignInVisible(false)} />}
                 {isSignUpVisibile && <SignUpModal onClose={() => setIsSignUpVisible(false)} />}
             </div>
