@@ -10,6 +10,7 @@ import Drawer from '@/components/Drawer';
 import SignUpModal from '@/components/SignUpModal';
 import { useAuth } from './contexts/AuthContext';
 import { getEntries } from '@/services/BackendApiService';
+import DeleteAccountModal from '@/components/DeleteAccountModal';
 
 const Dashboard: React.FC = () => {
     const { translations } = useLanguage();
@@ -17,6 +18,7 @@ const Dashboard: React.FC = () => {
     const [ isDrawerVisible, setIsDrawerVisible ] = useState(true);
     const [ isSignInVisibile, setIsSignInVisible ] = useState(false);
     const [ isSignUpVisibile, setIsSignUpVisible ] = useState(false);
+    const [ isDeleteAccountVisible, setIsDeleteAccountVisible ] = useState(false);
     const [ entries, setEntries ] = useState<Record<string, DailyEntry>>({})
     const { isSignedIn } = useAuth();
 
@@ -56,7 +58,7 @@ const Dashboard: React.FC = () => {
             </button>
 
             <Drawer isVisible={isDrawerVisible} onSignInClick={() => setIsSignInVisible(true)}
-                onSignUpClick={() => setIsSignUpVisible(true)} />
+                onSignUpClick={() => setIsSignUpVisible(true)} onDeleteAccountClick={() => setIsDeleteAccountVisible(true)} />
 
             <div className="flex flex-col items-center justify-center gap-4">
                 <h1 className="text-2xl font-semibold text-center mb-4">LifeJournaler</h1>
@@ -69,6 +71,7 @@ const Dashboard: React.FC = () => {
                     onClose={() => setCurrentDate(null)} updateEntry={updateEntry}/>}
                 {isSignInVisibile && <SignInModal onClose={() => setIsSignInVisible(false)} />}
                 {isSignUpVisibile && <SignUpModal onClose={() => setIsSignUpVisible(false)} />}
+                {isDeleteAccountVisible && <DeleteAccountModal onClose={() => setIsDeleteAccountVisible(false)} />}
             </div>
         </div>
     );

@@ -17,6 +17,7 @@
     "EnterResetCode": "Digite o código de recuperação",
     "EntryDeletedSuccessfully": "Registro deletado",
     "EntrySavedSuccessfully": "Registro salvo.",
+    "ErrorDeletingAccount" : "Um erro occoreu ao deleter a conta. Por favor, tente novamente mais tarde.",
     "ErrorDeletingEntry": "Um erro ocorreu ao deleter o registro. Por favor, tente novamente mais tarde.",
     "ErrorSavingEntry": "Um erro ocorreu ao salvar o registro.",
     "Excited": "Animado",

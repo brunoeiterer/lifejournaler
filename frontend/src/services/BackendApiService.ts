@@ -91,7 +91,12 @@ export const editEntry = async (date: string, entry: DailyEntry) => {
     return true;
 }
 
-export const deleteAccount = async (token: string) => {
+export const deleteAccount = async () => {
+    var token = sessionStorage.getItem('loginToken');
+    if(token == null) {
+        return false;
+    }
+
     const response = await fetchWrapper('api/auth/delete-account', 'DELETE', '', token);
     return response && response.ok;
 }
