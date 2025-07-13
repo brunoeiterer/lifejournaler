@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import clsx from 'clsx';
 import { DailyEntry } from '@/app/models/DailyEntry';
+import Tooltip from '@/components/Tooltip'
+import { useLanguage } from '@/app/contexts/LanguageContext';
 
 export interface CalendarProps {
   entries: Record<string, DailyEntry>;
@@ -32,6 +34,8 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
   const endOfMonth = currentMonth.endOf('month');
   const startDate = startOfMonth.startOf('week');
   const endDate = endOfMonth.endOf('week');
+
+  const { translations } = useLanguage();
 
   const days: dayjs.Dayjs[] = [];
   let day = startDate;
@@ -85,21 +89,39 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
               <span className="font-semibold">{date.date()}</span>
               {entry && <div className="flex flex-col items-center gap-0.5 text-xs mt-1">
                 <div className="flex gap-1 justify-center">
-                  <span>{Emojis[entry.Mood]}</span>
-                  <span>{Emojis[entry.Weather]}</span>
-                  <span>{Emojis[entry.SleepQuality]}</span>
+                  <Tooltip label={translations['Mood'] + ': ' + translations[entry.Mood]}>
+                    <span>{Emojis[entry.Mood]}</span>
+                  </Tooltip>
+                  <Tooltip label={translations['Weather'] + ': ' + translations[entry.Weather]}>
+                    <span>{Emojis[entry.Weather]}</span>
+                  </Tooltip>
+                  <Tooltip label={translations['SleepQuality'] + ': ' + translations[entry.SleepQuality]}>
+                    <span>{Emojis[entry.SleepQuality]}</span>
+                  </Tooltip>
                 </div>
 
                 <div className="flex gap-1 justify-center">
-                  <span>{Emojis[entry.Menstruation ? 'Yes' : 'No']}</span>
-                  <span>{Emojis[entry.Exercise ? 'Yes' : 'No']}</span>
+                  <Tooltip label={translations['Menstruation'] + ' ' + (entry.Menstruation ? translations['Yes'] : translations['No'])}>
+                    <span>{Emojis[entry.Menstruation ? 'Yes' : 'No']}</span>
+                  </Tooltip>
+                  <Tooltip label={translations['Exercise'] + ': ' + (entry.Exercise ? translations['Yes'] : translations['No'])}>
+                    <span>{Emojis[entry.Exercise ? 'Yes' : 'No']}</span>
+                  </Tooltip>
                 </div>
 
                 <div className="flex gap-1 justify-center">
-                  <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.AnxietyThoughts)}`} />
-                  <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.DepressiveThoughts)}`} />
-                  <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.Autocriticism)}`} />
-                  <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.SensorialOverload)}`} />
+                  <Tooltip label={translations['AnxietyThoughts'] + ': ' + entry.AnxietyThoughts}>
+                    <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.AnxietyThoughts)}`} />
+                  </Tooltip>
+                  <Tooltip label={translations['DepressiveThoughts'] + ': ' + entry.DepressiveThoughts}>
+                    <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.DepressiveThoughts)}`} />
+                  </Tooltip>
+                  <Tooltip label={translations['Autocriticism'] + ': ' + entry.Autocriticism}>
+                    <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.Autocriticism)}`} />
+                  </Tooltip>
+                  <Tooltip label={translations['SensorialOverload'] + ': ' + entry.SensorialOverload}>
+                    <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.SensorialOverload)}`} />
+                  </Tooltip>
                 </div>
               </div>
               }
