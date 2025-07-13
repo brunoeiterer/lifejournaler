@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import clsx from 'clsx';
+import { DailyEntry } from '@/app/models/DailyEntry';
 
 export interface CalendarProps {
   entries: Record<string, DailyEntry>;
@@ -10,6 +11,18 @@ export interface CalendarProps {
 };
 
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+const zones = [
+    { labelKey: 'LightIntensity', color: 'cyan', range: [0, 3] },
+    { labelKey: 'ModerateIntensity', color: 'green', range: [4, 7] },
+    { labelKey: 'HighIntensity', color: 'red', range: [8, 10] }
+];
+
+const colorClasses: Record<string, string> = {
+    cyan: 'text-cyan-600 bg-cyan-600',
+    green: 'text-green-600 bg-green-600',
+    red: 'text-red-600 bg-red-600',
+};
 
 export default function Calendar({ entries, onDateClick }: CalendarProps) {
   const today = dayjs();
@@ -30,6 +43,11 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
 
   const handlePrev = () => setCurrentMonth(currentMonth.subtract(1, 'month'));
   const handleNext = () => setCurrentMonth(currentMonth.add(1, 'month'));
+
+  const getColor = (value: number) => {
+    const currentZone = zones.find(({ range }) => value >= range[0] && value <= range[1]) ?? zones[0];
+    return colorClasses[currentZone.color].split(' ')[1];
+  }
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -65,12 +83,26 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
               )}
             >
               <span className="font-semibold">{date.date()}</span>
-              <div className="flex gap-1 text-lg">
-                {entry?.mood && <span>{getMoodEmoji(entry.mood)}</span>}
-                {entry?.suds !== undefined && <span title="SUDS">🔵</span>}
-                {entry?.sleep && <span>{getSleepEmoji(entry.sleep)}</span>}
-                {entry?.hasNote && <span>📝</span>}
+              {entry && <div className="flex flex-col items-center gap-0.5 text-xs mt-1">
+                <div className="flex gap-1 justify-center">
+                  <span>{Emojis[entry.Mood]}</span>
+                  <span>{Emojis[entry.Weather]}</span>
+                  <span>{Emojis[entry.SleepQuality]}</span>
+                </div>
+
+                <div className="flex gap-1 justify-center">
+                  <span>{Emojis[entry.Menstruation ? 'Yes' : 'No']}</span>
+                  <span>{Emojis[entry.Exercise ? 'Yes' : 'No']}</span>
+                </div>
+
+                <div className="flex gap-1 justify-center">
+                  <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.AnxietyThoughts)}`} />
+                  <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.DepressiveThoughts)}`} />
+                  <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.Autocriticism)}`} />
+                  <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.SensorialOverload)}`} />
+                </div>
               </div>
+              }
             </button>
           );
         })}
@@ -79,19 +111,21 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
   );
 }
 
-const getMoodEmoji = (mood: string) =>
-  ({
+const Emojis: Record<string, string> = {
     Happy: '😊',
     Sad: '😢',
     Angry: '😠',
     Calm: '😌',
     Excited: '🤩',
-  }[mood] || '❓');
-
-const getSleepEmoji = (sleep: string) =>
-  ({
+    ExtremelyCold: '🥶',
+    Cold: '😬',
+    Pleasant: '😊',
+    Hot: '😓',
+    ExtremelyHot: '🥵',
+    Yes: '✅',
+    No: '❌',
     VeryBad: '😵',
     Bad: '😪',
     Good: '😴',
     VeryGood: '🛌',
-  }[sleep] || '');
+};
