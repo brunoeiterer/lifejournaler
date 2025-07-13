@@ -44,6 +44,7 @@ export default function CategoryChart({ data, title }: Props) {
         "count": count,
     }));
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const Tick = (props: any) => {
         const { x, y, payload } = props;
         return (

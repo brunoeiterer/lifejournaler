@@ -1,6 +1,5 @@
 'use client';
 
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import { DailyEntry } from '@/app/models/DailyEntry';
@@ -25,7 +24,7 @@ export default function MonthlyStatsChart({ entries }: Props) {
 
     const filteredEntries: DailyEntry[] = [];
     for (const key in entries) {
-        var date = key.split('-');
+        const date = key.split('-');
         if(parseInt(date[1]) == selectedMonth && parseInt(date[0]) == selectedYear) {
             filteredEntries.push(entries[key]);
         }

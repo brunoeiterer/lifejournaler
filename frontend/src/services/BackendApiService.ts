@@ -26,7 +26,7 @@ export const register = async (username: string, password: string) => {
 }
 
 export const getEntries = async () => {
-    var token = sessionStorage.getItem('loginToken');
+    const token = sessionStorage.getItem('loginToken');
     if(token == null) {
         return false;
     }
@@ -92,7 +92,7 @@ export const editEntry = async (date: string, entry: DailyEntry) => {
 }
 
 export const deleteAccount = async () => {
-    var token = sessionStorage.getItem('loginToken');
+    const token = sessionStorage.getItem('loginToken');
     if(token == null) {
         return false;
     }

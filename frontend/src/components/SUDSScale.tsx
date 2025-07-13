@@ -38,19 +38,19 @@ export default function SUDSScale({ title, label, initialValue, onChange }: SUDS
         onChange(label as keyof DailyEntry, e.target.value);
     };
 
-    const updateThumbPosition = () => {
-        const slider = sliderRef.current;
-        if (!slider) return;
-
-        const rect = slider.getBoundingClientRect();
-        const percent = (value - Number(slider.min)) / (Number(slider.max) - Number(slider.min));
-        const usableWidth = rect.width - 40;
-        const x = percent * usableWidth + 40 / 2;
-
-        setThumbX(x);
-    };
-
     useEffect(() => {
+        const updateThumbPosition = () => {
+            const slider = sliderRef.current;
+            if (!slider) return;
+
+            const rect = slider.getBoundingClientRect();
+            const percent = (value - Number(slider.min)) / (Number(slider.max) - Number(slider.min));
+            const usableWidth = rect.width - 40;
+            const x = percent * usableWidth + 40 / 2;
+
+            setThumbX(x);
+        };
+
         updateThumbPosition();
         window.addEventListener('resize', updateThumbPosition);
         return () => window.removeEventListener('resize', updateThumbPosition);
