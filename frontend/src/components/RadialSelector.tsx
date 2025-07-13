@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import clsx from 'clsx';
 import { useLanguage } from '@/app/contexts/LanguageContext';
 import { DailyEntry } from '@/app/models/DailyEntry';
@@ -9,6 +9,7 @@ type RadialSelectorProps = {
     title: string;
     options: string[];
     label : string;
+    initialValue: string;
     onChange: <K extends keyof DailyEntry>(key: K, value: DailyEntry[K]) => void;
 };
 
@@ -31,8 +32,9 @@ const Emojis: Record<string, string> = {
     VeryGood: '🛌',
 };
 
-export default function RadialSelector({ title, options, label, onChange }: RadialSelectorProps) {
-    const [value, setValue] = useState(options[0]);
+export default function RadialSelector({ title, options, label, initialValue, onChange }: RadialSelectorProps) {
+    const initialValueRef = useRef(initialValue);
+    const [value, setValue] = useState(initialValueRef.current);
     const { translations } = useLanguage();
 
     const updateValue = (newValue: string) => {
@@ -41,7 +43,7 @@ export default function RadialSelector({ title, options, label, onChange }: Radi
             onChange(label as keyof DailyEntry, newValue == 'Yes');
         }
         else {
-            onChange(label as keyof DailyEntry, value);
+            onChange(label as keyof DailyEntry, newValue);
         }
         
     };

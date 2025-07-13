@@ -19,7 +19,7 @@ interface EntryEditorProps {
 export default function EntryEditor({date, originalEntry, onClose, updateEntry} : EntryEditorProps) {
     const [ errorMessage, setErrorMessage ] = useState('');
     const {translations} = useLanguage();
-    let entry = originalEntry ?? { Mood: 'Happy', Weather: 'ExtremelyCold', SleepQuality: 'VeryBad',
+    const entry = originalEntry ?? { Mood: 'Happy', Weather: 'ExtremelyCold', SleepQuality: 'VeryBad',
         Menstruation: true, Exercise: true, AnxietyThoughts: 0, DepressiveThoughts: 0, Autocriticism: 0, SensorialOverload: 0,
         Notes: ''
     };
@@ -68,21 +68,26 @@ export default function EntryEditor({date, originalEntry, onClose, updateEntry} 
                     <EntryDate title={translations['Date']} date={date} />
 
                     <RadialSelector title={translations['Mood']} options={["Happy", "Sad", "Excited", "Calm", "Angry"]} 
-                        label='Mood' onChange={onEntryUpdated}/>
+                        label='Mood' initialValue={entry.Mood} onChange={onEntryUpdated} />
                     <RadialSelector title={translations['Weather']} options={["ExtremelyCold", "Cold", "Pleasant", "Hot", 
-                        "ExtremelyHot"]} label='Weather' onChange={onEntryUpdated}/>
+                        "ExtremelyHot"]} label='Weather' initialValue={entry.Weather} onChange={onEntryUpdated}/>
                     <RadialSelector title={translations['SleepQuality']} options={["VeryBad", "Bad", "Good", "VeryGood"]}
-                        label='SleepQuality' onChange={onEntryUpdated}/>
+                        label='SleepQuality' initialValue={entry.SleepQuality} onChange={onEntryUpdated}/>
                     <RadialSelector title={translations['MenstrualCycle']} options={['Yes', 'No']} label='Menstruation'
-                        onChange={onEntryUpdated} />
-                    <RadialSelector title={translations['Exercise']} options={['Yes', 'No']} label='Exercise' onChange={onEntryUpdated} />
+                        initialValue={entry.Menstruation ? "Yes" : "No"} onChange={onEntryUpdated} />
+                    <RadialSelector title={translations['Exercise']} options={['Yes', 'No']} label='Exercise' 
+                        initialValue={entry.Exercise ? "Yes" : "No"} onChange={onEntryUpdated} />
 
-                    <SUDSScale title={translations['AnxietyThoughts']} label='AnxietyThoughts' onChange={onEntryUpdated} />
-                    <SUDSScale title={translations['DepressiveThoughts']} label='DepressiveThoughts' onChange={onEntryUpdated} />
-                    <SUDSScale title={translations['Autocriticism']} label='Autocriticism' onChange={onEntryUpdated} />
-                    <SUDSScale title={translations['SensorialOverload']} label='SensorialOverload' onChange={onEntryUpdated} />
+                    <SUDSScale title={translations['AnxietyThoughts']} label='AnxietyThoughts'
+                        initialValue={entry.AnxietyThoughts} onChange={onEntryUpdated} />
+                    <SUDSScale title={translations['DepressiveThoughts']} label='DepressiveThoughts'
+                        initialValue={entry.DepressiveThoughts} onChange={onEntryUpdated} />
+                    <SUDSScale title={translations['Autocriticism']} label='Autocriticism'
+                        initialValue={entry.Autocriticism} onChange={onEntryUpdated} />
+                    <SUDSScale title={translations['SensorialOverload']} label='SensorialOverload'
+                        initialValue={entry.SensorialOverload} onChange={onEntryUpdated} />
 
-                    <Notes title={translations['Notes']} label='Notes' onChange={onEntryUpdated} />
+                    <Notes title={translations['Notes']} label='Notes' initialValue={entry.Notes} onChange={onEntryUpdated} />
 
                     <SaveButton onClick={saveEntry} label={translations['SaveEntry']} />
                 </div>

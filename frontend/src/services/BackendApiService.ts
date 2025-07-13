@@ -14,7 +14,7 @@ export const login = async (username: string, password: string) => {
     }
 
     const json = await response.json();
-    sessionStorage.setItem('loginToken', json['token']);
+    sessionStorage.setItem('loginToken', json['Token']);
     return '';
 }
 
@@ -25,11 +25,17 @@ export const register = async (username: string, password: string) => {
     return response && response.ok;
 }
 
-export const getEntries = async (token: string) => {
+export const getEntries = async () => {
+    var token = sessionStorage.getItem('loginToken');
+    if(token == null) {
+        return false;
+    }
+
     const response = await fetchWrapper('api/journaler', 'GET', '', token);
     if(response == undefined) {
         return {};
     }
+
     const data = await response.json();
     return data['entries'];
 }

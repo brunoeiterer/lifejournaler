@@ -1,16 +1,18 @@
 'use client';
 
 import { DailyEntry } from '@/app/models/DailyEntry';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 type NoteInputProps = {
   title: string;
   label: string;
+  initialValue: string;
   onChange: <K extends keyof DailyEntry>(key: K, value: DailyEntry[K]) => void;
 };
 
-export default function Notes({ title, label, onChange }: NoteInputProps) {
-  const [note, setNote] = useState('');
+export default function Notes({ title, label, initialValue, onChange }: NoteInputProps) {
+  const initialValueRef = useRef(initialValue);
+  const [note, setNote] = useState(initialValueRef.current);
 
   const updateValue = (newValue: string) => {
     setNote(newValue);

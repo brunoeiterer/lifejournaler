@@ -23,20 +23,16 @@ const Dashboard: React.FC = () => {
     const showEntryEditor = currentDate != null;
 
     useEffect(() => {
-        if(!isSignedIn) {
-            return;
-        }
-
-        const fetchEntries = async () => {
-            var token = sessionStorage.getItem('loginToken');
-            if(token == null) {
-                return;
+        if(isSignedIn) {
+            const fetchEntries = async () => {
+                setEntries(await getEntries());
             }
 
-            setEntries(await getEntries(token));
+            fetchEntries();
         }
-
-        fetchEntries();
+        else {
+            setEntries({});
+        }
     }, [isSignedIn]);
 
     const updateEntry = (date: string, entry: DailyEntry) => {

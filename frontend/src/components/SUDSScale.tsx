@@ -7,6 +7,7 @@ import React, { useEffect, useRef, useState } from 'react';
 type SUDSScaleProps = {
     title: string;
     label : string;
+    initialValue: number;
     onChange: <K extends keyof DailyEntry>(key: K, value: DailyEntry[K]) => void;
 };
 
@@ -22,8 +23,9 @@ const colorClasses: Record<string, string> = {
     red: 'text-red-600 bg-red-600',
 };
 
-export default function SUDSScale({ title, label, onChange }: SUDSScaleProps) {
-    const [value, setValue] = useState(0);
+export default function SUDSScale({ title, label, initialValue, onChange }: SUDSScaleProps) {
+    const initialValueRef = useRef(initialValue);
+    const [value, setValue] = useState(initialValueRef.current);
     const { translations } = useLanguage();
     const sliderRef = useRef<HTMLInputElement>(null);
     const [thumbX, setThumbX] = useState(0);
@@ -33,7 +35,7 @@ export default function SUDSScale({ title, label, onChange }: SUDSScaleProps) {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue(Number(e.target.value));
-        onChange(label as keyof DailyEntry, value);
+        onChange(label as keyof DailyEntry, e.target.value);
     };
 
     const updateThumbPosition = () => {

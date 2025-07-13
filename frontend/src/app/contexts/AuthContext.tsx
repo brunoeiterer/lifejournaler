@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [username, setUsername] = useState('');
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('loginToken');
+    const storedToken = sessionStorage.getItem('loginToken');
     if (storedToken) setisSignedIn(true);
   }, []);
 
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signOut = () => {
     setisSignedIn(false);
     setUsername('');
-    localStorage.removeItem('loginToken');
+    sessionStorage.removeItem('loginToken');
   };
 
   return (

@@ -60,9 +60,9 @@ namespace JournalerBackend.Controllers {
 
         [Authorize]
         [HttpPut]
-        public async Task<JsonResult> PutEntryEntity(EntryEntity editedEntry)
+        public async Task<JsonResult> PutEntryEntity([FromBody] AddModel model)
         {
-            var entry = _context.Entries.SingleOrDefault(e => e.Id == editedEntry.Id);
+            var entry = _context.Entries.SingleOrDefault(e => e.Date == model.Date);
 
             if (entry == null)
             {
@@ -72,19 +72,20 @@ namespace JournalerBackend.Controllers {
                 };
             }
 
-            entry.Mood = editedEntry.Mood;
-            entry.Weather = editedEntry.Weather;
-            entry.SleepQuality = editedEntry.SleepQuality;
-            entry.Menstruation = editedEntry.Menstruation;
-            entry.Exercise = editedEntry.Exercise;
-            entry.AnxietyThoughts = editedEntry.AnxietyThoughts;
-            entry.AutoCriticism = editedEntry.AutoCriticism;
-            entry.SensorialOverload = editedEntry.SensorialOverload;
-            entry.Notes = editedEntry.Notes;
+            entry.Mood = model.Entry.Mood;
+            entry.Weather = model.Entry.Weather;
+            entry.SleepQuality = model.Entry.SleepQuality;
+            entry.Menstruation = model.Entry.Menstruation;
+            entry.Exercise = model.Entry.Exercise;
+            entry.AnxietyThoughts = model.Entry.AnxietyThoughts;
+            entry.DepressiveThoughts = model.Entry.DepressiveThoughts;
+            entry.Autocriticism = model.Entry.Autocriticism;
+            entry.SensorialOverload = model.Entry.SensorialOverload;
+            entry.Notes = model.Entry.Notes;
 
             await _context.SaveChangesAsync();
 
-            return new JsonResult(new { editedEntry.Id });
+            return new JsonResult(new { entry.Id });
         }
 
         [Authorize]

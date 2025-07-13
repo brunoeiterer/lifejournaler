@@ -11,7 +11,7 @@ namespace JournalerBackend.Entities {
         public bool Exercise { get; set; }
         public int AnxietyThoughts { get; set; }
         public int DepressiveThoughts { get; set; }
-        public int AutoCriticism { get; set; }
+        public int Autocriticism { get; set; }
         public int SensorialOverload { get; set; }
         public string Notes { get; set; }
         
