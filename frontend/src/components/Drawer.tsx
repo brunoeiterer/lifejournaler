@@ -7,9 +7,10 @@ interface DrawerProps {
   onSignInClick: () => void;
   onSignUpClick: () => void;
   onDeleteAccountClick: () => void;
+  onMonthlyStatisticsClick: () => void;
 }
 
-const Drawer: React.FC<DrawerProps> = ({ isVisible, onSignInClick, onSignUpClick, onDeleteAccountClick }) => {
+const Drawer: React.FC<DrawerProps> = ({ isVisible, onSignInClick, onSignUpClick, onDeleteAccountClick, onMonthlyStatisticsClick }) => {
   const { translations } = useLanguage();
   const { isSignedIn, username, signOut } = useAuth();
 
@@ -22,7 +23,7 @@ const Drawer: React.FC<DrawerProps> = ({ isVisible, onSignInClick, onSignUpClick
             {isSignedIn ? (
             <>
               <div className="p-4 text-sm text-gray-600">{translations['SignedInAs']} <b>{username}</b></div>
-              <button >📈 {translations['MoodStatistics']}</button>
+              <button onClick={onMonthlyStatisticsClick}>📈 {translations['MonthlyStatistics']}</button>
               <button onClick={signOut}>🚪 {translations['SignOut']}</button>
               <button onClick={onDeleteAccountClick} className="text-red-600">🗑️ {translations['DeleteAccount']}</button>
             </>

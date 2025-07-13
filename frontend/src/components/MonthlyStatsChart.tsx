@@ -1,0 +1,98 @@
+'use client';
+
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import React, { useState } from 'react';
+import dayjs from 'dayjs';
+import { DailyEntry } from '@/app/models/DailyEntry';
+import CategoryChart from './CategoryChart';
+import { useLanguage } from '@/app/contexts/LanguageContext';
+
+type Props = {
+    entries: Record<string, DailyEntry>;
+};
+
+const getZone = (value: number): string => {
+    if (value <= 3) return 'LightIntensity';
+    if (value <= 7) return 'ModerateIntensity';
+    return 'HighIntensity';
+};
+
+export default function MonthlyStatsChart({ entries }: Props) {
+    const now = dayjs();
+    const [selectedMonth, setSelectedMonth] = useState<number>(now.month() + 1);
+    const [selectedYear, setSelectedYear] = useState<number>(now.year());
+    const { translations } = useLanguage();
+
+    const filteredEntries: DailyEntry[] = [];
+    for (const key in entries) {
+        var date = key.split('-');
+        if(parseInt(date[1]) == selectedMonth && parseInt(date[0]) == selectedYear) {
+            filteredEntries.push(entries[key]);
+        }
+    }
+
+    const moodCounts: Record<string, number> = { "Happy" : 0, "Sad" : 0, "Excited" : 0, "Calm" : 0, "Angry": 0 };
+    const weatherCounts: Record<string, number> = { "ExtremelyCold": 0, "Cold": 0, "Pleasant": 0, "Hot": 0, "ExtremelyHot": 0 };
+    const sleepQualityCounts: Record<string, number> = { "VeryBad": 0, "Bad": 0, "Good": 0, "VeryGood": 0 };
+    const anxietyThoughtsCounts: Record<string, number> = { "LightIntensity": 0, "ModerateIntensity": 0, "HighIntensity": 0 };
+    const depressiveThoughtsCounts: Record<string, number> = { "LightIntensity": 0, "ModerateIntensity": 0, "HighIntensity": 0 };
+    const autocriticismCounts: Record<string, number> = { "LightIntensity": 0, "ModerateIntensity": 0, "HighIntensity": 0 };
+    const sensorialOverloadCounts: Record<string, number> = { "LightIntensity": 0, "ModerateIntensity": 0, "HighIntensity": 0 };
+    const menstruationCount: Record<string, number> = { "Yes": 0, "No": 0 };
+    const exerciseCount: Record<string, number> = { "Yes": 0, "No": 0 };
+
+    for (const entry of filteredEntries) {
+        moodCounts[entry.Mood] = (moodCounts[entry.Mood] || 0) + 1;
+        weatherCounts[entry.Weather] = (moodCounts[entry.Weather] || 0) + 1;
+        sleepQualityCounts[entry.SleepQuality] = (sleepQualityCounts[entry.SleepQuality] || 0) + 1;
+        anxietyThoughtsCounts[getZone(entry.AnxietyThoughts)] = (anxietyThoughtsCounts[getZone(entry.AnxietyThoughts)] || 0) + 1;
+        depressiveThoughtsCounts[getZone(entry.DepressiveThoughts)] = (depressiveThoughtsCounts[getZone(entry.DepressiveThoughts)] || 0) + 1;
+        autocriticismCounts[getZone(entry.Autocriticism)] = (autocriticismCounts[getZone(entry.Autocriticism)] || 0) + 1;
+        sensorialOverloadCounts[getZone(entry.SensorialOverload)] = (sensorialOverloadCounts[getZone(entry.SensorialOverload)] || 0) + 1;
+        menstruationCount[entry.Menstruation ? "Yes" : "No"] = (menstruationCount[entry.Menstruation ? "Yes" : "No"] || 0) + 1;
+        exerciseCount[entry.Exercise ? "Yes" : "No"] = (exerciseCount[entry.Exercise ? "Yes" : "No"] || 0) + 1;
+    }
+    
+    return (
+        <div className="w-full h-96 max-w-3xl bg-white rounded-xl p-6">
+            <div className="flex justify-center gap-4 mb-6">
+                <select
+                    className="border rounded p-2"
+                    value={selectedMonth}
+                    onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                >
+                    {Array.from({ length: 12 }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                            {i + 1}
+                        </option>
+                    ))}
+                </select>
+
+                <select
+                    className="border rounded p-2"
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(Number(e.target.value))}
+                >
+                    {Array.from({ length: 5 }, (_, i) => {
+                        const year = now.year() - i;
+                        return (
+                            <option key={year} value={year}>
+                                {year}
+                            </option>
+                        );
+                    })}
+                </select>
+            </div>
+
+            <CategoryChart title={translations['Mood']} data={moodCounts} />
+            <CategoryChart title={translations['Weather']} data={weatherCounts} />
+            <CategoryChart title={translations['SleepQuality']} data={sleepQualityCounts} />
+            <CategoryChart title={translations['AnxietyThoughts']} data={anxietyThoughtsCounts} />
+            <CategoryChart title={translations['DepressiveThoughts']} data={depressiveThoughtsCounts} />
+            <CategoryChart title={translations['Autocriticism']} data={autocriticismCounts} />
+            <CategoryChart title={translations['SensorialOverload']} data={sensorialOverloadCounts} />
+            <CategoryChart title={translations['Menstruation']} data={menstruationCount} />
+            <CategoryChart title={translations['Exercise']} data={exerciseCount} />
+        </div>
+    );
+}
