@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JournalerBackend.Migrations
 {
     [DbContext(typeof(JournalerDbContext))]
-    [Migration("20250711204157_v1")]
+    [Migration("20250713140528_v1")]
     partial class v1
     {
         /// <inheritdoc />
@@ -36,7 +36,7 @@ namespace JournalerBackend.Migrations
                     b.Property<int>("AnxietyThoughts")
                         .HasColumnType("integer");
 
-                    b.Property<int>("AutoCriticism")
+                    b.Property<int>("Autocriticism")
                         .HasColumnType("integer");
 
                     b.Property<string>("Date")

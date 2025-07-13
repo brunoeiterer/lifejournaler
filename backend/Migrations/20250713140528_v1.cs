@@ -42,7 +42,7 @@ namespace JournalerBackend.Migrations
                     Exercise = table.Column<bool>(type: "boolean", nullable: false),
                     AnxietyThoughts = table.Column<int>(type: "integer", nullable: false),
                     DepressiveThoughts = table.Column<int>(type: "integer", nullable: false),
-                    AutoCriticism = table.Column<int>(type: "integer", nullable: false),
+                    Autocriticism = table.Column<int>(type: "integer", nullable: false),
                     SensorialOverload = table.Column<int>(type: "integer", nullable: false),
                     Notes = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<int>(type: "integer", nullable: true)

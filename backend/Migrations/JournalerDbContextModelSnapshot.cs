@@ -33,7 +33,7 @@ namespace JournalerBackend.Migrations
                     b.Property<int>("AnxietyThoughts")
                         .HasColumnType("integer");
 
-                    b.Property<int>("AutoCriticism")
+                    b.Property<int>("Autocriticism")
                         .HasColumnType("integer");
 
                     b.Property<string>("Date")
