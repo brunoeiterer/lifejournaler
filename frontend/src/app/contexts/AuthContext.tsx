@@ -21,11 +21,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isSignedIn, setisSignedIn] = useState(false);
   const [username, setUsername] = useState('');
 
-  useEffect(() => {
-    const storedToken = sessionStorage.getItem('loginToken');
-    if (storedToken) setisSignedIn(true);
-  }, []);
-
   const signIn = (username: string) => {
     setisSignedIn(true);
     setUsername(username);
