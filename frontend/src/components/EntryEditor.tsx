@@ -73,8 +73,8 @@ export default function EntryEditor({date, originalEntry, onClose, updateEntry} 
                         "ExtremelyHot"]} label='Weather' initialValue={entry.Weather} onChange={onEntryUpdated}/>
                     <RadialSelector title={translations['SleepQuality']} options={["VeryBad", "Bad", "Average", "Good", "VeryGood"]}
                         label='SleepQuality' initialValue={entry.SleepQuality} onChange={onEntryUpdated}/>
-                    <RadialSelector title={translations['MenstrualCycle']} options={['Yes', 'No']} label='Menstruation'
-                        initialValue={entry.Menstruation ? "Yes" : "No"} onChange={onEntryUpdated} />
+                    <RadialSelector title={translations['MenstrualCycle']} options={['Yes', 'PMS', 'No']} label='Menstruation'
+                        initialValue={entry.Menstruation} onChange={onEntryUpdated} />
                     <RadialSelector title={translations['Exercise']} options={['Yes', 'No']} label='Exercise' 
                         initialValue={entry.Exercise ? "Yes" : "No"} onChange={onEntryUpdated} />
 

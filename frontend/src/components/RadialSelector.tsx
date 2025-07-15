@@ -35,7 +35,7 @@ export default function RadialSelector({ title, options, label, initialValue, on
             <h2 className="text-xl font-semibold mb-4 text-center">{title}</h2>
             <div className="flex flex-wrap gap-4 justify-center">
                 {options.map((option) => {
-                    const emoji = Emojis[option];
+                    const emoji = label == 'Menstruation' && option == 'Yes' ? Emojis['YesMenstruation'] : Emojis[option];
                     const isSelected = value === option;
 
                     return (

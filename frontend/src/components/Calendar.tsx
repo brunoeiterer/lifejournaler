@@ -102,8 +102,8 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
                 </div>
 
                 <div className="flex gap-1 justify-center">
-                  <Tooltip label={translations['Menstruation'] + ' ' + (entry.Menstruation ? translations['Yes'] : translations['No'])}>
-                    <span>{Emojis[entry.Menstruation ? 'Yes' : 'No']}</span>
+                  <Tooltip label={translations['Menstruation'] + ': ' + translations[entry.Menstruation]}>
+                    <span>{entry.Menstruation == 'Yes' ? Emojis['YesMenstruation'] : Emojis[entry.Menstruation]}</span>
                   </Tooltip>
                   <Tooltip label={translations['Exercise'] + ': ' + (entry.Exercise ? translations['Yes'] : translations['No'])}>
                     <span>{Emojis[entry.Exercise ? 'Yes' : 'No']}</span>

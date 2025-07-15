@@ -2,7 +2,7 @@ export interface DailyEntry {
   Mood: string;
   Weather: string;
   SleepQuality: string;
-  Menstruation: boolean;
+  Menstruation: string;
   Exercise: boolean;
   AnxietyThoughts: number;
   DepressiveThoughts: number;
