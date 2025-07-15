@@ -67,8 +67,8 @@ export default function EntryEditor({date, originalEntry, onClose, updateEntry} 
                 <div className="flex flex-col gap-4 bg-white rounded-xl pt-10 p-6 shadow-lg max-h-[80vh] overflow-y-auto">
                     <EntryDate title={translations['Date']} date={date} />
 
-                    <RadialSelector title={translations['Mood']} options={["Happy", "Sad", "Excited", "Calm", "Angry"]} 
-                        label='Mood' initialValue={entry.Mood} onChange={onEntryUpdated} />
+                    <RadialSelector title={translations['Mood']} options={["Happy", "Sad", "Excited", "Calm", "Angry", "Apathetic",
+                        "Anxious", "Tired"]} label='Mood' initialValue={entry.Mood} onChange={onEntryUpdated} />
                     <RadialSelector title={translations['Weather']} options={["ExtremelyCold", "Cold", "Pleasant", "Hot", 
                         "ExtremelyHot"]} label='Weather' initialValue={entry.Weather} onChange={onEntryUpdated}/>
                     <RadialSelector title={translations['SleepQuality']} options={["VeryBad", "Bad", "Good", "VeryGood"]}

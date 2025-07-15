@@ -1,6 +1,8 @@
 {
     "Angry": "Irritado",
     "AnxietyThoughts": "Pensamentos Ansiosos",
+    "Anxious": "Ansioso",
+    "Apathetic": "Apático",
     "Autocriticism": "Autocrítica",
     "Bad": "Ruim",
     "Calm": "Calmo",
@@ -72,6 +74,7 @@
     "SingUpWelcome": "Bem-Vindo! Por favor, cadastre-se para continuar.",
     "SignUpWith": "Cadastre-se com email",
     "SleepQuality": "Qualidade do Sono",
+    "Tired": "Cansado",
     "VeryBad": "Muito Ruim",
     "VeryGood": "Muito Bom",
     "Weather": "Tempo",

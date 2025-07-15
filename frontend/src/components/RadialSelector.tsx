@@ -4,6 +4,7 @@ import React, { useRef, useState } from 'react';
 import clsx from 'clsx';
 import { useLanguage } from '@/app/contexts/LanguageContext';
 import { DailyEntry } from '@/app/models/DailyEntry';
+import { Emojis } from './Emojis';
 
 type RadialSelectorProps = {
     title: string;
@@ -11,25 +12,6 @@ type RadialSelectorProps = {
     label : string;
     initialValue: string;
     onChange: <K extends keyof DailyEntry>(key: K, value: DailyEntry[K]) => void;
-};
-
-const Emojis: Record<string, string> = {
-    Happy: '😊',
-    Sad: '😢',
-    Angry: '😠',
-    Calm: '😌',
-    Excited: '🤩',
-    ExtremelyCold: '🥶',
-    Cold: '😬',
-    Pleasant: '😊',
-    Hot: '😓',
-    ExtremelyHot: '🥵',
-    Yes: '✅',
-    No: '❌',
-    VeryBad: '😵',
-    Bad: '😪',
-    Good: '😴',
-    VeryGood: '🛌',
 };
 
 export default function RadialSelector({ title, options, label, initialValue, onChange }: RadialSelectorProps) {
@@ -51,7 +33,7 @@ export default function RadialSelector({ title, options, label, initialValue, on
     return (
         <div className="w-full max-w-xl p-6 bg-white rounded-xl shadow-md border">
             <h2 className="text-xl font-semibold mb-4 text-center">{title}</h2>
-            <div className="flex flex-row gap-4 justify-center">
+            <div className="flex flex-wrap gap-4 justify-center">
                 {options.map((option) => {
                     const emoji = Emojis[option];
                     const isSelected = value === option;

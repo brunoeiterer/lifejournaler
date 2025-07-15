@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { DailyEntry } from '@/app/models/DailyEntry';
 import Tooltip from '@/components/Tooltip'
 import { useLanguage } from '@/app/contexts/LanguageContext';
+import { Emojis } from './Emojis';
 
 export interface CalendarProps {
   entries: Record<string, DailyEntry>;
@@ -132,22 +133,3 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
     </div>
   );
 }
-
-const Emojis: Record<string, string> = {
-    Happy: '😊',
-    Sad: '😢',
-    Angry: '😠',
-    Calm: '😌',
-    Excited: '🤩',
-    ExtremelyCold: '🥶',
-    Cold: '😬',
-    Pleasant: '😊',
-    Hot: '😓',
-    ExtremelyHot: '🥵',
-    Yes: '✅',
-    No: '❌',
-    VeryBad: '😵',
-    Bad: '😪',
-    Good: '😴',
-    VeryGood: '🛌',
-};
