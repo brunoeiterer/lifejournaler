@@ -16,6 +16,7 @@ export const Emojis: Record<string, string> = {
     No: '❌',
     VeryBad: '😵',
     Bad: '😪',
+    Average: '😶',
     Good: '😴',
     VeryGood: '🛌',
 };
