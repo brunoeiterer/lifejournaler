@@ -77,6 +77,7 @@ namespace JournalerBackend.Controllers {
             entry.SleepQuality = model.Entry.SleepQuality;
             entry.Menstruation = model.Entry.Menstruation;
             entry.Exercise = model.Entry.Exercise;
+            entry.AppetiteLevel = model.Entry.AppetiteLevel;
             entry.AnxietyThoughts = model.Entry.AnxietyThoughts;
             entry.DepressiveThoughts = model.Entry.DepressiveThoughts;
             entry.Autocriticism = model.Entry.Autocriticism;

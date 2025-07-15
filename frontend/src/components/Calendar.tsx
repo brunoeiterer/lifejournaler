@@ -108,6 +108,9 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
                   <Tooltip label={translations['Exercise'] + ': ' + (entry.Exercise ? translations['Yes'] : translations['No'])}>
                     <span>{Emojis[entry.Exercise ? 'Yes' : 'No']}</span>
                   </Tooltip>
+                  <Tooltip label={translations['AppetiteLevel'] + ': ' + entry.AppetiteLevel}>
+                    <span>{Emojis[entry.AppetiteLevel]}</span>
+                  </Tooltip>
                 </div>
 
                 <div className="flex gap-1 justify-center">

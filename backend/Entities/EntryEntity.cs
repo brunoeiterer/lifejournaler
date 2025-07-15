@@ -9,6 +9,7 @@ namespace JournalerBackend.Entities {
         public string SleepQuality { get; set; }
         public string Menstruation { get; set; }
         public bool Exercise { get; set; }
+        public string AppetiteLevel { get; set; }
         public int AnxietyThoughts { get; set; }
         public int DepressiveThoughts { get; set; }
         public int Autocriticism { get; set; }

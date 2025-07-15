@@ -23,4 +23,7 @@ export const Emojis: Record<string, string> = {
     Average: '😶',
     Good: '😴',
     VeryGood: '🛌',
+    Low: '🍎',
+    Normal: '🍽️',
+    Large: '🍔'
 };

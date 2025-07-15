@@ -3,6 +3,7 @@ export interface DailyEntry {
   Weather: string;
   SleepQuality: string;
   Menstruation: string;
+  AppetiteLevel: string;
   Exercise: boolean;
   AnxietyThoughts: number;
   DepressiveThoughts: number;
