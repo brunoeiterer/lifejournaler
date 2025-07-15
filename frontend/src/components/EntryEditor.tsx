@@ -20,7 +20,7 @@ export default function EntryEditor({date, originalEntry, onClose, updateEntry} 
     const [ errorMessage, setErrorMessage ] = useState('');
     const {translations} = useLanguage();
     const entry = originalEntry ?? { Mood: 'Happy', Weather: 'ExtremelyCold', SleepQuality: 'VeryBad',
-        Menstruation: true, Exercise: true, AnxietyThoughts: 0, DepressiveThoughts: 0, Autocriticism: 0, SensorialOverload: 0,
+        Menstruation: "Yes", Exercise: true, AnxietyThoughts: 0, DepressiveThoughts: 0, Autocriticism: 0, SensorialOverload: 0,
         Notes: ''
     };
 
