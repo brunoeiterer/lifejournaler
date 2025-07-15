@@ -12,6 +12,8 @@ export const Emojis: Record<string, string> = {
     Pleasant: '😊',
     Hot: '😓',
     ExtremelyHot: '🥵',
+    Cloudy: '☁️',
+    Rainy: '🌧️',
     YesMenstruation: '🩸',
     PMS: '🍫',
     No: '❌',

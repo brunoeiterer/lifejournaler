@@ -70,7 +70,7 @@ export default function EntryEditor({date, originalEntry, onClose, updateEntry} 
                     <RadialSelector title={translations['Mood']} options={["Happy", "Sad", "Excited", "Calm", "Angry", "Apathetic",
                         "Anxious", "Tired"]} label='Mood' initialValue={entry.Mood} onChange={onEntryUpdated} />
                     <RadialSelector title={translations['Weather']} options={["ExtremelyCold", "Cold", "Pleasant", "Hot", 
-                        "ExtremelyHot"]} label='Weather' initialValue={entry.Weather} onChange={onEntryUpdated}/>
+                        "ExtremelyHot", "Cloudy", "Rainy"]} label='Weather' initialValue={entry.Weather} onChange={onEntryUpdated}/>
                     <RadialSelector title={translations['SleepQuality']} options={["VeryBad", "Bad", "Average", "Good", "VeryGood"]}
                         label='SleepQuality' initialValue={entry.SleepQuality} onChange={onEntryUpdated}/>
                     <RadialSelector title={translations['MenstrualCycle']} options={['Yes', 'PMS', 'No']} label='Menstruation'
