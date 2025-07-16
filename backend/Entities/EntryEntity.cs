@@ -8,7 +8,7 @@ namespace JournalerBackend.Entities {
         public string Weather { get; set; }
         public string SleepQuality { get; set; }
         public string Menstruation { get; set; }
-        public bool Exercise { get; set; }
+        public string Exercise { get; set; }
         public string AppetiteLevel { get; set; }
         public int AnxietyThoughts { get; set; }
         public int DepressiveThoughts { get; set; }

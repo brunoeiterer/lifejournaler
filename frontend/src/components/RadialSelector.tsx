@@ -21,13 +21,7 @@ export default function RadialSelector({ title, options, label, initialValue, on
 
     const updateValue = (newValue: string) => {
         setValue(newValue);
-        if(newValue == 'Yes' || newValue == 'No') {
-            onChange(label as keyof DailyEntry, newValue == 'Yes');
-        }
-        else {
-            onChange(label as keyof DailyEntry, newValue);
-        }
-        
+        onChange(label as keyof DailyEntry, newValue);
     };
 
     return (

@@ -4,7 +4,7 @@ export interface DailyEntry {
   SleepQuality: string;
   Menstruation: string;
   AppetiteLevel: string;
-  Exercise: boolean;
+  Exercise: string;
   AnxietyThoughts: number;
   DepressiveThoughts: number;
   Autocriticism: number;

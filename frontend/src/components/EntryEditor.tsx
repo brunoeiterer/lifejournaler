@@ -20,7 +20,7 @@ export default function EntryEditor({date, originalEntry, onClose, updateEntry} 
     const [ errorMessage, setErrorMessage ] = useState('');
     const {translations} = useLanguage();
     const entry = originalEntry ?? { Mood: 'Happy', Weather: 'ExtremelyCold', SleepQuality: 'VeryBad',
-        Menstruation: "Yes", Exercise: true, AppetiteLevel: 'Low', AnxietyThoughts: 0, DepressiveThoughts: 0, Autocriticism: 0, SensorialOverload: 0,
+        Menstruation: 'Yes', Exercise: 'Yes', AppetiteLevel: 'Low', AnxietyThoughts: 0, DepressiveThoughts: 0, Autocriticism: 0, SensorialOverload: 0,
         Notes: ''
     };
 
@@ -76,7 +76,7 @@ export default function EntryEditor({date, originalEntry, onClose, updateEntry} 
                     <RadialSelector title={translations['MenstrualCycle']} options={['Yes', 'PMS', 'No']} label='Menstruation'
                         initialValue={entry.Menstruation} onChange={onEntryUpdated} />
                     <RadialSelector title={translations['Exercise']} options={['Yes', 'No']} label='Exercise' 
-                        initialValue={entry.Exercise ? "Yes" : "No"} onChange={onEntryUpdated} />
+                        initialValue={entry.Exercise} onChange={onEntryUpdated} />
                     <RadialSelector title={translations['AppetiteLevel']} options={['Low', 'Normal', 'Large']} label='AppetiteLevel'
                         initialValue={entry.AppetiteLevel} onChange={onEntryUpdated} />
 
