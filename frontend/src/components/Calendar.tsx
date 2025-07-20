@@ -7,6 +7,7 @@ import { DailyEntry } from '@/app/models/DailyEntry';
 import Tooltip from '@/components/Tooltip'
 import { useLanguage } from '@/app/contexts/LanguageContext';
 import { Emojis } from './Emojis';
+import { ColorClasses, ColorZones } from './ColorZones';
 
 export interface CalendarProps {
   entries: Record<string, DailyEntry>;
@@ -14,18 +15,6 @@ export interface CalendarProps {
 };
 
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-const zones = [
-    { labelKey: 'LightIntensity', color: 'cyan', range: [0, 3] },
-    { labelKey: 'ModerateIntensity', color: 'green', range: [4, 7] },
-    { labelKey: 'HighIntensity', color: 'red', range: [8, 10] }
-];
-
-const colorClasses: Record<string, string> = {
-    cyan: 'text-cyan-600 bg-cyan-600',
-    green: 'text-green-600 bg-green-600',
-    red: 'text-red-600 bg-red-600',
-};
 
 export default function Calendar({ entries, onDateClick }: CalendarProps) {
   const today = dayjs();
@@ -50,8 +39,8 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
   const handleNext = () => setCurrentMonth(currentMonth.add(1, 'month'));
 
   const getColor = (value: number) => {
-    const currentZone = zones.find(({ range }) => value >= range[0] && value <= range[1]) ?? zones[0];
-    return colorClasses[currentZone.color].split(' ')[1];
+    const currentZone = ColorZones.find(({ range }) => value >= range[0] && value <= range[1]) ?? ColorZones[0];
+    return ColorClasses[currentZone.color].split(' ')[1];
   }
 
   return (

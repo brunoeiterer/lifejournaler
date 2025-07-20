@@ -3,24 +3,13 @@
 import { useLanguage } from '@/app/contexts/LanguageContext';
 import { DailyEntry } from '@/app/models/DailyEntry';
 import React, { useEffect, useRef, useState } from 'react';
+import { ColorZones, ColorClasses } from './ColorZones';
 
 type SUDSScaleProps = {
     title: string;
     label : string;
     initialValue: number;
     onChange: <K extends keyof DailyEntry>(key: K, value: DailyEntry[K]) => void;
-};
-
-const zones = [
-    { labelKey: 'LightIntensity', color: 'green', range: [0, 3] },
-    { labelKey: 'ModerateIntensity', color: 'yellow', range: [4, 7] },
-    { labelKey: 'HighIntensity', color: 'red', range: [8, 10] }
-];
-
-const colorClasses: Record<string, string> = {
-    green: 'text-green-600 bg-green-600',
-    yellow: 'text-yellow-600 bg-yellow-600',
-    red: 'text-red-600 bg-red-600',
 };
 
 export default function SUDSScale({ title, label, initialValue, onChange }: SUDSScaleProps) {
@@ -30,9 +19,9 @@ export default function SUDSScale({ title, label, initialValue, onChange }: SUDS
     const sliderRef = useRef<HTMLInputElement>(null);
     const [thumbX, setThumbX] = useState(0);
 
-    const currentZone = zones.find(({ range }) => value >= range[0] && value <= range[1]) ?? zones[0];
-    const bgColor = colorClasses[currentZone.color].split(' ')[1];
-    const textColor = colorClasses[currentZone.color].split(' ')[0];
+    const currentZone = ColorZones.find(({ range }) => value >= range[0] && value <= range[1]) ?? ColorZones[0];
+    const bgColor = ColorClasses[currentZone.color].split(' ')[1];
+    const textColor = ColorClasses[currentZone.color].split(' ')[0];
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue(Number(e.target.value));
@@ -86,10 +75,10 @@ export default function SUDSScale({ title, label, initialValue, onChange }: SUDS
                 </div>
 
                 <div className="flex justify-between text-xs font-medium text-gray-600">
-                    {zones.map((zone) => (
+                    {ColorZones.map((zone) => (
                         <span
                             key={zone.labelKey}
-                            className={`${colorClasses[zone.color].split(' ')[0]} w-20 text-center`}
+                            className={`${ColorClasses[zone.color].split(' ')[0]} w-20 text-center`}
                         >
                             {translations[zone.labelKey]}
                         </span>
