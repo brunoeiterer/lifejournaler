@@ -12,14 +12,14 @@ type SUDSScaleProps = {
 };
 
 const zones = [
-    { labelKey: 'LightIntensity', color: 'cyan', range: [0, 3] },
-    { labelKey: 'ModerateIntensity', color: 'green', range: [4, 7] },
+    { labelKey: 'LightIntensity', color: 'green', range: [0, 3] },
+    { labelKey: 'ModerateIntensity', color: 'yellow', range: [4, 7] },
     { labelKey: 'HighIntensity', color: 'red', range: [8, 10] }
 ];
 
 const colorClasses: Record<string, string> = {
-    cyan: 'text-cyan-600 bg-cyan-600',
     green: 'text-green-600 bg-green-600',
+    yellow: 'text-yellow-600 bg-yellow-600',
     red: 'text-red-600 bg-red-600',
 };
 
@@ -32,6 +32,7 @@ export default function SUDSScale({ title, label, initialValue, onChange }: SUDS
 
     const currentZone = zones.find(({ range }) => value >= range[0] && value <= range[1]) ?? zones[0];
     const bgColor = colorClasses[currentZone.color].split(' ')[1];
+    const textColor = colorClasses[currentZone.color].split(' ')[0];
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue(Number(e.target.value));
@@ -69,7 +70,7 @@ export default function SUDSScale({ title, label, initialValue, onChange }: SUDS
                 step="1"
                 value={value}
                 onChange={handleChange}
-                className={`suds-slider w-full appearance-none h-2 rounded-lg outline-none ${bgColor} text-${currentZone.color}-600`}
+                className={`suds-slider w-full appearance-none h-2 rounded-lg outline-none ${bgColor} ${textColor}`}
                 style={{ position: 'relative' }}
                 />
 
