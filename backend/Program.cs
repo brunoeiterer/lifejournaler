@@ -18,7 +18,7 @@ builder.Services.AddHttpLogging(o => {});
 builder.Services.AddCors(options =>
     options.AddPolicy(name: allowedOrigins,
         policy => {
-            policy.WithOrigins("https://localhost:3000").AllowAnyHeader().AllowAnyMethod();
+            policy.WithOrigins("https://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
         }));
 
 builder.Services.AddAuthentication(options => {

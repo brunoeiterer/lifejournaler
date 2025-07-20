@@ -1,5 +1,6 @@
 'use client';
-import { createContext, useContext, useState } from 'react';
+import { refresh, signOut as backendApiServiceSignOut } from '@/services/BackendApiService';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 type AuthContextType = {
   isSignedIn: boolean;
@@ -26,11 +27,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUsername(username);
   };
 
-  const signOut = () => {
+  const signOut = async () => {
     setisSignedIn(false);
     setUsername('');
+
+    await backendApiServiceSignOut();
+
     sessionStorage.removeItem('loginToken');
   };
+
+  useEffect(() => {
+    const callRefresh = async () => {
+        const username = await refresh();
+        if(username != '') {
+          signIn(username);
+        }
+      }
+
+    callRefresh();
+  }, []);
 
   return (
     <AuthContext.Provider value={{ isSignedIn, username, signIn, signOut }}>

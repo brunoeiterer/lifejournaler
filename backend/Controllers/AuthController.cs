@@ -33,7 +33,39 @@ namespace JournalerBackend.Controllers {
             }
 
             var token = GenerateJwtToken(user.Id);
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(30);
+            await _context.SaveChangesAsync();
+
+            Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(30)
+            });
+
             return Ok(new { Token = token });
+        }
+
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            if (Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
+            {
+                var user = await _context.Users.SingleOrDefaultAsync(u => u.RefreshToken == refreshToken);
+                if (user != null)
+                {
+                    user.RefreshToken = null;
+                    await _context.SaveChangesAsync();
+                }
+
+                Response.Cookies.Delete("refreshToken");
+            }
+
+            return Ok();
         }
 
         [HttpPost("register")]
@@ -57,9 +89,11 @@ namespace JournalerBackend.Controllers {
         }
 
         [HttpPost("request-password-reset")]
-        public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetModel requestPasswordResetModel) {
+        public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetModel requestPasswordResetModel)
+        {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == requestPasswordResetModel.Email);
-            if(user == null) {
+            if (user == null)
+            {
                 return BadRequest("Username is not registered.");
             }
 
@@ -86,17 +120,21 @@ namespace JournalerBackend.Controllers {
         }
 
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel resetPasswordModel) {
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel resetPasswordModel)
+        {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == resetPasswordModel.Email);
-            if(user == null) {
+            if (user == null)
+            {
                 return BadRequest("Username is not registered.");
             }
 
-            if(user.ResetPasswordCode != resetPasswordModel.AuthenticationCode) {
+            if (user.ResetPasswordCode != resetPasswordModel.AuthenticationCode)
+            {
                 return BadRequest("Authentication code is not valid");
             }
 
-            if(DateTime.UtcNow >= user.ResetPasswordCodeExpiration) {
+            if (DateTime.UtcNow >= user.ResetPasswordCodeExpiration)
+            {
                 return BadRequest("Authentication code is expired");
             }
 
@@ -108,13 +146,16 @@ namespace JournalerBackend.Controllers {
 
         [Authorize]
         [HttpDelete("delete-account")]
-        public async Task<IActionResult> DeleteAccount() {
-            if(!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId)) {
+        public async Task<IActionResult> DeleteAccount()
+        {
+            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
+            {
                 return BadRequest("The user was not found in the request");
             }
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-            if(user == null) {
+            if (user == null)
+            {
                 return BadRequest("Username is not registered.");
             }
 
@@ -124,6 +165,21 @@ namespace JournalerBackend.Controllers {
             await _context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh()
+        {
+            if (!Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
+                return Unauthorized();
+
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.RefreshToken == refreshToken);
+
+            if (user == null || user.RefreshTokenExpiry < DateTime.UtcNow)
+                return Unauthorized();
+
+            var newAccessToken = GenerateJwtToken(user.Id);
+            return Ok(new { Token = newAccessToken, user.Username });
         }
 
         private string GenerateJwtToken(int userId)
@@ -142,6 +198,14 @@ namespace JournalerBackend.Controllers {
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        private static string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
     }
 

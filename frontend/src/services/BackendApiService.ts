@@ -101,6 +101,27 @@ export const deleteAccount = async () => {
     return response && response.ok;
 }
 
+export const refresh = async () => {
+    const response = await fetchWrapper('api/auth/refresh', 'POST');
+    if(response?.ok) {
+        const json = await response.json();
+        sessionStorage.setItem('loginToken', json['Token']);
+        return json['Username'];
+    }
+
+    return '';
+}
+
+export const signOut = async () => {
+    const token = sessionStorage.getItem('loginToken');
+
+    if(token == null) {
+        return false;
+    }
+
+    await fetchWrapper('api/auth/logout', 'POST', '', token);
+}
+
 const fetchWrapper = async (url: string, method: string = 'GET', data: string = '', token: string = '') => {
     const headers: Headers = new Headers();
     if (data != '') {
@@ -110,22 +131,38 @@ const fetchWrapper = async (url: string, method: string = 'GET', data: string = 
         headers.set('Authorization', 'Bearer ' + token);
     }
 
-    try {
-        const response = await fetch(`${API_BASE_URL}${url}`, {
-            headers: headers,
-            method: method,
-            ...(data != '' && {body: data})
-        });
+    let retry = false;
+    let hasRetried = false;
 
-        if (!response.ok) {
-            console.log(`Error: ${response.statusText}`);
-        }
+    do {
+        retry = false;
+        try {
+            const response = await fetch(`${API_BASE_URL}${url}`, {
+                headers: headers,
+                method: method,
+                credentials: 'include',
+                ...(data != '' && {body: data})
+            });
 
-        return response;
-    } catch (error) {
-        console.log(error);
-        if(error instanceof Error) {
-            console.error(error.message);
+            if (!response.ok) {
+                console.log(`Error: ${response.statusText}`);
+            }
+
+            if(response.status == 401 && !url.includes('refresh')) {
+                await refresh();
+                if(!hasRetried) {
+                    retry = true;
+                    hasRetried = true;
+                }
+            }
+
+            return response;
+        } catch (error) {
+            console.log(error);
+            if(error instanceof Error) {
+                console.error(error.message);
+            }
         }
-    }
+    } while(retry);
+
 };
