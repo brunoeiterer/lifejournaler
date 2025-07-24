@@ -12,6 +12,7 @@ import { useAuth } from './contexts/AuthContext';
 import { getEntries } from '@/services/BackendApiService';
 import DeleteAccountModal from '@/components/DeleteAccountModal';
 import MonthlyStatsChartModal from '@/components/MonthlyStatsChartModal';
+import LoadingScreen from '@/components/LoadingScreen';
 
 const Dashboard: React.FC = () => {
     const { translations } = useLanguage();
@@ -22,7 +23,7 @@ const Dashboard: React.FC = () => {
     const [ isDeleteAccountVisible, setIsDeleteAccountVisible ] = useState(false);
     const [ isMonthlyStatsChartModalVisible, setIsMonthlyStatsChartModalVisible ] = useState(false);
     const [ entries, setEntries ] = useState<Record<string, DailyEntry>>({})
-    const { isSignedIn } = useAuth();
+    const { isSignedIn, isAuthLoading } = useAuth();
 
     const showEntryEditor = currentDate != null;
 
@@ -43,6 +44,10 @@ const Dashboard: React.FC = () => {
         const entryData = Object.assign({}, entries);
         entryData[date] = entry;
         setEntries(entryData);
+    }
+
+    if(isAuthLoading) {
+        return <LoadingScreen />
     }
 
     return (

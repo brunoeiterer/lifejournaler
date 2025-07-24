@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 type AuthContextType = {
   isSignedIn: boolean;
   username: string,
+  isAuthLoading: boolean,
   signIn: (username: string) => void;
   signOut: () => void;
 };
@@ -12,6 +13,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   isSignedIn: false,
   username: '',
+  isAuthLoading: false,
   signIn: () => {},
   signOut: () => {},
 });
@@ -21,6 +23,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isSignedIn, setisSignedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   const signIn = (username: string) => {
     setisSignedIn(true);
@@ -42,13 +45,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if(username != '') {
           signIn(username);
         }
+
+        setIsAuthLoading(false);
       }
 
     callRefresh();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isSignedIn, username, signIn, signOut }}>
+    <AuthContext.Provider value={{ isSignedIn, username, isAuthLoading, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
