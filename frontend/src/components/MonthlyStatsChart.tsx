@@ -30,15 +30,18 @@ export default function MonthlyStatsChart({ entries }: Props) {
         }
     }
 
-    const moodCounts: Record<string, number> = { "Happy" : 0, "Sad" : 0, "Excited" : 0, "Calm" : 0, "Angry": 0 };
-    const weatherCounts: Record<string, number> = { "ExtremelyCold": 0, "Cold": 0, "Pleasant": 0, "Hot": 0, "ExtremelyHot": 0 };
-    const sleepQualityCounts: Record<string, number> = { "VeryBad": 0, "Bad": 0, "Good": 0, "VeryGood": 0 };
+    const moodCounts: Record<string, number> = { "Happy" : 0, "Sad" : 0, "Excited" : 0, "Calm" : 0, "Angry": 0, "Apathetic": 0,
+        "Anxious": 0, "Tired": 0 };
+    const weatherCounts: Record<string, number> = { "ExtremelyCold": 0, "Cold": 0, "Pleasant": 0, "Hot": 0, "ExtremelyHot": 0,
+        "Cloudy": 0, "Rainy": 0};
+    const sleepQualityCounts: Record<string, number> = { "VeryBad": 0, "Bad": 0, "Average": 0, "Good": 0, "VeryGood": 0 };
     const anxietyThoughtsCounts: Record<string, number> = { "LightIntensity": 0, "ModerateIntensity": 0, "HighIntensity": 0 };
     const depressiveThoughtsCounts: Record<string, number> = { "LightIntensity": 0, "ModerateIntensity": 0, "HighIntensity": 0 };
     const autocriticismCounts: Record<string, number> = { "LightIntensity": 0, "ModerateIntensity": 0, "HighIntensity": 0 };
     const sensorialOverloadCounts: Record<string, number> = { "LightIntensity": 0, "ModerateIntensity": 0, "HighIntensity": 0 };
-    const menstruationCount: Record<string, number> = { "Yes": 0, "No": 0 };
+    const menstruationCount: Record<string, number> = { "Yes": 0, "No": 0, "PMS": 0 };
     const exerciseCount: Record<string, number> = { "Yes": 0, "No": 0 };
+    const appetiteLevelCount : Record<string, number> = { "Low": 0, "Normal": 0, "Large": 0};
 
     for (const entry of filteredEntries) {
         moodCounts[entry.Mood] = (moodCounts[entry.Mood] || 0) + 1;
@@ -48,8 +51,9 @@ export default function MonthlyStatsChart({ entries }: Props) {
         depressiveThoughtsCounts[getZone(entry.DepressiveThoughts)] = (depressiveThoughtsCounts[getZone(entry.DepressiveThoughts)] || 0) + 1;
         autocriticismCounts[getZone(entry.Autocriticism)] = (autocriticismCounts[getZone(entry.Autocriticism)] || 0) + 1;
         sensorialOverloadCounts[getZone(entry.SensorialOverload)] = (sensorialOverloadCounts[getZone(entry.SensorialOverload)] || 0) + 1;
-        menstruationCount[entry.Menstruation ? "Yes" : "No"] = (menstruationCount[entry.Menstruation ? "Yes" : "No"] || 0) + 1;
-        exerciseCount[entry.Exercise ? "Yes" : "No"] = (exerciseCount[entry.Exercise ? "Yes" : "No"] || 0) + 1;
+        menstruationCount[entry.Menstruation] = (menstruationCount[entry.Menstruation] || 0) + 1;
+        exerciseCount[entry.Exercise] = (exerciseCount[entry.Exercise] || 0) + 1;
+        appetiteLevelCount[entry.AppetiteLevel] = (appetiteLevelCount[entry.AppetiteLevel] || 0) + 1;
     }
     
     return (
@@ -92,6 +96,7 @@ export default function MonthlyStatsChart({ entries }: Props) {
             <CategoryChart title={translations['SensorialOverload']} data={sensorialOverloadCounts} />
             <CategoryChart title={translations['Menstruation']} data={menstruationCount} />
             <CategoryChart title={translations['Exercise']} data={exerciseCount} />
+            <CategoryChart title={translations['AppetiteLevel']} data={appetiteLevelCount} />
         </div>
     );
 }

@@ -23,17 +23,27 @@ const colors: Record<string, string> = {
     Excited: '#c084fc',
     Calm: '#34d399',
     Angry: '#ef4444',
+    Apathetic: '#a9a9a9',
+    Anxious: '#ff6f61',
+    Tired: '#8a7f8d',
     Yes: '#16a34a',
+    PMS: '#800080',
     No: '#dc2626',
     ExtremelyCold: '#1d4ed8',
     Cold: '#60a5fa',
     Pleasant: '#4ade80',
     Hot: '#fb923c',
     ExtremelyHot: '#dc2626',
+    Cloudy: '#b0bec5',
+    Rainy: '#4a708b',
     VeryBad: '#ef4444',
     Bad: '#fb923c',
+    Average: '#add8e6',
     Good: '#38bdf8',
-    VeryGood: '#10b981'
+    VeryGood: '#10b981',
+    Low: '#c0c0c0',
+    Normal: '#90ee90',
+    Large: '#ffd700'
 }
 
 export default function CategoryChart({ data, title }: Props) {
