@@ -19,6 +19,10 @@ const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 export default function Calendar({ entries, onDateClick }: CalendarProps) {
   const today = dayjs();
   const [currentMonth, setCurrentMonth] = useState(today);
+  let isTooltipActive: boolean;
+  const setIsToolTipActive = (active: boolean) => {
+    isTooltipActive = active;
+  }
 
   const startOfMonth = currentMonth.startOf('month');
   const endOfMonth = currentMonth.endOf('month');
@@ -41,6 +45,12 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
   const getColor = (value: number) => {
     const currentZone = ColorZones.find(({ range }) => value >= range[0] && value <= range[1]) ?? ColorZones[0];
     return ColorClasses[currentZone.color].split(' ')[1];
+  }
+
+  const onCalendarDateClick = (date: string) => {
+    if(!isTooltipActive) {
+      onDateClick(date);
+    }
   }
 
   return (
@@ -68,7 +78,7 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
           return (
             <button
               key={key}
-              onClick={() => onDateClick(key)}
+              onClick={() => onCalendarDateClick(key)}
               className={clsx(
                 'rounded p-1 border grid h-20 place-items-center',
                 isCurrentMonth ? 'bg-white' : 'bg-gray-50 text-gray-400',
@@ -79,40 +89,40 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
               <span className="font-semibold">{date.date()}</span>
               {entry && <div className='grid place-items-center'>
                 <div className="grid grid-cols-3 gap-2 place-items-center">
-                  <Tooltip label={translations['Mood'] + ': ' + translations[entry.Mood]}>
+                  <Tooltip label={translations['Mood'] + ': ' + translations[entry.Mood]} setToolTipActive={setIsToolTipActive}>
                     <span>{Emojis[entry.Mood]}</span>
                   </Tooltip>
-                  <Tooltip label={translations['Weather'] + ': ' + translations[entry.Weather]}>
+                  <Tooltip label={translations['Weather'] + ': ' + translations[entry.Weather]} setToolTipActive={setIsToolTipActive}>
                     <span>{Emojis[entry.Weather]}</span>
                   </Tooltip>
-                  <Tooltip label={translations['SleepQuality'] + ': ' + translations[entry.SleepQuality]}>
+                  <Tooltip label={translations['SleepQuality'] + ': ' + translations[entry.SleepQuality]} setToolTipActive={setIsToolTipActive}>
                     <span>{Emojis[entry.SleepQuality]}</span>
                   </Tooltip>
                 </div>
 
                 <div className="grid grid-cols-3 gap-2 place-items-center">
-                  <Tooltip label={translations['Menstruation'] + ': ' + translations[entry.Menstruation]}>
+                  <Tooltip label={translations['Menstruation'] + ': ' + translations[entry.Menstruation]} setToolTipActive={setIsToolTipActive}>
                     <span>{entry.Menstruation == 'Yes' ? Emojis['YesMenstruation'] : Emojis[entry.Menstruation]}</span>
                   </Tooltip>
-                  <Tooltip label={translations['Exercise'] + ': ' + entry.Exercise}>
+                  <Tooltip label={translations['Exercise'] + ': ' + entry.Exercise} setToolTipActive={setIsToolTipActive}>
                     <span>{Emojis[entry.Exercise]}</span>
                   </Tooltip>
-                  <Tooltip label={translations['AppetiteLevel'] + ': ' + entry.AppetiteLevel}>
+                  <Tooltip label={translations['AppetiteLevel'] + ': ' + entry.AppetiteLevel} setToolTipActive={setIsToolTipActive}>
                     <span>{Emojis[entry.AppetiteLevel]}</span>
                   </Tooltip>
                 </div>
 
                 <div className="grid grid-cols-4 gap-2 place-items-center">
-                  <Tooltip label={translations['AnxietyThoughts'] + ': ' + entry.AnxietyThoughts}>
+                  <Tooltip label={translations['AnxietyThoughts'] + ': ' + entry.AnxietyThoughts} setToolTipActive={setIsToolTipActive}>
                     <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.AnxietyThoughts)}`} />
                   </Tooltip>
-                  <Tooltip label={translations['DepressiveThoughts'] + ': ' + entry.DepressiveThoughts}>
+                  <Tooltip label={translations['DepressiveThoughts'] + ': ' + entry.DepressiveThoughts} setToolTipActive={setIsToolTipActive}>
                     <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.DepressiveThoughts)}`} />
                   </Tooltip>
-                  <Tooltip label={translations['Autocriticism'] + ': ' + entry.Autocriticism}>
+                  <Tooltip label={translations['Autocriticism'] + ': ' + entry.Autocriticism} setToolTipActive={setIsToolTipActive}>
                     <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.Autocriticism)}`} />
                   </Tooltip>
-                  <Tooltip label={translations['SensorialOverload'] + ': ' + entry.SensorialOverload}>
+                  <Tooltip label={translations['SensorialOverload'] + ': ' + entry.SensorialOverload} setToolTipActive={setIsToolTipActive}>
                     <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.SensorialOverload)}`} />
                   </Tooltip>
                 </div>

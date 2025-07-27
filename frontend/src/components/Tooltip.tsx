@@ -1,14 +1,48 @@
 import { useState } from 'react';
 
-export default function Tooltip({ label, children }: { label: string; children: React.ReactNode }) {
+interface TooltipProps {
+  label: string,
+  children: React.ReactNode,
+  setToolTipActive: (active: boolean) => void
+};
+
+export default function Tooltip({ label, children, setToolTipActive}: TooltipProps) {
   const [visible, setVisible] = useState(false);
+  const [fromClick, setFromClick] = useState(false);
+  let timeoutId: number;
+
+  const onTouchStart = () => {
+    setToolTipActive(true);
+    timeoutId = window.setTimeout(() => {
+      setVisible(true);
+      setFromClick(false);
+    }, 500)
+  }
+
+  const onTouchEnd = () => {
+    window.clearTimeout(timeoutId);
+    setToolTipActive(false);
+  }
+
+  const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if(visible && !fromClick) {
+      e.stopPropagation();
+    }
+
+    setVisible((v) => !v);
+    if(visible) {
+      setFromClick(true);
+    }
+  };
 
   return (
     <div
       className="relative cursor-pointer"
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
-      onClick={() => setVisible((v) => !v)}
+      onClick={(e) => {onClick(e)}}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
     >
       {children}
       {visible && (
