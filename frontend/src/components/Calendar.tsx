@@ -70,15 +70,15 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
               key={key}
               onClick={() => onDateClick(key)}
               className={clsx(
-                'rounded p-1 border h-20 flex flex-col justify-between items-center',
+                'rounded p-1 border grid h-20 place-items-center',
                 isCurrentMonth ? 'bg-white' : 'bg-gray-50 text-gray-400',
                 isToday && 'border-blue-500 ring-2 ring-blue-200',
                 'hover:bg-blue-50'
               )}
             >
               <span className="font-semibold">{date.date()}</span>
-              {entry && <div className="flex flex-col items-center gap-0.5 text-xs mt-1">
-                <div className="flex gap-1 justify-center">
+              {entry && <div className='grid place-items-center'>
+                <div className="grid grid-cols-3 gap-2 place-items-center">
                   <Tooltip label={translations['Mood'] + ': ' + translations[entry.Mood]}>
                     <span>{Emojis[entry.Mood]}</span>
                   </Tooltip>
@@ -90,7 +90,7 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
                   </Tooltip>
                 </div>
 
-                <div className="flex gap-1 justify-center">
+                <div className="grid grid-cols-3 gap-2 place-items-center">
                   <Tooltip label={translations['Menstruation'] + ': ' + translations[entry.Menstruation]}>
                     <span>{entry.Menstruation == 'Yes' ? Emojis['YesMenstruation'] : Emojis[entry.Menstruation]}</span>
                   </Tooltip>
@@ -102,7 +102,7 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
                   </Tooltip>
                 </div>
 
-                <div className="flex gap-1 justify-center">
+                <div className="grid grid-cols-4 gap-2 place-items-center">
                   <Tooltip label={translations['AnxietyThoughts'] + ': ' + entry.AnxietyThoughts}>
                     <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.AnxietyThoughts)}`} />
                   </Tooltip>
