@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import enTranslations from '../../../messages/en-US.json';
 
 // Type for the context
@@ -29,7 +29,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const initialTranslations = enTranslations;
 
-  const [language, setLanguage] = useState<string>('en-US');
+  const [language, setLanguage] = useState<string>(navigator.language);
   const [translations, setTranslations] = useState<Record<string, string>>(initialTranslations);
 
   const switchLanguage = (lang: string) => {
@@ -46,8 +46,12 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
       .catch((error) => console.error('Error loading language file:', error));
   };
 
+  useEffect(() => {
+    switchLanguage(language);
+  }, [language]);
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage: switchLanguage, translations }}>
+    <LanguageContext.Provider value={{ language, setLanguage: setLanguage, translations }}>
       {children}
     </LanguageContext.Provider>
   );
