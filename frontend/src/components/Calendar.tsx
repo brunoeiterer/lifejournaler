@@ -14,11 +14,12 @@ export interface CalendarProps {
   onDateClick: (date: string) => void;
 };
 
-const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export default function Calendar({ entries, onDateClick }: CalendarProps) {
   const today = dayjs();
   const [currentMonth, setCurrentMonth] = useState(today);
+
   let isTooltipActive: boolean;
   const setIsToolTipActive = (active: boolean) => {
     isTooltipActive = active;
@@ -57,13 +58,13 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
     <div className="max-w-3xl mx-auto">
       <div className="flex justify-between items-center mb-4">
         <button onClick={handlePrev} className="text-lg px-2">←</button>
-        <h2 className="text-xl font-bold">{currentMonth.format('MMMM YYYY')}</h2>
+        <h2 className="text-xl font-bold">{translations[currentMonth.format('MMMM')]} {currentMonth.format('YYYY')}</h2>
         <button onClick={handleNext} className="text-lg px-2">→</button>
       </div>
 
       <div className="grid grid-cols-7 text-center font-medium text-sm text-gray-500 mb-2">
         {weekDays.map((day) => (
-          <div key={day}>{day}</div>
+          <div key={day}>{translations[`${day}Abbreviation`]}</div>
         ))}
       </div>
 
