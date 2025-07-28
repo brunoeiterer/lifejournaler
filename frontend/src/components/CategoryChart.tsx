@@ -49,10 +49,19 @@ const colors: Record<string, string> = {
 export default function CategoryChart({ data, title }: Props) {
     const { translations } = useLanguage();
 
-    const chartData = Object.entries(data).map(([label, count]) => ({
-        "label": translations[label],
-        "count": count,
-    }));
+    const chartData = Object.entries(data).map(([label, count]) =>
+        {
+            const obj: {
+                [k: string]: any
+            } = {};
+
+            obj["label"] = translations[label];
+            obj[translations["Quantity"]] = count;
+            obj["color"] = colors[label.replace(/\s/g, "")];
+
+            return obj;
+        }
+    );
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const Tick = (props: any) => {
@@ -72,11 +81,11 @@ export default function CategoryChart({ data, title }: Props) {
                     <XAxis dataKey="label" tick={<Tick />} interval={0} />
                     <YAxis allowDecimals={false} />
                     <Tooltip />
-                    <Bar dataKey="count">
+                    <Bar dataKey={translations["Quantity"]}>
                         {chartData.map((entry, index) => (
                                 <Cell
                                     key={`cell-${index}`}
-                                    fill={colors[entry.label.replace(/\s/g, "")]}
+                                    fill={entry["color"]}
                                 />
                             ))}
                     </Bar>
