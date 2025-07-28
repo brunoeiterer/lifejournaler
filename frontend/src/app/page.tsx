@@ -13,6 +13,7 @@ import { getEntries } from '@/services/BackendApiService';
 import DeleteAccountModal from '@/components/DeleteAccountModal';
 import MonthlyStatsChartModal from '@/components/MonthlyStatsChartModal';
 import LoadingScreen from '@/components/LoadingScreen';
+import ForgotPasswordModal from '@/components/ForgotPasswordModal';
 
 const Dashboard: React.FC = () => {
     const { translations } = useLanguage();
@@ -22,6 +23,7 @@ const Dashboard: React.FC = () => {
     const [ isSignUpVisibile, setIsSignUpVisible ] = useState(false);
     const [ isDeleteAccountVisible, setIsDeleteAccountVisible ] = useState(false);
     const [ isMonthlyStatsChartModalVisible, setIsMonthlyStatsChartModalVisible ] = useState(false);
+    const [ isForgotPasswordVisible, setIsForgotPasswordVisible ] = useState(false);
     const [ entries, setEntries ] = useState<Record<string, DailyEntry>>({})
     const { isSignedIn, isAuthLoading } = useAuth();
 
@@ -44,6 +46,11 @@ const Dashboard: React.FC = () => {
         const entryData = Object.assign({}, entries);
         entryData[date] = entry;
         setEntries(entryData);
+    }
+
+    const onForgotPassword = () => {
+        setIsSignInVisible(false);
+        setIsForgotPasswordVisible(true);
     }
 
     if(isAuthLoading) {
@@ -77,10 +84,11 @@ const Dashboard: React.FC = () => {
                 </div>
                 {showEntryEditor && <EntryEditor date={currentDate} originalEntry={entries[currentDate]} 
                     onClose={() => setCurrentDate(null)} updateEntry={updateEntry}/>}
-                {isSignInVisibile && <SignInModal onClose={() => setIsSignInVisible(false)} />}
+                {isSignInVisibile && <SignInModal onClose={() => setIsSignInVisible(false)} onForgotPassword={onForgotPassword} />}
                 {isSignUpVisibile && <SignUpModal onClose={() => setIsSignUpVisible(false)} />}
                 {isDeleteAccountVisible && <DeleteAccountModal onClose={() => setIsDeleteAccountVisible(false)} />}
                 {isMonthlyStatsChartModalVisible && <MonthlyStatsChartModal entries={entries} onClose={() => setIsMonthlyStatsChartModalVisible(false)} />}
+                {isForgotPasswordVisible && <ForgotPasswordModal onClose={() => setIsForgotPasswordVisible(false)} />}
             </div>
         </div>
     );

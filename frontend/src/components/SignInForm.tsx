@@ -8,9 +8,10 @@ import { useLanguage } from '@/app/contexts/LanguageContext';
 interface SignInFormProps {
     onSuccess: () => void;
     onError: (errorMessage: string) => void;
+    onForgotPassword: () => void;
 }
 
-export default function SignInForm({ onSuccess, onError }: SignInFormProps) {
+export default function SignInForm({ onSuccess, onError, onForgotPassword }: SignInFormProps) {
     const { translations } = useLanguage();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -29,6 +30,7 @@ export default function SignInForm({ onSuccess, onError }: SignInFormProps) {
     }
 
     return (
+        <>
         <form onSubmit={handleSubmit} className="space-y-4">
             <input
                 className="w-full border px-3 py-2 rounded"
@@ -47,5 +49,9 @@ export default function SignInForm({ onSuccess, onError }: SignInFormProps) {
                 {translations['SignIn']}
             </button>
         </form>
+
+        <span onClick={onForgotPassword} className='block text-sm text-blue-600 hover:underline hover:cursor-pointer mt-4'>
+            {translations["ForgotPassword"]}</span>
+    </>
     );
 }

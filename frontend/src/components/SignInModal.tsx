@@ -1,14 +1,15 @@
 'use client';
 import { useEffect, useState } from 'react';
-import SignInform from './SignInForm';
+import SignInForm from './SignInForm';
 import Toast from './Toast';
 import { useLanguage } from '@/app/contexts/LanguageContext';
 
 interface SignInModalProps {
     onClose: () => void;
+    onForgotPassword: () => void;
 }
 
-export default function SignInModal({ onClose }: SignInModalProps) {
+export default function SignInModal({ onClose, onForgotPassword }: SignInModalProps) {
     const { translations } = useLanguage();
     const [ errorMessage, setErrorMessage ] = useState('');
 
@@ -22,7 +23,7 @@ export default function SignInModal({ onClose }: SignInModalProps) {
 
     return (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center">
-            {errorMessage != '' && <Toast message={errorMessage} />}
+            {errorMessage != '' && <Toast message={errorMessage} onClose={() => setErrorMessage('')} />}
             <div className="relative max-w-2xl w-full flex items-center justify-center">
                 <button
                     className="absolute z-10 top-0 right-24 -translate-y-1/2 bg-white rounded-full shadow-md w-8 h-8 text-gray-500 hover:text-black"
@@ -32,7 +33,7 @@ export default function SignInModal({ onClose }: SignInModalProps) {
                 </button>
                 <div className="relative bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
                     <h2 className="text-xl font-semibold mb-4 text-center">{translations['SignIn']}</h2>
-                    <SignInform onSuccess={onClose} onError={setErrorMessage} />
+                    <SignInForm onSuccess={onClose} onError={setErrorMessage} onForgotPassword={onForgotPassword} />
                 </div>
             </div>
         </div>

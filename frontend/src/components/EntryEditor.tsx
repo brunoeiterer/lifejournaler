@@ -94,7 +94,7 @@ export default function EntryEditor({date, originalEntry, onClose, updateEntry} 
                     <SaveButton onClick={saveEntry} label={translations['SaveEntry']} />
                 </div>
 
-                {errorMessage != '' && <Toast message={errorMessage} />}
+                {errorMessage != '' && <Toast message={errorMessage} onClose={() => setErrorMessage('')}/>}
             </div>
         </div>
     )
