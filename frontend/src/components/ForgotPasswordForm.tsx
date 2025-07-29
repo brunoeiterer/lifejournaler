@@ -20,7 +20,7 @@ function getPasswordCriteria(password: string) {
 }
 
 export default function SignInForm({ onSuccess, onError }: ForgotPasswordFormProps) {
-    const { translations } = useLanguage();
+    const { language, translations } = useLanguage();
     const [ username, setUsername] = useState('');
     const [ newPassword, setNewPassword ] = useState('');
     const [ confirmNewPassword, setConfirmNewPassword ] = useState('');
@@ -31,7 +31,7 @@ export default function SignInForm({ onSuccess, onError }: ForgotPasswordFormPro
     const handleSubmitRequest = async (event : FormEvent) => {
         event.preventDefault();
         setIsLoading(true);
-        const result = await requestPasswordReset(username);
+        const result = await requestPasswordReset(username, language);
         setIsLoading(false);
         if (result) {
             setPasswordResetRequested(true);

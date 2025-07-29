@@ -12,215 +12,221 @@ using System.Net.Mail;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 
-namespace JournalerBackend.Controllers {
-    [Route("api/auth")]
-    [ApiController]
-    public class AuthController(JournalerDbContext context, IPasswordHasher<UserEntity> passwordHasher) : ControllerBase
+using JournalerBackend.Messages;
+
+namespace JournalerBackend.Controllers;
+
+[Route("api/auth")]
+[ApiController]
+public class AuthController(JournalerDbContext context, IPasswordHasher<UserEntity> passwordHasher) : ControllerBase
+{
+    private readonly JournalerDbContext _context = context;
+    private readonly IPasswordHasher<UserEntity> _passwordHasher = passwordHasher;
+    private readonly string ZohoMailPassword = Environment.GetEnvironmentVariable("ZohoMailPassword");
+    private readonly string JWTKey = Environment.GetEnvironmentVariable("JWTKey");
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginModel login)
     {
-        private readonly JournalerDbContext _context = context;
-        private readonly IPasswordHasher<UserEntity> _passwordHasher = passwordHasher;
-        private readonly string ZohoMailPassword = Environment.GetEnvironmentVariable("ZohoMailPassword");
-        private readonly string JWTKey = Environment.GetEnvironmentVariable("JWTKey");
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == login.Username);
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel login)
+        if (user == null || _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, login.Password) != PasswordVerificationResult.Success)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == login.Username);
-
-            if (user == null || _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, login.Password) != PasswordVerificationResult.Success)
-            {
-                return Unauthorized();
-            }
-
-            var token = GenerateJwtToken(user.Id);
-            var refreshToken = GenerateRefreshToken();
-            user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(30);
-            await _context.SaveChangesAsync();
-
-            Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.None,
-                Expires = DateTime.UtcNow.AddDays(30)
-            });
-
-            return Ok(new { Token = token });
+            return Unauthorized();
         }
 
-        [Authorize]
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
+        var token = GenerateJwtToken(user.Id);
+        var refreshToken = GenerateRefreshToken();
+        user.RefreshToken = refreshToken;
+        user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(30);
+        await _context.SaveChangesAsync();
+
+        Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
         {
-            if (Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
-            {
-                var user = await _context.Users.SingleOrDefaultAsync(u => u.RefreshToken == refreshToken);
-                if (user != null)
-                {
-                    user.RefreshToken = null;
-                    await _context.SaveChangesAsync();
-                }
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+            Expires = DateTime.UtcNow.AddDays(30)
+        });
 
-                Response.Cookies.Delete("refreshToken");
-            }
+        return Ok(new { Token = token });
+    }
 
-            return Ok();
-        }
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] LoginModel register)
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        if (Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
         {
-            if (await _context.Users.AnyAsync(u => u.Username == register.Username))
-            {
-                return BadRequest("Username already exists.");
-            }
-
-            var user = new UserEntity
-            {
-                Username = register.Username,
-                PasswordHash = _passwordHasher.HashPassword(null, register.Password)
-            };
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return Ok("User registered successfully");
-        }
-
-        [HttpPost("request-password-reset")]
-        public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetModel requestPasswordResetModel)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == requestPasswordResetModel.Email);
-            if (user == null)
-            {
-                return BadRequest("Username is not registered.");
-            }
-
-            var authenticationCode = RandomNumberGenerator.GetString("123456789", 6);
-            user.ResetPasswordCode = authenticationCode;
-            user.ResetPasswordCodeExpiration = DateTime.UtcNow.AddMinutes(15);
-
-            await _context.SaveChangesAsync();
-
-            var message = new MailMessage("no-reply@lifejournaler.com", requestPasswordResetModel.Email)
-            {
-                Subject = "LifeJournal Password Reset",
-                Body = $"Please find your password reset code below.\n{authenticationCode}"
-            };
-
-            var client = new SmtpClient("smtp.zoho.com", 587)
-            {
-                EnableSsl = true,
-                Credentials = new NetworkCredential("no-reply@lifejournaler.com", ZohoMailPassword)
-            };
-            client.Send(message);
-
-            return Ok();
-        }
-
-        [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel resetPasswordModel)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == resetPasswordModel.Email);
-            if (user == null)
-            {
-                return BadRequest("Username is not registered.");
-            }
-
-            if (user.ResetPasswordCode != resetPasswordModel.AuthenticationCode)
-            {
-                return BadRequest("Authentication code is not valid");
-            }
-
-            if (DateTime.UtcNow >= user.ResetPasswordCodeExpiration)
-            {
-                return BadRequest("Authentication code is expired");
-            }
-
-            user.PasswordHash = _passwordHasher.HashPassword(null, resetPasswordModel.NewPassword);
-            await _context.SaveChangesAsync();
-
-            return Ok();
-        }
-
-        [Authorize]
-        [HttpDelete("delete-account")]
-        public async Task<IActionResult> DeleteAccount()
-        {
-            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
-            {
-                return BadRequest("The user was not found in the request");
-            }
-
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-            if (user == null)
-            {
-                return BadRequest("Username is not registered.");
-            }
-
-            var entriesToRemove = await _context.Entries.Where(e => e.User == user).ToListAsync();
-            _context.Entries.RemoveRange(entriesToRemove);
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return Ok();
-        }
-
-        [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh()
-        {
-            if (!Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
-                return Unauthorized();
-
             var user = await _context.Users.SingleOrDefaultAsync(u => u.RefreshToken == refreshToken);
-
-            if (user == null || user.RefreshTokenExpiry < DateTime.UtcNow)
-                return Unauthorized();
-
-            var newAccessToken = GenerateJwtToken(user.Id);
-            return Ok(new { Token = newAccessToken, user.Username });
-        }
-
-        private string GenerateJwtToken(int userId)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(JWTKey);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
+            if (user != null)
             {
-                Subject = new ClaimsIdentity(new Claim[] { new(ClaimTypes.NameIdentifier, userId.ToString()) }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                Issuer = "JournalerBackend",
-                Audience = "JournalerAudience",
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
+                user.RefreshToken = null;
+                await _context.SaveChangesAsync();
+            }
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            Response.Cookies.Delete("refreshToken");
         }
 
-        private static string GenerateRefreshToken()
+        return Ok();
+    }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] LoginModel register)
+    {
+        if (await _context.Users.AnyAsync(u => u.Username == register.Username))
         {
-            var randomNumber = new byte[32];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
+            return BadRequest("Username already exists.");
         }
+
+        var user = new UserEntity
+        {
+            Username = register.Username,
+            PasswordHash = _passwordHasher.HashPassword(null, register.Password)
+        };
+
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+        return Ok("User registered successfully");
     }
 
-    public class LoginModel {
-        public required string Username { get; set; }
-        public required string Password { get; set; }
+    [HttpPost("request-password-reset")]
+    public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetModel requestPasswordResetModel)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == requestPasswordResetModel.Email);
+        if (user == null)
+        {
+            return BadRequest("Username is not registered.");
+        }
+
+        var authenticationCode = RandomNumberGenerator.GetString("123456789", 6);
+        user.ResetPasswordCode = authenticationCode;
+        user.ResetPasswordCodeExpiration = DateTime.UtcNow.AddMinutes(15);
+
+        await _context.SaveChangesAsync();
+
+        var message = new MailMessage("no-reply@lifejournaler.com", requestPasswordResetModel.Email)
+        {
+            Subject = LocalizedMessages.GetMessage("PasswordResetEmailSubject", requestPasswordResetModel.Locale),
+            Body = $"{LocalizedMessages.GetMessage("PasswordResetEmailBody", requestPasswordResetModel.Locale)}{authenticationCode}\n\n{LocalizedMessages.GetMessage("PasswordResetEmailFooter", requestPasswordResetModel.Locale)}"
+        };
+
+        var client = new SmtpClient("smtp.zoho.com", 587)
+        {
+            EnableSsl = true,
+            Credentials = new NetworkCredential("no-reply@lifejournaler.com", ZohoMailPassword)
+        };
+        client.Send(message);
+
+        return Ok();
     }
 
-    public class RequestPasswordResetModel {
-        public required string Email { get; set;}
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel resetPasswordModel)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == resetPasswordModel.Email);
+        if (user == null)
+        {
+            return BadRequest("Username is not registered.");
+        }
+
+        if (user.ResetPasswordCode != resetPasswordModel.AuthenticationCode)
+        {
+            return BadRequest("Authentication code is not valid");
+        }
+
+        if (DateTime.UtcNow >= user.ResetPasswordCodeExpiration)
+        {
+            return BadRequest("Authentication code is expired");
+        }
+
+        user.PasswordHash = _passwordHasher.HashPassword(null, resetPasswordModel.NewPassword);
+        await _context.SaveChangesAsync();
+
+        return Ok();
     }
 
-    public class ResetPasswordModel {
-        public required string Email { get; set; }
-        public required string AuthenticationCode { get; set; }
-        public required string NewPassword { get; set; }
+    [Authorize]
+    [HttpDelete("delete-account")]
+    public async Task<IActionResult> DeleteAccount()
+    {
+        if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
+        {
+            return BadRequest("The user was not found in the request");
+        }
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        if (user == null)
+        {
+            return BadRequest("Username is not registered.");
+        }
+
+        var entriesToRemove = await _context.Entries.Where(e => e.User == user).ToListAsync();
+        _context.Entries.RemoveRange(entriesToRemove);
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+
+        return Ok();
     }
+
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh()
+    {
+        if (!Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
+            return Unauthorized();
+
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.RefreshToken == refreshToken);
+
+        if (user == null || user.RefreshTokenExpiry < DateTime.UtcNow)
+            return Unauthorized();
+
+        var newAccessToken = GenerateJwtToken(user.Id);
+        return Ok(new { Token = newAccessToken, user.Username });
+    }
+
+    private string GenerateJwtToken(int userId)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(JWTKey);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new Claim[] { new(ClaimTypes.NameIdentifier, userId.ToString()) }),
+            Expires = DateTime.UtcNow.AddHours(1),
+            Issuer = "JournalerBackend",
+            Audience = "JournalerAudience",
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
+    }
+
+    private static string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
+    }
+}
+
+public class LoginModel
+{
+    public required string Username { get; set; }
+    public required string Password { get; set; }
+}
+
+public class RequestPasswordResetModel
+{
+    public required string Email { get; set; }
+    public required string Locale { get; set; }
+}
+
+public class ResetPasswordModel
+{
+    public required string Email { get; set; }
+    public required string AuthenticationCode { get; set; }
+    public required string NewPassword { get; set; }
 }

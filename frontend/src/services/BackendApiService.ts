@@ -54,9 +54,9 @@ export const addEntry = async (date: string, entry: DailyEntry) => {
     return true;
 }
 
-export const requestPasswordReset = async (email: string) => {
+export const requestPasswordReset = async (email: string, locale: string) => {
     const response = await fetchWrapper('api/auth/request-password-reset', 'POST', JSON.stringify({
-        Email: email}));
+        Email: email, Locale: locale}));
 
     return response && response.ok;
 }
