@@ -13,6 +13,8 @@ interface LanguageContextType {
 // Create the context
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+const supportedLanguages = new Set<string>(['en-US', 'pt-BR']);
+
 // Hook to use the LanguageContext
 export const useLanguage = (): LanguageContextType => {
   const context = useContext(LanguageContext);
@@ -29,13 +31,12 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const initialTranslations = enTranslations;
 
-  const [language, setLanguage] = useState<string>(navigator.language);
+  const [language, setLanguage] = useState<string>(supportedLanguages.has(navigator.language) ? navigator.language : "en-US");
   const [translations, setTranslations] = useState<Record<string, string>>(initialTranslations);
 
   const switchLanguage = (lang: string) => {
     setLanguage(lang);
     loadTranslations(lang);
-    localStorage.setItem('language', lang); // Store in localStorage for persistence
   };
 
   const loadTranslations = (lang: string) => {
