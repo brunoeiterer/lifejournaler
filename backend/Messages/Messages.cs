@@ -6,14 +6,14 @@ public static class LocalizedMessages
     {
         { "PasswordResetEmailSubject", "LifeJournaler - Password Reset" },
         { "PasswordResetEmailBody", "Please find your password reset code below.\n"},
-        { "PasswordResetEmailFooter", "If you didn’t request this change, please ignore this message.\n\n One day at a time,\n LifeJournaler"}
+        { "PasswordResetEmailFooter", "If you didn’t request this change, please ignore this message.\n\nOne day at a time,\nLifeJournaler"}
     };
 
     private static readonly Dictionary<string, string> _messagesPtBr = new()
     {
         { "PasswordResetEmailSubject", "LifeJournaler - Recuperação de Senha" },
         { "PasswordResetEmailBody", "Por favor, veja seu código de recuperação de senha abaixo.\n"},
-        { "PasswordResetEmailFooter", "Caso não tenha requisitado esta alteração, por favor, ignore esta mensagem.\n\n Um dia de cada vez,\n LifeJournaler"}
+        { "PasswordResetEmailFooter", "Caso não tenha requisitado esta alteração, por favor, ignore esta mensagem.\n\nUm dia de cada vez,\nLifeJournaler"}
     };
 
     public static string GetMessage(string key, string locale) => locale switch
