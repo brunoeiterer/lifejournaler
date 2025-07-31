@@ -34,11 +34,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
   const [language, setLanguage] = useState<string>(supportedLanguages.has(navigator.language) ? navigator.language : "en-US");
   const [translations, setTranslations] = useState<Record<string, string>>(initialTranslations);
 
-  const switchLanguage = (lang: string) => {
-    setLanguage(lang);
-    loadTranslations(lang);
-  };
-
   const loadTranslations = (lang: string) => {
     import(`../../../messages/${lang}.json`) // Dynamically load language files
       .then((module) => {
@@ -48,7 +43,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    switchLanguage(language);
+    setLanguage(language);
+    loadTranslations(language);
   }, [language]);
 
   return (

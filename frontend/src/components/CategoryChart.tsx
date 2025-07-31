@@ -52,7 +52,7 @@ export default function CategoryChart({ data, title }: Props) {
     const chartData = Object.entries(data).map(([label, count]) =>
         {
             const obj: {
-                [k: string]: any
+                [k: string]: string | number
             } = {};
 
             obj["label"] = translations[label];
@@ -85,7 +85,7 @@ export default function CategoryChart({ data, title }: Props) {
                         {chartData.map((entry, index) => (
                                 <Cell
                                     key={`cell-${index}`}
-                                    fill={entry["color"]}
+                                    fill={entry["color"] as string}
                                 />
                             ))}
                     </Bar>

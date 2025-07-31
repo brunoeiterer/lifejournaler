@@ -4,7 +4,7 @@ import { Button, FormControl, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 
 const ResetPassword = () => {
-    const { translations } = useLanguage();
+    const { language, translations } = useLanguage();
 
     const [email, setEmail] = useState('');
     const [verificationCode, setVerificationCode] = useState('');
@@ -15,7 +15,7 @@ const ResetPassword = () => {
     const [success, setSuccess] = useState(false);
 
     const handleRequestCode = async () => {
-        const codeSent = await requestPasswordReset(email);
+        const codeSent = await requestPasswordReset(email, language);
         if (codeSent) {
             setStep('reset');
         } 
