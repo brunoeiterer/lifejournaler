@@ -1,7 +1,7 @@
 import { DailyEntry } from "@/app/models/DailyEntry";
 import { env } from 'next-runtime-env';
 
-const API_BASE_URL = env('NEXT_PUBLIC_API_BASE_URL');
+const API_BASE_URL = env('NEXT_PUBLIC_API_BASE_URL') ?? '';
 
 export const login = async (username: string, password: string) => {
     const response = await fetchWrapper('api/auth/login', 'POST', JSON.stringify({Username: username, Password: password}));
