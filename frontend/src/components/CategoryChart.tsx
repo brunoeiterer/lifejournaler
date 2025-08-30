@@ -109,7 +109,7 @@ export default function CategoryChart({ data, title }: Props) {
     };
 
     return (
-        <div className="flex flex-col w-full h-64 justify-center items-center">
+        <div className="flex flex-col w-full h-64 mb-8 justify-center items-center">
             <h3 className="text-center font-medium mb-2">{title}</h3>
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 20, right: 30, left: -40, bottom: 5 }}>
