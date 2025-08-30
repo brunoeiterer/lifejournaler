@@ -19,7 +19,7 @@ jobs:
       - name: Install Dependencies
         run: |
           cd frontend
-          npm ci --force
+          npm ci
 
       - name: Build the App
         run: |
