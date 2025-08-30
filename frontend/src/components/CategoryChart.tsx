@@ -67,9 +67,16 @@ export default function CategoryChart({ data, title }: Props) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const Tick = (props: any) => {
         const { x, y, payload } = props;
+        const textValue = Emojis[payload.value] ?? translations[payload.value];
+        const words = textValue.split(' '); // Split the text into words
+
         return (
             <text x={x} y={y + 10} textAnchor="middle" fontSize={12}>
-                {Emojis[payload.value] ?? translations[payload.value]}
+                {words.map((word, index) => (
+                    <tspan key={index} x={x} dy={index === 0 ? 0 : 15}>
+                        {word}
+                    </tspan>
+                ))}
             </text>
         );
     };
@@ -78,13 +85,25 @@ export default function CategoryChart({ data, title }: Props) {
     const CustomTooltip = (props: any) => {
         const { active, payload, label } = props;
         const isVisible = active && payload && payload.length;
+
         return (
-            <div className="custom-tooltip" style={{ visibility: isVisible ? 'visible' : 'hidden' }}>
-            {isVisible && (
-                <div>
-                    <p className="label">{`${translations[label]} : ${payload[0].value}`}</p>
-                </div>
-            )}
+            <div
+                style={{
+                    visibility: isVisible ? 'visible' : 'hidden',
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    borderRadius: '5px',
+                    padding: '10px',
+                    color: 'white',
+                    fontSize: '14px',
+                    minWidth: '100px',
+                    textAlign: 'center'
+                }}
+            >
+                {isVisible && (
+                    <div>
+                        <p className="label">{`${translations[label]} : ${payload[0].value}`}</p>
+                    </div>
+                )}
             </div>
         );
     };
