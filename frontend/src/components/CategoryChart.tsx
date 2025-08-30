@@ -4,10 +4,11 @@ import {
     Bar,
     XAxis,
     YAxis,
-    Tooltip,
     Cell,
     ResponsiveContainer,
+    Tooltip,
 } from 'recharts';
+import { Emojis } from './Emojis';
 
 type Props = {
     data: Record<string, number>;
@@ -55,7 +56,7 @@ export default function CategoryChart({ data, title }: Props) {
                 [k: string]: string | number
             } = {};
 
-            obj["label"] = translations[label];
+            obj["label"] = label;
             obj[translations["Quantity"]] = count;
             obj["color"] = colors[label.replace(/\s/g, "")];
 
@@ -68,19 +69,34 @@ export default function CategoryChart({ data, title }: Props) {
         const { x, y, payload } = props;
         return (
             <text x={x} y={y + 10} textAnchor="middle" fontSize={12}>
-                {payload.value}
+                {Emojis[payload.value] ?? translations[payload.value]}
             </text>
         );
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const CustomTooltip = (props: any) => {
+        const { active, payload, label } = props;
+        const isVisible = active && payload && payload.length;
+        return (
+            <div className="custom-tooltip" style={{ visibility: isVisible ? 'visible' : 'hidden' }}>
+            {isVisible && (
+                <div>
+                    <p className="label">{`${translations[label]} : ${payload[0].value}`}</p>
+                </div>
+            )}
+            </div>
+        );
+    };
+
     return (
-        <div className="flex flex-col w-full h-64 mb-8 justify-center align-center">
+        <div className="flex flex-col w-full h-64 justify-center items-center">
             <h3 className="text-center font-medium mb-2">{title}</h3>
-            <ResponsiveContainer>
-                <BarChart data={chartData} width={400} height={200} margin={{ top: 20, right: 30, left: -40, bottom: 5 }}>
+            <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 20, right: 30, left: -40, bottom: 5 }}>
                     <XAxis dataKey="label" tick={<Tick />} interval={0} />
                     <YAxis allowDecimals={false} />
-                    <Tooltip />
+                    <Tooltip content={<CustomTooltip />} />
                     <Bar dataKey={translations["Quantity"]}>
                         {chartData.map((entry, index) => (
                                 <Cell

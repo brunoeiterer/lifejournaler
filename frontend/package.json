@@ -9,42 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/css": "^11.13.4",
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
-    "@mui/lab": "^6.0.0-beta.15",
-    "@mui/material": "^6.1.7",
-    "@mui/x-charts": "^7.22.1",
-    "@mui/x-date-pickers": "^7.22.1",
-    "@toolpad/core": "^0.9.0",
     "dayjs": "^1.11.13",
-    "dayjs-plugin-utc": "^0.1.2",
-    "draft-js": "^0.11.7",
-    "i18next": "^23.16.5",
-    "next": "15.0.2",
-    "next-i18next": "^15.3.1",
-    "next-intl": "^3.25.1",
+    "next": "15.5.2",
     "next-runtime-env": "^3.2.2",
-    "ni18n": "^1.1.0",
-    "react": "19.0.0-rc-02c0e824-20241028",
-    "react-dnd": "^16.0.1",
-    "react-dnd-html5-backend": "^16.0.1",
-    "react-dom": "19.0.0-rc-02c0e824-20241028",
-    "react-i18next": "^15.1.1",
-    "recharts": "^2.13.2",
-    "slate": "^0.110.2",
-    "slate-history": "^0.110.3",
-    "slate-react": "^0.110.3"
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "react-is": "19.1.1",
+    "recharts": "^3.1.2"
   },
   "devDependencies": {
-    "@types/i18next": "^13.0.0",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/node": "24.3.0",
+    "@types/react": "19.1.12",
     "eslint": "^8",
-    "eslint-config-next": "15.0.2",
-    "postcss": "^8",
+    "eslint-config-next": "15.5.2",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@types/react": "19.1.12"
   }
 }
