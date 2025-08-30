@@ -8,9 +8,10 @@ interface DrawerProps {
   onSignUpClick: () => void;
   onDeleteAccountClick: () => void;
   onMonthlyStatisticsClick: () => void;
+  onPrivacyPolicyClick: () => void;
 }
 
-const Drawer: React.FC<DrawerProps> = ({ isVisible, onSignInClick, onSignUpClick, onDeleteAccountClick, onMonthlyStatisticsClick }) => {
+const Drawer: React.FC<DrawerProps> = ({ isVisible, onSignInClick, onSignUpClick, onDeleteAccountClick, onMonthlyStatisticsClick, onPrivacyPolicyClick }) => {
   const { translations } = useLanguage();
   const { isSignedIn, username, signOut } = useAuth();
   const { language, setLanguage } = useLanguage();
@@ -51,6 +52,13 @@ const Drawer: React.FC<DrawerProps> = ({ isVisible, onSignInClick, onSignUpClick
             )}
 
             <div className="flex items-center gap-2">
+              <span>
+                🛡️
+              </span>
+              <button onClick={onPrivacyPolicyClick}>{translations['PrivacyPolicyTitle']}</button>
+            </div>
+
+            <div className="flex items-center gap-2">
                 <label htmlFor="language-select">
                   🌐
                 </label>
@@ -63,7 +71,7 @@ const Drawer: React.FC<DrawerProps> = ({ isVisible, onSignInClick, onSignUpClick
                   <option value="en-US">en-US</option>
                   <option value="pt-BR">pt-BR</option>
                 </select>
-              </div>
+            </div>
         </nav>
     </div>
   );

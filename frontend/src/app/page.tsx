@@ -16,6 +16,7 @@ import { ModalErrorProvider } from './contexts/ModalErrorContext';
 import DeleteAccount from '@/components/DeleteAccount';
 import MonthlyStatsChart from '@/components/MonthlyStatsChart';
 import ForgotPasswordForm from '@/components/ForgotPasswordForm';
+import PrivacyPolicy from '@/components/PrivacyPolicy';
 
 const Dashboard: React.FC = () => {
     const { translations } = useLanguage();
@@ -26,6 +27,7 @@ const Dashboard: React.FC = () => {
     const [ isDeleteAccountVisible, setIsDeleteAccountVisible ] = useState(false);
     const [ isMonthlyStatsChartModalVisible, setIsMonthlyStatsChartModalVisible ] = useState(false);
     const [ isForgotPasswordVisible, setIsForgotPasswordVisible ] = useState(false);
+    const [ isPrivacyPolicyVisible, setIsPrivacyPolicyVisible ] = useState(false);
     const [ entries, setEntries ] = useState<Record<string, DailyEntry>>({})
     const { isSignedIn, isAuthLoading } = useAuth();
 
@@ -73,9 +75,12 @@ const Dashboard: React.FC = () => {
                 </svg>
             </button>
 
-            <Drawer isVisible={isDrawerVisible} onSignInClick={() => setIsSignInVisible(true)}
-                onSignUpClick={() => setIsSignUpVisible(true)} onDeleteAccountClick={() => setIsDeleteAccountVisible(true)}
-                onMonthlyStatisticsClick={() => setIsMonthlyStatsChartModalVisible(true)} />
+            <Drawer isVisible={isDrawerVisible}
+                onSignInClick={() => setIsSignInVisible(true)}
+                onSignUpClick={() => setIsSignUpVisible(true)}
+                onDeleteAccountClick={() => setIsDeleteAccountVisible(true)}
+                onMonthlyStatisticsClick={() => setIsMonthlyStatsChartModalVisible(true)}
+                onPrivacyPolicyClick={() => setIsPrivacyPolicyVisible(true)} />
 
             <div className="flex flex-col items-center justify-center gap-4">
                 <h1 className="text-2xl font-semibold text-center mb-4">LifeJournaler</h1>
@@ -120,6 +125,11 @@ const Dashboard: React.FC = () => {
                             <ForgotPasswordForm onSuccess={() => setIsForgotPasswordVisible(false)}  />
                         </Modal>
                     </ModalErrorProvider>    
+                }
+                {isPrivacyPolicyVisible &&
+                    <Modal onClose={() => setIsPrivacyPolicyVisible(false)} title={translations['PrivacyPolicyTitle']}>
+                        <PrivacyPolicy />
+                    </Modal>
                 }
             </div>
         </div>
