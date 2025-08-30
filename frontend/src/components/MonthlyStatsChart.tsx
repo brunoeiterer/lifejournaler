@@ -45,7 +45,7 @@ export default function MonthlyStatsChart({ entries }: Props) {
 
     for (const entry of filteredEntries) {
         moodCounts[entry.Mood] = (moodCounts[entry.Mood] || 0) + 1;
-        weatherCounts[entry.Weather] = (moodCounts[entry.Weather] || 0) + 1;
+        weatherCounts[entry.Weather] = (weatherCounts[entry.Weather] || 0) + 1;
         sleepQualityCounts[entry.SleepQuality] = (sleepQualityCounts[entry.SleepQuality] || 0) + 1;
         anxietyThoughtsCounts[getZone(entry.AnxietyThoughts)] = (anxietyThoughtsCounts[getZone(entry.AnxietyThoughts)] || 0) + 1;
         depressiveThoughtsCounts[getZone(entry.DepressiveThoughts)] = (depressiveThoughtsCounts[getZone(entry.DepressiveThoughts)] || 0) + 1;
