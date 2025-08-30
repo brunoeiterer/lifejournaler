@@ -105,10 +105,10 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
                   <Tooltip label={translations['Menstruation'] + ': ' + translations[entry.Menstruation]} setToolTipActive={setIsToolTipActive}>
                     <span>{entry.Menstruation == 'Yes' ? Emojis['YesMenstruation'] : Emojis[entry.Menstruation]}</span>
                   </Tooltip>
-                  <Tooltip label={translations['Exercise'] + ': ' + entry.Exercise} setToolTipActive={setIsToolTipActive}>
+                  <Tooltip label={translations['Exercise'] + ': ' + translations[entry.Exercise]} setToolTipActive={setIsToolTipActive}>
                     <span>{Emojis[entry.Exercise]}</span>
                   </Tooltip>
-                  <Tooltip label={translations['AppetiteLevel'] + ': ' + entry.AppetiteLevel} setToolTipActive={setIsToolTipActive}>
+                  <Tooltip label={translations['AppetiteLevel'] + ': ' + translations[entry.AppetiteLevel]} setToolTipActive={setIsToolTipActive}>
                     <span>{Emojis[entry.AppetiteLevel]}</span>
                   </Tooltip>
                 </div>
