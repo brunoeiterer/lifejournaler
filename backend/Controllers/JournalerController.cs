@@ -49,6 +49,15 @@ namespace JournalerBackend.Controllers {
                 };
             }
 
+            var isEntryAlreadyInDb = await _context.Entries.AnyAsync(e => e.User.Id == user.Id && e.Date == model.Date);
+            if (isEntryAlreadyInDb)
+            {
+                return new JsonResult(new { message = "The entry already exists in the database" })
+                {
+                    StatusCode = 400
+                };
+            }
+
             model.Entry.User = user;
             model.Entry.Date = model.Date;
 
