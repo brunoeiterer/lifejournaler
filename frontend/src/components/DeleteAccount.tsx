@@ -2,16 +2,17 @@
 
 import { useAuth } from '@/app/contexts/AuthContext';
 import { useLanguage } from '@/app/contexts/LanguageContext';
+import { useModalError } from '@/app/contexts/ModalErrorContext';
 import { deleteAccount } from '@/services/BackendApiService';
 
 interface DeleteAccountProps {
     onSuccess: () => void;
-    onError: (errorMessage: string) => void;
 }
 
-export default function DeleteAccount({ onSuccess, onError} : DeleteAccountProps) {
+export default function DeleteAccount({ onSuccess} : DeleteAccountProps) {
     const { translations } = useLanguage();
     const { signOut } = useAuth();
+    const { setErrorMessage } = useModalError();
 
     const handleDelete = async () => {
         const success = await deleteAccount();
@@ -21,7 +22,7 @@ export default function DeleteAccount({ onSuccess, onError} : DeleteAccountProps
             signOut();
         }
         else {
-            onError(translations['ErrorDeletingAccount']);
+            setErrorMessage(translations['ErrorDeletingAccount']);
         }
     }
 

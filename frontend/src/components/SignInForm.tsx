@@ -4,18 +4,20 @@ import { FormEvent, useState } from 'react';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { login } from '@/services/BackendApiService';
 import { useLanguage } from '@/app/contexts/LanguageContext';
+import { useModalError } from '@/app/contexts/ModalErrorContext';
 
 interface SignInFormProps {
     onSuccess: () => void;
-    onError: (errorMessage: string) => void;
     onForgotPassword: () => void;
 }
 
-export default function SignInForm({ onSuccess, onError, onForgotPassword }: SignInFormProps) {
+export default function SignInForm({ onSuccess, onForgotPassword }: SignInFormProps) {
     const { translations } = useLanguage();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const { signIn } = useAuth();
+
+    const { setErrorMessage } = useModalError();
 
     const handleSubmit = async (event : FormEvent) => {
         event.preventDefault();
@@ -25,7 +27,7 @@ export default function SignInForm({ onSuccess, onError, onForgotPassword }: Sig
             onSuccess();
         }
         else {
-            onError(result);
+            setErrorMessage(result);
         }
     }
 

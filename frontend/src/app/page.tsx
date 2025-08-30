@@ -3,17 +3,19 @@
 import { useLanguage } from './contexts/LanguageContext';
 import { DailyEntry } from './models/DailyEntry';
 import Calendar from '@/components/Calendar';
-import SignInModal from '@/components/SignInModal';
 import { useEffect, useState } from 'react';
 import EntryEditor from '@/components/EntryEditor';
 import Drawer from '@/components/Drawer';
-import SignUpModal from '@/components/SignUpModal';
 import { useAuth } from './contexts/AuthContext';
 import { getEntries } from '@/services/BackendApiService';
-import DeleteAccountModal from '@/components/DeleteAccountModal';
-import MonthlyStatsChartModal from '@/components/MonthlyStatsChartModal';
 import LoadingScreen from '@/components/LoadingScreen';
-import ForgotPasswordModal from '@/components/ForgotPasswordModal';
+import Modal from '@/components/Modal';
+import SignInForm from '@/components/SignInForm';
+import SignUpForm from '@/components/SignUpForm';
+import { ModalErrorProvider } from './contexts/ModalErrorContext';
+import DeleteAccount from '@/components/DeleteAccount';
+import MonthlyStatsChart from '@/components/MonthlyStatsChart';
+import ForgotPasswordForm from '@/components/ForgotPasswordForm';
 
 const Dashboard: React.FC = () => {
     const { translations } = useLanguage();
@@ -84,11 +86,41 @@ const Dashboard: React.FC = () => {
                 </div>
                 {showEntryEditor && <EntryEditor date={currentDate} originalEntry={entries[currentDate]} 
                     onClose={() => setCurrentDate(null)} updateEntry={updateEntry}/>}
-                {isSignInVisibile && <SignInModal onClose={() => setIsSignInVisible(false)} onForgotPassword={onForgotPassword} />}
-                {isSignUpVisibile && <SignUpModal onClose={() => setIsSignUpVisible(false)} />}
-                {isDeleteAccountVisible && <DeleteAccountModal onClose={() => setIsDeleteAccountVisible(false)} />}
-                {isMonthlyStatsChartModalVisible && <MonthlyStatsChartModal entries={entries} onClose={() => setIsMonthlyStatsChartModalVisible(false)} />}
-                {isForgotPasswordVisible && <ForgotPasswordModal onClose={() => setIsForgotPasswordVisible(false)} />}
+                {isSignInVisibile &&
+                    <ModalErrorProvider>
+                        <Modal onClose={() => setIsSignInVisible(false)} title={translations['SignIn']}>
+                            <SignInForm onSuccess={() => setIsSignInVisible(false)} onForgotPassword={onForgotPassword} />
+                        </Modal>
+                    </ModalErrorProvider>
+                }
+                {isSignUpVisibile &&
+                    <ModalErrorProvider>
+                        <Modal onClose={() => setIsSignUpVisible(false)} title={translations['SignUp']} >
+                            <SignUpForm onSuccess={() => setIsSignUpVisible(false)} />
+                        </Modal>
+                    </ModalErrorProvider>
+                }
+                {isDeleteAccountVisible &&
+                    <ModalErrorProvider>
+                        <Modal onClose={() => setIsDeleteAccountVisible(false)} title={translations['DeleteAccount']}>
+                            <DeleteAccount onSuccess={() => setIsDeleteAccountVisible(false)} />
+                        </Modal>
+                    </ModalErrorProvider>
+                }
+                {isMonthlyStatsChartModalVisible &&
+                    <ModalErrorProvider>
+                        <Modal onClose={() => setIsMonthlyStatsChartModalVisible(false)} title={translations['MonthlyStatistics']}>
+                            <MonthlyStatsChart entries={entries} />
+                        </Modal>
+                    </ModalErrorProvider>
+                }
+                {isForgotPasswordVisible &&
+                    <ModalErrorProvider>
+                        <Modal onClose={() => setIsForgotPasswordVisible(false)} title={translations['ResetPassword']}>
+                            <ForgotPasswordForm onSuccess={() => setIsForgotPasswordVisible(false)}  />
+                        </Modal>
+                    </ModalErrorProvider>    
+                }
             </div>
         </div>
     );

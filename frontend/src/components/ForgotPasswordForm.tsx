@@ -3,10 +3,10 @@
 import { FormEvent, useState } from 'react';
 import { requestPasswordReset, resetPassword } from '@/services/BackendApiService';
 import { useLanguage } from '@/app/contexts/LanguageContext';
+import { useModalError } from '@/app/contexts/ModalErrorContext';
 
 interface ForgotPasswordFormProps {
     onSuccess: () => void;
-    onError: (message: string) => void;
 }
 
 function getPasswordCriteria(password: string) {
@@ -19,7 +19,7 @@ function getPasswordCriteria(password: string) {
   };
 }
 
-export default function SignInForm({ onSuccess, onError }: ForgotPasswordFormProps) {
+export default function SignInForm({ onSuccess }: ForgotPasswordFormProps) {
     const { language, translations } = useLanguage();
     const [ username, setUsername] = useState('');
     const [ newPassword, setNewPassword ] = useState('');
@@ -27,6 +27,7 @@ export default function SignInForm({ onSuccess, onError }: ForgotPasswordFormPro
     const [ code, setCode ] = useState('');
     const [ passwordResetRequested, setPasswordResetRequested ] = useState(false);
     const [ isLoading, setIsLoading ] = useState(false);
+    const { setErrorMessage } = useModalError();
 
     const handleSubmitRequest = async (event : FormEvent) => {
         event.preventDefault();
@@ -37,7 +38,7 @@ export default function SignInForm({ onSuccess, onError }: ForgotPasswordFormPro
             setPasswordResetRequested(true);
         }
         else {
-            onError(translations['FailedToSendResetCode']);
+            setErrorMessage(translations['FailedToSendResetCode']);
         }
     }
 
@@ -45,13 +46,13 @@ export default function SignInForm({ onSuccess, onError }: ForgotPasswordFormPro
         event.preventDefault();
 
         if (newPassword !== confirmNewPassword) {
-            onError(translations['PasswordsDoNotMatch']);
+            setErrorMessage(translations['PasswordsDoNotMatch']);
             return;
         }
 
         const failed = Object.entries(criteria).find(([met]) => !met);
         if (failed) {
-            onError(translations['PasswordDoesntMeetAllCriteria']);
+            setErrorMessage(translations['PasswordDoesntMeetAllCriteria']);
             return;
         }
 
@@ -62,7 +63,7 @@ export default function SignInForm({ onSuccess, onError }: ForgotPasswordFormPro
             onSuccess();
         }
         else {
-            onError(translations['FailedToResetPassword']);
+            setErrorMessage(translations['FailedToResetPassword']);
         }
 
         setIsLoading(false);

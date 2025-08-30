@@ -2,10 +2,10 @@
 import { useState } from 'react';
 import { useLanguage } from '@/app/contexts/LanguageContext';
 import { register } from '@/services/BackendApiService';
+import { useModalError } from '@/app/contexts/ModalErrorContext';
 
 interface SignUpFormProps {
     onSuccess: () => void;
-    onError: (errorMessage: string) => void;
 }
 
 function getPasswordCriteria(password: string) {
@@ -18,24 +18,25 @@ function getPasswordCriteria(password: string) {
   };
 }
 
-export default function SignUpForm({ onSuccess, onError }: SignUpFormProps) {
+export default function SignUpForm({ onSuccess }: SignUpFormProps) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirm, setConfirm] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const { translations } = useLanguage();
+    const { setErrorMessage } = useModalError();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (password !== confirm) {
-            onError(translations['PasswordsDoNotMatch']);
+            setErrorMessage(translations['PasswordsDoNotMatch']);
             return;
         }
 
         const failed = Object.entries(criteria).find(([met]) => !met);
         if (failed) {
-            onError(translations['PasswordDoesntMeetAllCriteria']);
+            setErrorMessage(translations['PasswordDoesntMeetAllCriteria']);
             return;
         }
 
@@ -46,7 +47,7 @@ export default function SignUpForm({ onSuccess, onError }: SignUpFormProps) {
         if (result) {
             onSuccess();
         } else {
-            onError(translations['SignUpError']);
+            setErrorMessage(translations['SignUpError']);
         }
 
         setIsLoading(false);
