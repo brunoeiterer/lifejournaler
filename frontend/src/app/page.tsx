@@ -90,8 +90,12 @@ const Dashboard: React.FC = () => {
                 <div className="bg-white p-6 rounded-2xl shadow-md max-w-md mx-auto">
                     <Calendar entries={entries} onDateClick={(date) => setCurrentDate(date)} />
                 </div>
-                {showEntryEditor && <EntryEditor date={currentDate} originalEntry={entries[currentDate]} 
-                    onClose={() => setCurrentDate(null)} updateEntry={updateEntry}/>}
+                {showEntryEditor &&
+                    <Modal onClose={() => setCurrentDate(null)} >
+                        <EntryEditor date={currentDate} originalEntry={entries[currentDate]} 
+                        onClose={() => setCurrentDate(null)} updateEntry={updateEntry}/>
+                    </Modal>
+                }
                 {isSignInVisibile &&
                     <ModalErrorProvider>
                         <Modal onClose={() => setIsSignInVisible(false)} title={translations['SignIn']}>

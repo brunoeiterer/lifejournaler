@@ -7,7 +7,7 @@ import { useModalError } from '@/app/contexts/ModalErrorContext';
 interface ModalProps {
     onClose: () => void;
     children: ReactNode;
-    title: string
+    title?: string
 }
 
 export default function Modal({ onClose, children, title }: ModalProps) {
