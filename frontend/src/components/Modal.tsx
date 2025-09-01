@@ -22,9 +22,11 @@ export default function Modal({ onClose, children, title }: ModalProps) {
     }, [onClose]);
 
     return (
-    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center">
+    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center"
+         onClick={onClose}>
         {errorMessage !== '' && <Toast message={errorMessage} onClose={() => setErrorMessage('')} />}
-        <div className="relative max-w-2xl w-full grid grid-rows-[min-content_auto] grid-cols-[auto_min-content]">
+        <div className="relative max-w-2xl w-full grid grid-rows-[min-content_auto] grid-cols-[auto_min-content]"
+            onClick={(e) => e.stopPropagation()}>
             <div className="row-start-1 col-start-2 flex justify-end">
                 <button
                     className="bg-white rounded-full shadow-md w-8 h-8 text-gray-500 hover:text-black"
