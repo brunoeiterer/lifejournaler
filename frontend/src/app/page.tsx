@@ -80,7 +80,8 @@ const Dashboard: React.FC = () => {
                 onSignUpClick={() => setIsSignUpVisible(true)}
                 onDeleteAccountClick={() => setIsDeleteAccountVisible(true)}
                 onMonthlyStatisticsClick={() => setIsMonthlyStatsChartModalVisible(true)}
-                onPrivacyPolicyClick={() => setIsPrivacyPolicyVisible(true)} />
+                onPrivacyPolicyClick={() => setIsPrivacyPolicyVisible(true)}
+                onClose={() => setIsDrawerVisible(false)} />
 
             <div className="flex flex-col items-center justify-center gap-4">
                 <h1 className="text-2xl font-semibold text-center mb-4">LifeJournaler</h1>
