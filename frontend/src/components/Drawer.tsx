@@ -1,6 +1,7 @@
 import { useLanguage } from "@/app/contexts/LanguageContext";
 import { useAuth } from '@/app/contexts/AuthContext';
 import clsx from 'clsx';
+import { useEffect } from "react";
 
 interface DrawerProps {
   isVisible : boolean;
@@ -17,6 +18,14 @@ const Drawer: React.FC<DrawerProps> = ({ isVisible, onSignInClick, onSignUpClick
   const { translations } = useLanguage();
   const { isSignedIn, username, signOut } = useAuth();
   const { language, setLanguage } = useLanguage();
+
+  useEffect(() => {
+      const handleEscape = (e: KeyboardEvent) => {
+          if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleEscape);
+      return () => window.removeEventListener('keydown', handleEscape);
+  }, [onClose]);
 
   return (
     <div
