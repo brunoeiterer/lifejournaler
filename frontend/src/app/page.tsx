@@ -17,6 +17,7 @@ import DeleteAccount from '@/components/DeleteAccount';
 import MonthlyStatsChart from '@/components/MonthlyStatsChart';
 import ForgotPasswordForm from '@/components/ForgotPasswordForm';
 import PrivacyPolicy from '@/components/PrivacyPolicy';
+import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
 
 const Page: React.FC = () => {
     const { translations } = useLanguage();
@@ -45,6 +46,10 @@ const Page: React.FC = () => {
             setEntries({});
         }
     }, [isSignedIn]);
+
+    const lockBodyScroll = isDrawerVisible || isSignInVisibile || isSignUpVisibile || isDeleteAccountVisible ||
+        isMonthlyStatsChartModalVisible || isForgotPasswordVisible || isPrivacyPolicyVisible;
+    useLockBodyScroll(lockBodyScroll);
 
     const updateEntry = (date: string, entry: DailyEntry) => {
         const entryData = Object.assign({}, entries);
