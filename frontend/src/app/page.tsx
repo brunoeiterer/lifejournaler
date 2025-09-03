@@ -18,7 +18,7 @@ import MonthlyStatsChart from '@/components/MonthlyStatsChart';
 import ForgotPasswordForm from '@/components/ForgotPasswordForm';
 import PrivacyPolicy from '@/components/PrivacyPolicy';
 
-const Dashboard: React.FC = () => {
+const Page: React.FC = () => {
     const { translations } = useLanguage();
     const [ currentDate, setCurrentDate ] = useState<string | null>(null);
     const [ isDrawerVisible, setIsDrawerVisible ] = useState(true);
@@ -63,7 +63,7 @@ const Dashboard: React.FC = () => {
 
     return (
         <div className="relative min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
-            <button className="fixed top-4 left-4 z-50 p-2 rounded-md hover:bg-gray-100" onClick={() => setIsDrawerVisible(!isDrawerVisible)}>
+            <button className="fixed top-4 left-4 z-[100] p-2 rounded-md hover:bg-gray-100" onClick={() => setIsDrawerVisible(!isDrawerVisible)}>
                 <svg
                     className="w-6 h-6 text-gray-700"
                     fill="none"
@@ -141,4 +141,4 @@ const Dashboard: React.FC = () => {
     );
 };
 
-export default Dashboard;
+export default Page;

@@ -29,11 +29,11 @@ const Drawer: React.FC<DrawerProps> = ({ isVisible, onSignInClick, onSignUpClick
 
   return (
     <div
-      className={`fixed inset-0 bg-black/50 transform transition-transform duration-300 ${isVisible ? "translate-x-0" : "-translate-x-full"}`}
+      className={`fixed z-50 inset-0 bg-black/50 transform transition-transform duration-300 ${isVisible ? "translate-x-0" : "-translate-x-full"}`}
       onClick={onClose}
     >
       <div className={clsx(
-          "fixed pt-14 top-0 left-0 h-full w-64 bg-white shadow-md z-40 transform transition-transform duration-300",
+          "fixed z-49 pt-14 top-0 left-0 h-full w-64 bg-white shadow-md transform transition-transform duration-300",
           isVisible ? "translate-x-0" : "-translate-x-full"
           )}
           onClick={(event) => event.stopPropagation()}>
