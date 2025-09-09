@@ -137,7 +137,7 @@ const Page: React.FC = () => {
                     </ModalErrorProvider>    
                 }
                 {isPrivacyPolicyVisible &&
-                    <Modal onClose={() => setIsPrivacyPolicyVisible(false)} title={translations['PrivacyPolicyTitle']}>
+                    <Modal onClose={() => setIsPrivacyPolicyVisible(false)}>
                         <PrivacyPolicy />
                     </Modal>
                 }
