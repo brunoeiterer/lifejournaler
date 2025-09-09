@@ -57,9 +57,17 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="flex justify-between items-center mb-4">
-        <button onClick={handlePrev} className="text-lg px-2">←</button>
-        <h2 className="text-xl font-bold">{translations[currentMonth.format('MMMM')]} {currentMonth.format('YYYY')}</h2>
-        <button onClick={handleNext} className="text-lg px-2">→</button>
+        <button onClick={handlePrev} className="text-lg px-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" width="25" height="25">
+            <path style={{ fill: '#232326' }} d="M24 12.001H2.914l5.294-5.295-.707-.707L1 12.501l6.5 6.5.707-.707-5.293-5.293H24v-1z" />
+          </svg>
+        </button>
+        <h2 className="text-xl font-bold ml-4 mr-4 mt-2">{translations[currentMonth.format('MMMM')]} {currentMonth.format('YYYY')}</h2>
+        <button onClick={handleNext} className="text-lg px-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" width="25" height="25">
+            <path style={{ fill: '#232326' }} d="m17.5 5.999-.707.707 5.293 5.293H1v1h21.086l-5.294 5.295.707.707L24 12.499l-6.5-6.5z" />
+          </svg>
+        </button>
       </div>
 
       <div className="grid grid-cols-7 text-center font-medium text-sm text-gray-500 mb-2">
