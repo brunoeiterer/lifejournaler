@@ -15,11 +15,13 @@ export default function SignInForm({ onSuccess, onForgotPassword }: SignInFormPr
     const { translations } = useLanguage();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const { signIn } = useAuth();
 
     const { setErrorMessage } = useModalError();
 
     const handleSubmit = async (event : FormEvent) => {
+        setIsLoading(true);
         event.preventDefault();
         const result = await login(username, password);
         if (result == '') {
@@ -29,6 +31,7 @@ export default function SignInForm({ onSuccess, onForgotPassword }: SignInFormPr
         else {
             setErrorMessage(result);
         }
+        setIsLoading(false);
     }
 
     return (
@@ -47,8 +50,12 @@ export default function SignInForm({ onSuccess, onForgotPassword }: SignInFormPr
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
             />
-            <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
-                {translations['SignIn']}
+            <button type="submit" disabled={isLoading} className="w-full bg-blue-600 flex justify-center items-center text-white py-2 rounded">
+                {isLoading ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"/>
+                ) : (
+                    translations['SignIn']
+                )}
             </button>
         </form>
 
