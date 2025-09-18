@@ -18,6 +18,7 @@ interface EntryEditorProps {
 
 export default function EntryEditor({date, originalEntry, onClose, updateEntry} : EntryEditorProps) {
     const [ errorMessage, setErrorMessage ] = useState('');
+    const [ isSavingInProgress, setIsSavingInProgress ] = useState(false);
     const {translations} = useLanguage();
     const entry = originalEntry ?? { Mood: 'Happy', Weather: 'ExtremelyCold', SleepQuality: 'VeryBad',
         Menstruation: 'Yes', Exercise: 'Yes', AppetiteLevel: 'Low', AnxietyThoughts: 0, DepressiveThoughts: 0, Autocriticism: 0, SensorialOverload: 0,
@@ -25,6 +26,7 @@ export default function EntryEditor({date, originalEntry, onClose, updateEntry} 
     };
 
     const saveEntry = async () => {
+        setIsSavingInProgress(true);
         let result = true;
         if(originalEntry == null) {
             result = await addEntry(date, entry);
@@ -40,6 +42,8 @@ export default function EntryEditor({date, originalEntry, onClose, updateEntry} 
             updateEntry(date, entry);
             onClose();
         }
+
+        setIsSavingInProgress(false);
     }
 
     const onEntryUpdated = <K extends keyof DailyEntry>(key: K, value: DailyEntry[K]) => {
@@ -75,7 +79,7 @@ export default function EntryEditor({date, originalEntry, onClose, updateEntry} 
 
                 <Notes title={translations['Notes']} label='Notes' initialValue={entry.Notes} onChange={onEntryUpdated} />
 
-                <SaveButton onClick={saveEntry} label={translations['SaveEntry']} />
+                <SaveButton onClick={saveEntry} label={translations['SaveEntry']} isInProgress={isSavingInProgress} />
             </div>
 
             {errorMessage != '' && <Toast message={errorMessage} onClose={() => setErrorMessage('')}/>}
