@@ -71,7 +71,24 @@ namespace JournalerBackend.Controllers {
         [HttpPut]
         public async Task<JsonResult> PutEntryEntity([FromBody] AddModel model)
         {
-            var entry = _context.Entries.SingleOrDefault(e => e.Date == model.Date);
+            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
+            {
+                return new JsonResult(new { message = "The user was not found in the request" })
+                {
+                    StatusCode = 400
+                };
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                return new JsonResult(new { message = "The user was not found in the database" })
+                {
+                    StatusCode = 400
+                };
+            }
+
+            var entry = _context.Entries.SingleOrDefault(e => e.User.Id == user.Id && e.Date == model.Date);
 
             if (entry == null)
             {
