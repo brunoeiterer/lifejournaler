@@ -112,7 +112,7 @@ export default function CategoryChart({ data, title }: Props) {
         <div className="flex flex-col w-full h-64 mb-8 justify-center items-center">
             <h3 className="text-center font-medium mb-2">{title}</h3>
             <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 20, right: 30, left: -40, bottom: 5 }}>
+                <BarChart data={chartData} margin={{ top: 20, right: 30, left: -30, bottom: 5 }}>
                     <XAxis dataKey="label" tick={<Tick />} interval={0} />
                     <YAxis allowDecimals={false} />
                     <Tooltip content={<CustomTooltip />} />
