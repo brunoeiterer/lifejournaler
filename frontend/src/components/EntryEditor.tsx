@@ -22,7 +22,7 @@ export default function EntryEditor({date, originalEntry, onClose, updateEntry} 
     const {translations} = useLanguage();
     const entry = originalEntry ?? { Mood: 'Happy', Weather: 'ExtremelyCold', SleepQuality: 'VeryBad',
         Menstruation: 'Yes', Exercise: 'Yes', AppetiteLevel: 'Low', AnxietyThoughts: 0, DepressiveThoughts: 0, Autocriticism: 0, SensorialOverload: 0,
-        Notes: ''
+        RacingThoughts: 0, Notes: ''
     };
 
     const saveEntry = async () => {
@@ -76,6 +76,8 @@ export default function EntryEditor({date, originalEntry, onClose, updateEntry} 
                     initialValue={entry.Autocriticism} onChange={onEntryUpdated} />
                 <SUDSScale title={translations['SensorialOverload']} label='SensorialOverload'
                     initialValue={entry.SensorialOverload} onChange={onEntryUpdated} />
+                <SUDSScale title={translations['RacingThoughts']} label='RacingThoughts'
+                    initialValue={entry.RacingThoughts} onChange={onEntryUpdated} />
 
                 <Notes title={translations['Notes']} label='Notes' initialValue={entry.Notes} onChange={onEntryUpdated} />
 

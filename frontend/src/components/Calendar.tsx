@@ -121,18 +121,21 @@ export default function Calendar({ entries, onDateClick }: CalendarProps) {
                   </Tooltip>
                 </div>
 
-                <div className="grid grid-cols-4 gap-2 place-items-center">
+                <div className="grid grid-cols-5 gap-2 place-items-center">
                   <Tooltip label={translations['AnxietyThoughts'] + ': ' + entry.AnxietyThoughts} setToolTipActive={setIsToolTipActive}>
-                    <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.AnxietyThoughts)}`} />
+                    <div className={`w-2 h-2 rounded-full ${getColor(entry.AnxietyThoughts)}`} />
                   </Tooltip>
                   <Tooltip label={translations['DepressiveThoughts'] + ': ' + entry.DepressiveThoughts} setToolTipActive={setIsToolTipActive}>
-                    <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.DepressiveThoughts)}`} />
+                    <div className={`w-2 h-2 rounded-full ${getColor(entry.DepressiveThoughts)}`} />
                   </Tooltip>
                   <Tooltip label={translations['Autocriticism'] + ': ' + entry.Autocriticism} setToolTipActive={setIsToolTipActive}>
-                    <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.Autocriticism)}`} />
+                    <div className={`w-2 h-2 rounded-full ${getColor(entry.Autocriticism)}`} />
                   </Tooltip>
                   <Tooltip label={translations['SensorialOverload'] + ': ' + entry.SensorialOverload} setToolTipActive={setIsToolTipActive}>
-                    <div className={`w-2.5 h-2.5 rounded-full ${getColor(entry.SensorialOverload)}`} />
+                    <div className={`w-2 h-2 rounded-full ${getColor(entry.SensorialOverload)}`} />
+                  </Tooltip>
+                  <Tooltip label={translations['RacingThoughts'] + ': ' + entry.RacingThoughts} setToolTipActive={setIsToolTipActive}>
+                    <div className={`w-2 h-2 rounded-full ${getColor(entry.RacingThoughts)}`} />
                   </Tooltip>
                 </div>
               </div>

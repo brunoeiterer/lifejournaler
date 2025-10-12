@@ -9,5 +9,6 @@ export interface DailyEntry {
   DepressiveThoughts: number;
   Autocriticism: number;
   SensorialOverload: number;
+  RacingThoughts: number;
   Notes: string;
 };

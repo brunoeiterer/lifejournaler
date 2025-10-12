@@ -108,6 +108,7 @@ namespace JournalerBackend.Controllers {
             entry.DepressiveThoughts = model.Entry.DepressiveThoughts;
             entry.Autocriticism = model.Entry.Autocriticism;
             entry.SensorialOverload = model.Entry.SensorialOverload;
+            entry.RacingThoughts = model.Entry.RacingThoughts;
             entry.Notes = model.Entry.Notes;
 
             await _context.SaveChangesAsync();
