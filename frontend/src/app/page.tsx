@@ -47,6 +47,48 @@ const Page: React.FC = () => {
         }
     }, [isSignedIn]);
 
+    useEffect(() => {
+        const anyModalOpen = isSignInVisibile || isSignUpVisibile || isDeleteAccountVisible || isMonthlyStatsChartModalVisible ||
+           isForgotPasswordVisible || isPrivacyPolicyVisible || showEntryEditor;
+        if(!anyModalOpen) {
+            if(window.history.state?.modal) {
+                window.history.back();
+            }
+
+            return;
+        }
+
+        window.history.pushState({ modal: true }, "");
+
+        const handlePopState = () => {
+                if (isSignInVisibile) {
+                    setIsSignInVisible(false);
+                }
+                else if(isSignUpVisibile) {
+                    setIsSignUpVisible(false);
+                }
+                else if(isDeleteAccountVisible) {
+                    setIsDeleteAccountVisible(false);
+                }
+                else if(isMonthlyStatsChartModalVisible) {
+                    setIsMonthlyStatsChartModalVisible(false);
+                }
+                else if(isForgotPasswordVisible) {
+                    setIsForgotPasswordVisible(false);
+                }
+                else if(isPrivacyPolicyVisible) {
+                    setIsPrivacyPolicyVisible(false);
+                }
+                else if(showEntryEditor) {
+                    setCurrentDate(null);
+                }
+            };
+
+        window.addEventListener("popstate", handlePopState);
+        return () => window.removeEventListener("popstate", handlePopState);
+    }, [isSignInVisibile, isSignUpVisibile, isDeleteAccountVisible, isMonthlyStatsChartModalVisible, isForgotPasswordVisible,
+        isPrivacyPolicyVisible, showEntryEditor]);
+
     const lockBodyScroll = isDrawerVisible || isSignInVisibile || isSignUpVisibile || isDeleteAccountVisible ||
         isMonthlyStatsChartModalVisible || isForgotPasswordVisible || isPrivacyPolicyVisible;
     useLockBodyScroll(lockBodyScroll);
