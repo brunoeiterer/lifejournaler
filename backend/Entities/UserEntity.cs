@@ -6,6 +6,8 @@ namespace JournalerBackend.Entities {
         public required string PasswordHash { get; set; }
         public string ResetPasswordCode { get; set; }
         public DateTime ResetPasswordCodeExpiration { get; set; }
+        public string RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiry { get; set; }
     }
 }
 

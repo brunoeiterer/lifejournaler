@@ -19,7 +19,7 @@ jobs:
       - name: Install Dependencies
         run: |
           cd frontend
-          npm ci --force
+          npm ci
 
       - name: Build the App
         run: |
@@ -33,7 +33,7 @@ jobs:
           cd deployable_package
           tar -czf ../lifejournaler-frontend.tar.gz .
       - name: Upload Package as Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lifejournaler-frontend
           path: lifejournaler-frontend.tar.gz

@@ -1,8 +1,7 @@
-import { JournalEntry } from "@/components/JournalEntries";
-import dayjs from "dayjs";
+import { DailyEntry } from "@/app/models/DailyEntry";
 import { env } from 'next-runtime-env';
 
-const API_BASE_URL = env('NEXT_PUBLIC_API_BASE_URL');
+const API_BASE_URL = env('NEXT_PUBLIC_API_BASE_URL') ?? '';
 
 export const login = async (username: string, password: string) => {
     const response = await fetchWrapper('api/auth/login', 'POST', JSON.stringify({Username: username, Password: password}));
@@ -15,7 +14,7 @@ export const login = async (username: string, password: string) => {
     }
 
     const json = await response.json();
-    sessionStorage.setItem('loginToken', json['token']);
+    sessionStorage.setItem('loginToken', json['Token']);
     return '';
 }
 
@@ -26,31 +25,38 @@ export const register = async (username: string, password: string) => {
     return response && response.ok;
 }
 
-export const getEntries = async (token: string) => {
+export const getEntries = async () => {
+    const token = sessionStorage.getItem('loginToken');
+    if(token == null) {
+        return false;
+    }
+
     const response = await fetchWrapper('api/journaler', 'GET', '', token);
     if(response == undefined) {
-        return new Array<JournalEntry>();
+        return {};
     }
+
     const data = await response.json();
-    const entries: JournalEntry[] = (data['entries']).map((x: {id: number, entry: string, mood: number, date: dayjs.Dayjs}) => 
-        ({id: x.id, entry: x.entry, mood: x.mood, date: x.date}));
-    return entries;
+    return data['entries'];
 }
 
-export const addEntry = async (entry: string, mood: string, date: dayjs.Dayjs, token: string) => {
-    const response = await fetchWrapper('api/journaler', 'POST', JSON.stringify({ 
-        Entry: entry, Mood: mood, Date: date }), token);
-    if(response == undefined || !response.ok) {
-        return -1;
+export const addEntry = async (date: string, entry: DailyEntry) => {
+    const token = sessionStorage.getItem("loginToken");
+    if(token == null) {
+        return false;
     }
 
-    const resposeData = await response.json();
-    return resposeData['id'];
+    const response = await fetchWrapper('api/journaler', 'POST', JSON.stringify({ entry: entry, date: date}), token);
+    if(response == undefined || !response.ok) {
+        return false;
+    }
+
+    return true;
 }
 
-export const requestPasswordReset = async (email: string) => {
+export const requestPasswordReset = async (email: string, locale: string) => {
     const response = await fetchWrapper('api/auth/request-password-reset', 'POST', JSON.stringify({
-        Email: email}));
+        Email: email, Locale: locale}));
 
     return response && response.ok;
 }
@@ -69,21 +75,51 @@ export const deleteEntry = async (id: number, token: string) => {
     return response && response.ok;
 }
 
-export const editEntry = async (entry: string, mood: string, date: dayjs.Dayjs, id: number, token: string) => {
-    const response = await fetchWrapper('api/journaler', 'PUT', JSON.stringify({ 
-        Entry: entry, Mood: mood, Date: date, Id: id}), token);
-    
-    if(response == undefined || !response.ok) {
-        return -1;
+export const editEntry = async (date: string, entry: DailyEntry) => {
+    const token = sessionStorage.getItem('loginToken');
+
+    if(token == null) {
+        return false;
     }
 
-    const resposeData = await response.json();
-    return resposeData['id'];
+    const response = await fetchWrapper('api/journaler', 'PUT', JSON.stringify({ date: date, entry: entry}), token);
+    
+    if(response == undefined || !response.ok) {
+        return false
+    }
+
+    return true;
 }
 
-export const deleteAccount = async (token: string) => {
+export const deleteAccount = async () => {
+    const token = sessionStorage.getItem('loginToken');
+    if(token == null) {
+        return false;
+    }
+
     const response = await fetchWrapper('api/auth/delete-account', 'DELETE', '', token);
     return response && response.ok;
+}
+
+export const refresh = async () => {
+    const response = await fetchWrapper('api/auth/refresh', 'POST');
+    if(response?.ok) {
+        const json = await response.json();
+        sessionStorage.setItem('loginToken', json['Token']);
+        return json['Username'];
+    }
+
+    return '';
+}
+
+export const signOut = async () => {
+    const token = sessionStorage.getItem('loginToken');
+
+    if(token == null) {
+        return false;
+    }
+
+    await fetchWrapper('api/auth/logout', 'POST', '', token);
 }
 
 const fetchWrapper = async (url: string, method: string = 'GET', data: string = '', token: string = '') => {
@@ -95,22 +131,38 @@ const fetchWrapper = async (url: string, method: string = 'GET', data: string = 
         headers.set('Authorization', 'Bearer ' + token);
     }
 
-    try {
-        const response = await fetch(`${API_BASE_URL}${url}`, {
-            headers: headers,
-            method: method,
-            ...(data != '' && {body: data})
-        });
+    let retry = false;
+    let hasRetried = false;
 
-        if (!response.ok) {
-            console.log(`Error: ${response.statusText}`);
-        }
+    do {
+        retry = false;
+        try {
+            const response = await fetch(`${API_BASE_URL}${url}`, {
+                headers: headers,
+                method: method,
+                credentials: 'include',
+                ...(data != '' && {body: data})
+            });
 
-        return response;
-    } catch (error) {
-        console.log(error);
-        if(error instanceof Error) {
-            console.error(error.message);
+            if (!response.ok) {
+                console.log(`Error: ${response.statusText}`);
+            }
+
+            if(response.status == 401 && !url.includes('refresh')) {
+                await refresh();
+                if(!hasRetried) {
+                    retry = true;
+                    hasRetried = true;
+                }
+            }
+
+            return response;
+        } catch (error) {
+            console.log(error);
+            if(error instanceof Error) {
+                console.error(error.message);
+            }
         }
-    }
+    } while(retry);
+
 };

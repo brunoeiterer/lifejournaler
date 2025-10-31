@@ -18,7 +18,7 @@ builder.Services.AddHttpLogging(o => {});
 builder.Services.AddCors(options =>
     options.AddPolicy(name: allowedOrigins,
         policy => {
-            policy.WithOrigins("https://localhost:3000").AllowAnyHeader().AllowAnyMethod();
+            policy.WithOrigins("https://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
         }));
 
 builder.Services.AddAuthentication(options => {
@@ -46,7 +46,8 @@ builder.Services.AddScoped<IPasswordHasher<UserEntity>, PasswordHasher<UserEntit
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+                .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
 builder.Services.AddScoped<JournalerDbContext>();
 

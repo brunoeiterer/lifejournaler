@@ -14,62 +14,106 @@ namespace JournalerBackend.Controllers {
 
         [Authorize]
         [HttpGet]
-        public async Task<JsonResult> GetEntryEntities() {
-            if(!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId)) {
-                return new JsonResult(new {message = "The user was not found in the request"}) {
+        public async Task<JsonResult> GetEntryEntities()
+        {
+            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
+            {
+                return new JsonResult(new { message = "The user was not found in the request" })
+                {
                     StatusCode = 400
                 };
             }
 
-            var entries = await _context.Entries.Where(e => e.User.Id == userId).ToListAsync();
-            return new JsonResult(new {entries});
+            var entries = await _context.Entries.Where(e => e.User.Id == userId).ToDictionaryAsync(e => e.Date);
+            return new JsonResult(new { entries });
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<JsonResult> PostEntryEntity([FromBody] EntryEntity entity)
+        public async Task<JsonResult> PostEntryEntity([FromBody] AddModel model)
         {
-            if(!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId)) {
-                return new JsonResult(new {message = "The user was not found in the request"}) {
+            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
+            {
+                return new JsonResult(new { message = "The user was not found in the request" })
+                {
                     StatusCode = 400
                 };
             }
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-            if(user == null) {
-                return new JsonResult(new {message = "The user was not found in the database"}) {
+            if (user == null)
+            {
+                return new JsonResult(new { message = "The user was not found in the database" })
+                {
                     StatusCode = 400
                 };
             }
 
-            entity.User = user;
+            var isEntryAlreadyInDb = await _context.Entries.AnyAsync(e => e.User.Id == user.Id && e.Date == model.Date);
+            if (isEntryAlreadyInDb)
+            {
+                return new JsonResult(new { message = "The entry already exists in the database" })
+                {
+                    StatusCode = 400
+                };
+            }
 
-            _context.Entries.Add(entity);
+            model.Entry.User = user;
+            model.Entry.Date = model.Date;
+
+            _context.Entries.Add(model.Entry);
             await _context.SaveChangesAsync();
 
-            return new JsonResult(new {entity.Id});
+            return new JsonResult(new { model.Entry.Id });
         }
 
         [Authorize]
         [HttpPut]
-        public async Task<JsonResult> PutYourEntity(EntryEntity editedEntry)
+        public async Task<JsonResult> PutEntryEntity([FromBody] AddModel model)
         {
-            var entry = _context.Entries.SingleOrDefault(e => e.Id == editedEntry.Id);
-
-            if (entry == null)
+            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
             {
-                return new JsonResult(new {message = "The entry was not found in the database"}) {
+                return new JsonResult(new { message = "The user was not found in the request" })
+                {
                     StatusCode = 400
                 };
             }
 
-            entry.Entry = editedEntry.Entry;
-            entry.Mood = editedEntry.Mood;
-            entry.Date = editedEntry.Date;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                return new JsonResult(new { message = "The user was not found in the database" })
+                {
+                    StatusCode = 400
+                };
+            }
+
+            var entry = _context.Entries.SingleOrDefault(e => e.User.Id == user.Id && e.Date == model.Date);
+
+            if (entry == null)
+            {
+                return new JsonResult(new { message = "The entry was not found in the database" })
+                {
+                    StatusCode = 400
+                };
+            }
+
+            entry.Mood = model.Entry.Mood;
+            entry.Weather = model.Entry.Weather;
+            entry.SleepQuality = model.Entry.SleepQuality;
+            entry.Menstruation = model.Entry.Menstruation;
+            entry.Exercise = model.Entry.Exercise;
+            entry.AppetiteLevel = model.Entry.AppetiteLevel;
+            entry.AnxietyThoughts = model.Entry.AnxietyThoughts;
+            entry.DepressiveThoughts = model.Entry.DepressiveThoughts;
+            entry.Autocriticism = model.Entry.Autocriticism;
+            entry.SensorialOverload = model.Entry.SensorialOverload;
+            entry.RacingThoughts = model.Entry.RacingThoughts;
+            entry.Notes = model.Entry.Notes;
 
             await _context.SaveChangesAsync();
 
-            return new JsonResult(new {editedEntry.Id});
+            return new JsonResult(new { entry.Id });
         }
 
         [Authorize]
@@ -88,8 +132,15 @@ namespace JournalerBackend.Controllers {
             return NoContent();
         }
 
-        public class DeleteModel {
+        public class DeleteModel
+        {
             public int Id { get; set; }
+        }
+
+        public class AddModel
+        {
+            public EntryEntity Entry { get; set; }
+            public string Date { get; set; }
         }
     }
 }

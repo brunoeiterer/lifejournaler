@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "C#: JournalerBackend",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}\\JournalerBackend.csproj",
+            "launchConfigurationId": "TargetFramework=;https"
+        }
+    ]
+}

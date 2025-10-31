@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import enTranslations from '../../../messages/en-US.json';
 
 // Type for the context
@@ -12,6 +12,8 @@ interface LanguageContextType {
 
 // Create the context
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+
+const supportedLanguages = new Set<string>(['en-US', 'pt-BR']);
 
 // Hook to use the LanguageContext
 export const useLanguage = (): LanguageContextType => {
@@ -29,14 +31,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const initialTranslations = enTranslations;
 
-  const [language, setLanguage] = useState<string>('en-US');
+  const [language, setLanguage] = useState<string>(supportedLanguages.has(navigator.language) ? navigator.language : "en-US");
   const [translations, setTranslations] = useState<Record<string, string>>(initialTranslations);
-
-  const switchLanguage = (lang: string) => {
-    setLanguage(lang);
-    loadTranslations(lang);
-    localStorage.setItem('language', lang); // Store in localStorage for persistence
-  };
 
   const loadTranslations = (lang: string) => {
     import(`../../../messages/${lang}.json`) // Dynamically load language files
@@ -46,8 +42,13 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
       .catch((error) => console.error('Error loading language file:', error));
   };
 
+  useEffect(() => {
+    setLanguage(language);
+    loadTranslations(language);
+  }, [language]);
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage: switchLanguage, translations }}>
+    <LanguageContext.Provider value={{ language, setLanguage: setLanguage, translations }}>
       {children}
     </LanguageContext.Provider>
   );

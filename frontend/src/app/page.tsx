@@ -1,214 +1,191 @@
 'use client';
 
-import { useState } from 'react';
-import Drawer from '../components/Drawer';
-import MoodStatistics, { moods } from '../components/MoodStatistics';
-import JournalEntries, { JournalEntry } from '../components/JournalEntries';
-import { AppBar, Box, Button, Dialog, Modal, Toolbar, Typography } from '@mui/material';
-import SignIn from '@/components/SignIn';
-import SignUp from '@/components/SignUp';
-import { deleteAccount, getEntries } from '@/services/BackendApiService'; 
-import ResetPassword from '@/components/ResetPassword';
-import { css } from '@emotion/css';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useLanguage } from './contexts/LanguageContext';
+import { DailyEntry } from './models/DailyEntry';
+import Calendar from '@/components/Calendar';
+import { useEffect, useState } from 'react';
+import EntryEditor from '@/components/EntryEditor';
+import Drawer from '@/components/Drawer';
+import { useAuth } from './contexts/AuthContext';
+import { getEntries } from '@/services/BackendApiService';
+import LoadingScreen from '@/components/LoadingScreen';
+import Modal from '@/components/Modal';
+import SignInForm from '@/components/SignInForm';
+import SignUpForm from '@/components/SignUpForm';
+import { ModalErrorProvider } from './contexts/ModalErrorContext';
+import DeleteAccount from '@/components/DeleteAccount';
+import MonthlyStatsChart from '@/components/MonthlyStatsChart';
+import ForgotPasswordForm from '@/components/ForgotPasswordForm';
 import PrivacyPolicy from '@/components/PrivacyPolicy';
+import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
 
-const Dashboard: React.FC = () => {
-    const [view, setView] = useState('journal');
+const Page: React.FC = () => {
+    const { translations } = useLanguage();
+    const [ currentDate, setCurrentDate ] = useState<string | null>(null);
+    const [ isDrawerVisible, setIsDrawerVisible ] = useState(true);
+    const [ isSignInVisibile, setIsSignInVisible ] = useState(false);
+    const [ isSignUpVisibile, setIsSignUpVisible ] = useState(false);
+    const [ isDeleteAccountVisible, setIsDeleteAccountVisible ] = useState(false);
+    const [ isMonthlyStatsChartModalVisible, setIsMonthlyStatsChartModalVisible ] = useState(false);
+    const [ isForgotPasswordVisible, setIsForgotPasswordVisible ] = useState(false);
+    const [ isPrivacyPolicyVisible, setIsPrivacyPolicyVisible ] = useState(false);
+    const [ entries, setEntries ] = useState<Record<string, DailyEntry>>({})
+    const { isSignedIn, isAuthLoading } = useAuth();
 
-    const [moodsMap] = useState<Map<string, number>>(new Map(moods.map((m, i) => [m, i])));
-    const [moodsArray, setMoodsArray] = useState<number[]>(new Array<number>(moods.length).fill(0));
+    const showEntryEditor = currentDate != null;
 
-    const [showSignInButton, setShowSignInButton] = useState(true);
-    const [showDeleteAccountButton, setShowDeleteAccountButton] = useState(false);
+    useEffect(() => {
+        if(isSignedIn) {
+            const fetchEntries = async () => {
+                setEntries(await getEntries());
+            }
 
-    const [showDeleteAccountDialog, setShowDeleteAccountDialog] = useState(false);
-    const handleOpenDeleteAccountDialog = () => setShowDeleteAccountDialog(true);
-
-    const [showSignInModal, setShowSignInModal] = useState(false);
-    const handleOpenSignInModal = () => setShowSignInModal(true);
-    const handleCloseSignInModal = () => setShowSignInModal(false);
-
-    const [showSignUpModal, setShowSignUpModal] = useState(false);
-    const handleOpenSignUpModal = () => setShowSignUpModal(true);
-    const handleCloseSignUpModal = () => setShowSignUpModal(false);
-
-    const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
-    const handleOpenResetPasswordModal = () => setShowResetPasswordModal(true);
-    const handleCloseResetPasswordModal = () => setShowResetPasswordModal(false);
-
-    const [username, setUserName] = useState('');
-
-    const [entries, setEntries] = useState<JournalEntry[]>([]);
-
-    const addEntry = (newEntry: JournalEntry) => {
-        setEntries(entries => [newEntry, ...entries]);
-        moodsArray[(moodsMap.get(newEntry.mood) as number)] += 1
-    }
-
-    const removeEntry = (id: number) => {
-        setEntries(entries.filter(e => e.id !== id));
-    }
-
-    const editEntry = (editedEntry: JournalEntry) => {
-        const entriesCopy = [...entries];
-        const entryIndex = entries.findIndex(e => e.id == editedEntry.id);
-        entriesCopy[entryIndex] = editedEntry;
-        setEntries(entriesCopy);
-    }
-
-    const onSignedIn = async (username: string) => {
-        handleCloseSignInModal();
-        setShowSignInButton(false);
-        setShowDeleteAccountButton(true);
-        setUserName(username);
-        const userEntries = await getEntries(sessionStorage.getItem('loginToken') ?? '');
-        for (const entry of userEntries) {
-            addEntry(entry);
+            fetchEntries();
         }
-    }
+        else {
+            setEntries({});
+        }
+    }, [isSignedIn]);
 
-    const onSignedUp = () => {
-        handleCloseSignUpModal();
-        handleOpenSignInModal();
-    }
+    useEffect(() => {
+        const anyModalOpen = isSignInVisibile || isSignUpVisibile || isDeleteAccountVisible || isMonthlyStatsChartModalVisible ||
+           isForgotPasswordVisible || isPrivacyPolicyVisible || showEntryEditor;
+        if(!anyModalOpen) {
+            if(window.history.state?.modal) {
+                window.history.back();
+            }
 
-    const handleSignOut = () => {
-        setShowSignInButton(true);
-        setShowDeleteAccountButton(false);
-        sessionStorage.clear();
-        setEntries([]);
-        setMoodsArray(new Array<number>(moods.length).fill(0));
+            return;
+        }
+
+        window.history.pushState({ modal: true }, "");
+
+        const handlePopState = () => {
+                if (isSignInVisibile) {
+                    setIsSignInVisible(false);
+                }
+                else if(isSignUpVisibile) {
+                    setIsSignUpVisible(false);
+                }
+                else if(isDeleteAccountVisible) {
+                    setIsDeleteAccountVisible(false);
+                }
+                else if(isMonthlyStatsChartModalVisible) {
+                    setIsMonthlyStatsChartModalVisible(false);
+                }
+                else if(isForgotPasswordVisible) {
+                    setIsForgotPasswordVisible(false);
+                }
+                else if(isPrivacyPolicyVisible) {
+                    setIsPrivacyPolicyVisible(false);
+                }
+                else if(showEntryEditor) {
+                    setCurrentDate(null);
+                }
+            };
+
+        window.addEventListener("popstate", handlePopState);
+        return () => window.removeEventListener("popstate", handlePopState);
+    }, [isSignInVisibile, isSignUpVisibile, isDeleteAccountVisible, isMonthlyStatsChartModalVisible, isForgotPasswordVisible,
+        isPrivacyPolicyVisible, showEntryEditor]);
+
+    const lockBodyScroll = isDrawerVisible || isSignInVisibile || isSignUpVisibile || isDeleteAccountVisible ||
+        isMonthlyStatsChartModalVisible || isForgotPasswordVisible || isPrivacyPolicyVisible;
+    useLockBodyScroll(lockBodyScroll);
+
+    const updateEntry = (date: string, entry: DailyEntry) => {
+        const entryData = Object.assign({}, entries);
+        entryData[date] = entry;
+        setEntries(entryData);
     }
 
     const onForgotPassword = () => {
-        handleCloseSignInModal();
-        handleOpenResetPasswordModal();
+        setIsSignInVisible(false);
+        setIsForgotPasswordVisible(true);
     }
 
-    const handleDeleteAccountConfirmation = async (confirm: boolean) => {
-        if(confirm) {
-            const success = await deleteAccount(sessionStorage.getItem('loginToken') ?? '');
-            if(success) {
-                handleSignOut();
-            }
-        }
-
-        setShowDeleteAccountDialog(false);
+    if(isAuthLoading) {
+        return <LoadingScreen />
     }
-
-    const { translations } = useLanguage();
 
     return (
-            <div>
-                <AppBar position="static">
-                    <Toolbar className={css({display: 'flex', justifyContent: 'space-between'})}>
-                        <div>
-                            <div className={showSignInButton ? 'hidden' : undefined}>
-                                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                                    {username}
-                                </Typography>
-                                <Button color='inherit'
-                                    onClick={handleSignOut}>
-                                    {translations['SignOut']}
-                                </Button>
-                            </div>
-                            <div className={showSignInButton ? undefined : 'hidden'}>
-                                <Button color="inherit"
-                                    onClick={handleOpenSignInModal}
-                                >{translations['SignIn']}</Button>
-                                <Button color="inherit"
-                                    onClick={handleOpenSignUpModal}
-                                >{translations['SignUp']}</Button>
-                            </div>
-                            <div className={showDeleteAccountButton ? undefined : 'hidden'}>
-                                <Button color="inherit"
-                                    onClick={handleOpenDeleteAccountDialog}
-                                >{translations['DeleteAccount']}</Button>
-                            </div>
-                        </div>
+        <div className="relative min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
+            <button className="fixed top-4 left-4 z-[100] p-2 rounded-md hover:bg-gray-100" onClick={() => setIsDrawerVisible(!isDrawerVisible)}>
+                <svg
+                    className="w-6 h-6 text-gray-700"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    viewBox="0 0 24 24"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
 
-                        <div>
-                            <LanguageSwitcher />
-                        </div>
-                    </Toolbar>
-                </AppBar>
+            <Drawer isVisible={isDrawerVisible}
+                onSignInClick={() => setIsSignInVisible(true)}
+                onSignUpClick={() => setIsSignUpVisible(true)}
+                onDeleteAccountClick={() => setIsDeleteAccountVisible(true)}
+                onMonthlyStatisticsClick={() => setIsMonthlyStatsChartModalVisible(true)}
+                onPrivacyPolicyClick={() => setIsPrivacyPolicyVisible(true)}
+                onClose={() => setIsDrawerVisible(false)} />
 
-                <Modal open={showSignInModal} onClose={handleCloseSignInModal}>
-                    <Box>
-                        <SignIn onSignedIn={onSignedIn} onForgotPassword={onForgotPassword} />
-                    </Box>
-                </Modal>
+            <div className="flex flex-col items-center justify-center gap-4">
+                <h1 className="text-2xl font-semibold text-center mb-4">LifeJournaler</h1>
+                <p className="text-gray-500 text-center mb-8">{translations['ClickTip']}</p>
 
-                <Modal open={showSignUpModal} onClose={handleCloseSignUpModal}>
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            width: 400,
-                            bgcolor: 'background.paper',
-                            borderRadius: '8px',
-                            boxShadow: 24,
-                            p: 4,
-                        }}
-                    >
-                        <SignUp onSignedUp={onSignedUp} />
-                    </Box>
-                </Modal>
-
-                <Modal open={showResetPasswordModal} onClose={handleCloseResetPasswordModal}>
-                    <Box
-                            sx={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                width: 400,
-                                bgcolor: 'background.paper',
-                                borderRadius: '8px',
-                                boxShadow: 24,
-                                p: 4,
-                            }}
-                        >
-                            <ResetPassword />
-                        </Box>
-                </Modal>
-
-                <Dialog open={showDeleteAccountDialog}>
-                    {translations['DeleteAccountConfirmation']}
-                    <Button onClick={() => handleDeleteAccountConfirmation(true)}>
-                        {translations['Yes']}
-                    </Button>
-                    <Button onClick={() => handleDeleteAccountConfirmation(false)}>
-                        {translations['No']}
-                    </Button>
-                </Dialog>
-
-                <div style={{ display: 'flex'}}>
-                    <Drawer onSelect={setView} />
-                    <div style={{ padding: '20px', flex: 1, overflowY: 'auto' }}>
-                        {view === 'journal' ? (
-                            <>
-                                <h2>{translations['JournalEntries']}</h2>
-                                <JournalEntries entries={entries} addEntry={addEntry} removeEntry={removeEntry} editEntry={editEntry} />
-                            </>
-                        ) : view === 'statistics' ? (
-                            <>
-                                <h2>{translations['MoodStatistics']}</h2>
-                                <MoodStatistics moods={moodsArray} />
-                            </>
-                        ) : (
-                            <>
-                                <PrivacyPolicy />
-                            </>
-                        )}
-                    </div>
+                <div className="bg-white p-6 rounded-2xl shadow-md max-w-md mx-auto">
+                    <Calendar entries={entries} onDateClick={(date) => setCurrentDate(date)} />
                 </div>
+                {showEntryEditor &&
+                    <Modal onClose={() => setCurrentDate(null)} >
+                        <EntryEditor date={currentDate} originalEntry={entries[currentDate]} 
+                        onClose={() => setCurrentDate(null)} updateEntry={updateEntry}/>
+                    </Modal>
+                }
+                {isSignInVisibile &&
+                    <ModalErrorProvider>
+                        <Modal onClose={() => setIsSignInVisible(false)} title={translations['SignIn']}>
+                            <SignInForm onSuccess={() => setIsSignInVisible(false)} onForgotPassword={onForgotPassword} />
+                        </Modal>
+                    </ModalErrorProvider>
+                }
+                {isSignUpVisibile &&
+                    <ModalErrorProvider>
+                        <Modal onClose={() => setIsSignUpVisible(false)} title={translations['SignUp']} >
+                            <SignUpForm onSuccess={() => setIsSignUpVisible(false)} />
+                        </Modal>
+                    </ModalErrorProvider>
+                }
+                {isDeleteAccountVisible &&
+                    <ModalErrorProvider>
+                        <Modal onClose={() => setIsDeleteAccountVisible(false)} title={translations['DeleteAccount']}>
+                            <DeleteAccount onSuccess={() => setIsDeleteAccountVisible(false)} />
+                        </Modal>
+                    </ModalErrorProvider>
+                }
+                {isMonthlyStatsChartModalVisible &&
+                    <ModalErrorProvider>
+                        <Modal onClose={() => setIsMonthlyStatsChartModalVisible(false)} title={translations['MonthlyStatistics']}>
+                            <MonthlyStatsChart entries={entries} />
+                        </Modal>
+                    </ModalErrorProvider>
+                }
+                {isForgotPasswordVisible &&
+                    <ModalErrorProvider>
+                        <Modal onClose={() => setIsForgotPasswordVisible(false)} title={translations['ResetPassword']}>
+                            <ForgotPasswordForm onSuccess={() => setIsForgotPasswordVisible(false)}  />
+                        </Modal>
+                    </ModalErrorProvider>    
+                }
+                {isPrivacyPolicyVisible &&
+                    <Modal onClose={() => setIsPrivacyPolicyVisible(false)}>
+                        <PrivacyPolicy />
+                    </Modal>
+                }
             </div>
+        </div>
     );
 };
 
-export default Dashboard;
+export default Page;

@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JournalerBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class v1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,9 +34,17 @@ namespace JournalerBackend.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Entry = table.Column<string>(type: "text", nullable: true),
+                    Date = table.Column<string>(type: "text", nullable: true),
                     Mood = table.Column<string>(type: "text", nullable: true),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Weather = table.Column<string>(type: "text", nullable: true),
+                    SleepQuality = table.Column<string>(type: "text", nullable: true),
+                    Menstruation = table.Column<bool>(type: "boolean", nullable: false),
+                    Exercise = table.Column<bool>(type: "boolean", nullable: false),
+                    AnxietyThoughts = table.Column<int>(type: "integer", nullable: false),
+                    DepressiveThoughts = table.Column<int>(type: "integer", nullable: false),
+                    Autocriticism = table.Column<int>(type: "integer", nullable: false),
+                    SensorialOverload = table.Column<int>(type: "integer", nullable: false),
+                    Notes = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>

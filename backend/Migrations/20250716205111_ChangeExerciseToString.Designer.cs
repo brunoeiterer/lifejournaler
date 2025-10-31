@@ -3,6 +3,7 @@ using System;
 using JournalerBackend.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JournalerBackend.Migrations
 {
     [DbContext(typeof(JournalerDbContext))]
-    partial class JournalerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250716205111_ChangeExerciseToString")]
+    partial class ChangeExerciseToString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,9 +60,6 @@ namespace JournalerBackend.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
-                    b.Property<int>("RacingThoughts")
-                        .HasColumnType("integer");
-
                     b.Property<int>("SensorialOverload")
                         .HasColumnType("integer");
 
@@ -89,12 +89,6 @@ namespace JournalerBackend.Migrations
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");
-
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("RefreshTokenExpiry")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ResetPasswordCode")
                         .HasColumnType("text");
