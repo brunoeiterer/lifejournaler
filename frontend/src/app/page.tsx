@@ -5,7 +5,7 @@ import { DailyEntry } from './models/DailyEntry';
 import Calendar from '@/components/Calendar/Calendar';
 import { useEffect, useState } from 'react';
 import EntryEditor from '@/components/EntryEditor';
-import Drawer from '@/components/Drawer';
+import Drawer from '@/components/Drawer/Drawer';
 import { useAuth } from './contexts/AuthContext';
 import { getEntries } from '@/services/BackendApiService';
 import LoadingScreen from '@/components/LoadingScreen';
@@ -126,7 +126,8 @@ const Page: React.FC = () => {
                 </svg>
             </button>
 
-            <Drawer isVisible={isDrawerVisible}
+            <Drawer
+                isVisible={isDrawerVisible}
                 onSignInClick={() => setIsSignInVisible(true)}
                 onSignUpClick={() => setIsSignUpVisible(true)}
                 onDeleteAccountClick={() => setIsDeleteAccountVisible(true)}
