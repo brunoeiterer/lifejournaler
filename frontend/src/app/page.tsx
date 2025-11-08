@@ -2,7 +2,7 @@
 
 import { useLanguage } from './contexts/LanguageContext';
 import { DailyEntry } from './models/DailyEntry';
-import Calendar from '@/components/Calendar';
+import Calendar from '@/components/Calendar/Calendar';
 import { useEffect, useState } from 'react';
 import EntryEditor from '@/components/EntryEditor';
 import Drawer from '@/components/Drawer';
@@ -91,7 +91,7 @@ const Page: React.FC = () => {
         isPrivacyPolicyVisible, showEntryEditor]);
 
     const lockBodyScroll = isDrawerVisible || isSignInVisibile || isSignUpVisibile || isDeleteAccountVisible ||
-        isMonthlyStatsChartModalVisible || isForgotPasswordVisible || isPrivacyPolicyVisible;
+        isMonthlyStatsChartModalVisible || isForgotPasswordVisible || isPrivacyPolicyVisible || showEntryEditor;
     useLockBodyScroll(lockBodyScroll);
 
     const updateEntry = (date: string, entry: DailyEntry) => {
@@ -113,7 +113,7 @@ const Page: React.FC = () => {
         Object.keys(entries).sort().slice(-4).every(day => entries[day].Mood === "Tired");
 
     return (
-        <div className="relative min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
+        <div className="relative min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 overflow-auto">
             <button className="fixed top-4 left-4 z-[100] p-2 rounded-md hover:bg-gray-100" onClick={() => setIsDrawerVisible(!isDrawerVisible)}>
                 <svg
                     className="w-6 h-6 text-gray-700"
