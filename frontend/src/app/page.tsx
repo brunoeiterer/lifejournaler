@@ -14,7 +14,7 @@ import SignInForm from '@/components/SignInForm';
 import SignUpForm from '@/components/SignUpForm';
 import { ModalErrorProvider } from './contexts/ModalErrorContext';
 import DeleteAccount from '@/components/DeleteAccount';
-import MonthlyStatsChart from '@/components/MonthlyStatsChart';
+import MonthlyStats from '@/components/MonthlyStats/MonthlyStats';
 import ForgotPasswordForm from '@/components/ForgotPasswordForm';
 import PrivacyPolicy from '@/components/PrivacyPolicy';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
@@ -29,7 +29,7 @@ const Page: React.FC = () => {
     const [ isSignInVisibile, setIsSignInVisible ] = useState(false);
     const [ isSignUpVisibile, setIsSignUpVisible ] = useState(false);
     const [ isDeleteAccountVisible, setIsDeleteAccountVisible ] = useState(false);
-    const [ isMonthlyStatsChartModalVisible, setIsMonthlyStatsChartModalVisible ] = useState(false);
+    const [ isMonthlyStatsModalVisible, setIsMonthlyStatsModalVisible ] = useState(false);
     const [ isForgotPasswordVisible, setIsForgotPasswordVisible ] = useState(false);
     const [ isPrivacyPolicyVisible, setIsPrivacyPolicyVisible ] = useState(false);
     const [ entries, setEntries ] = useState<Record<string, DailyEntry>>({})
@@ -51,7 +51,7 @@ const Page: React.FC = () => {
     }, [isSignedIn]);
 
     useEffect(() => {
-        const anyModalOpen = isSignInVisibile || isSignUpVisibile || isDeleteAccountVisible || isMonthlyStatsChartModalVisible ||
+        const anyModalOpen = isSignInVisibile || isSignUpVisibile || isDeleteAccountVisible || isMonthlyStatsModalVisible ||
            isForgotPasswordVisible || isPrivacyPolicyVisible || showEntryEditor;
         if(!anyModalOpen) {
             if(window.history.state?.modal) {
@@ -73,8 +73,8 @@ const Page: React.FC = () => {
                 else if(isDeleteAccountVisible) {
                     setIsDeleteAccountVisible(false);
                 }
-                else if(isMonthlyStatsChartModalVisible) {
-                    setIsMonthlyStatsChartModalVisible(false);
+                else if(isMonthlyStatsModalVisible) {
+                    setIsMonthlyStatsModalVisible(false);
                 }
                 else if(isForgotPasswordVisible) {
                     setIsForgotPasswordVisible(false);
@@ -89,11 +89,11 @@ const Page: React.FC = () => {
 
         window.addEventListener("popstate", handlePopState);
         return () => window.removeEventListener("popstate", handlePopState);
-    }, [isSignInVisibile, isSignUpVisibile, isDeleteAccountVisible, isMonthlyStatsChartModalVisible, isForgotPasswordVisible,
+    }, [isSignInVisibile, isSignUpVisibile, isDeleteAccountVisible, isMonthlyStatsModalVisible, isForgotPasswordVisible,
         isPrivacyPolicyVisible, showEntryEditor]);
 
     const lockBodyScroll = isDrawerVisible || isSignInVisibile || isSignUpVisibile || isDeleteAccountVisible ||
-        isMonthlyStatsChartModalVisible || isForgotPasswordVisible || isPrivacyPolicyVisible || showEntryEditor;
+        isMonthlyStatsModalVisible || isForgotPasswordVisible || isPrivacyPolicyVisible || showEntryEditor;
     useLockBodyScroll(lockBodyScroll);
 
     const updateEntry = (date: string, entry: DailyEntry) => {
@@ -125,7 +125,7 @@ const Page: React.FC = () => {
                 onSignInClick={() => setIsSignInVisible(true)}
                 onSignUpClick={() => setIsSignUpVisible(true)}
                 onDeleteAccountClick={() => setIsDeleteAccountVisible(true)}
-                onMonthlyStatisticsClick={() => setIsMonthlyStatsChartModalVisible(true)}
+                onMonthlyStatisticsClick={() => setIsMonthlyStatsModalVisible(true)}
                 onPrivacyPolicyClick={() => setIsPrivacyPolicyVisible(true)}
                 onClose={() => setIsDrawerVisible(false)}
             />
@@ -192,13 +192,13 @@ const Page: React.FC = () => {
                         </Modal>
                     </ModalErrorProvider>
                 }
-                {isMonthlyStatsChartModalVisible &&
+                {isMonthlyStatsModalVisible &&
                     <ModalErrorProvider>
                         <Modal
-                            onClose={() => setIsMonthlyStatsChartModalVisible(false)}
+                            onClose={() => setIsMonthlyStatsModalVisible(false)}
                             title={translations['MonthlyStatistics']}
                         >
-                            <MonthlyStatsChart
+                            <MonthlyStats
                                 entries={entries}
                             />
                         </Modal>

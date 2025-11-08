@@ -3,8 +3,9 @@
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import { DailyEntry } from '@/app/models/DailyEntry';
-import CategoryChart from './CategoryChart';
+import CategoryChart from './CategoryChart/CategoryChart';
 import { useLanguage } from '@/app/contexts/LanguageContext';
+import { DateSelectContainer, MonthlyStatsContainer, Selector } from './MonthlyStats.styles';
 
 type Props = {
     entries: Record<string, DailyEntry>;
@@ -16,7 +17,7 @@ const getZone = (value: number): string => {
     return 'HighIntensity';
 };
 
-export default function MonthlyStatsChart({ entries }: Props) {
+export default function MonthlyStats({ entries }: Props) {
     const now = dayjs();
     const [selectedMonth, setSelectedMonth] = useState<number>(now.month() + 1);
     const [selectedYear, setSelectedYear] = useState<number>(now.year());
@@ -59,24 +60,22 @@ export default function MonthlyStatsChart({ entries }: Props) {
     }
     
     return (
-        <div className="w-full h-96 max-w-3xl bg-white rounded-xl p-6">
-            <div className="flex justify-center gap-4 mb-6">
-                <select
-                    className="border rounded p-2"
+        <MonthlyStatsContainer>
+            <DateSelectContainer>
+                <Selector
                     value={selectedMonth}
-                    onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedMonth(Number(e.target.value))}
                 >
                     {Array.from({ length: 12 }, (_, i) => (
                         <option key={i + 1} value={i + 1}>
                             {i + 1}
                         </option>
                     ))}
-                </select>
+                </Selector>
 
-                <select
-                    className="border rounded p-2"
+                <Selector
                     value={selectedYear}
-                    onChange={(e) => setSelectedYear(Number(e.target.value))}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedYear(Number(e.target.value))}
                 >
                     {Array.from({ length: 5 }, (_, i) => {
                         const year = now.year() - i;
@@ -86,8 +85,8 @@ export default function MonthlyStatsChart({ entries }: Props) {
                             </option>
                         );
                     })}
-                </select>
-            </div>
+                </Selector>
+            </DateSelectContainer>
 
             <CategoryChart title={translations['Mood']} data={moodCounts} />
             <CategoryChart title={translations['Weather']} data={weatherCounts} />
@@ -100,6 +99,6 @@ export default function MonthlyStatsChart({ entries }: Props) {
             <CategoryChart title={translations['Menstruation']} data={menstruationCount} />
             <CategoryChart title={translations['Exercise']} data={exerciseCount} />
             <CategoryChart title={translations['AppetiteLevel']} data={appetiteLevelCount} />
-        </div>
+        </MonthlyStatsContainer>
     );
 }

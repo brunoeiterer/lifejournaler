@@ -8,7 +8,8 @@ import {
     ResponsiveContainer,
     Tooltip,
 } from 'recharts';
-import { Emojis } from './Emojis';
+import { Emojis } from '@/components/Emojis';
+import { CategoryChartContainer, CategoryChartTitle } from './CategoryChart.styles';
 
 type Props = {
     data: Record<string, number>;
@@ -109,8 +110,8 @@ export default function CategoryChart({ data, title }: Props) {
     };
 
     return (
-        <div className="flex flex-col w-full h-64 mb-8 justify-center items-center">
-            <h3 className="text-center font-medium mb-2">{title}</h3>
+        <CategoryChartContainer>
+            <CategoryChartTitle>{title}</CategoryChartTitle>
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 20, right: 30, left: -30, bottom: 5 }}>
                     <XAxis dataKey="label" tick={<Tick />} interval={0} />
@@ -126,6 +127,6 @@ export default function CategoryChart({ data, title }: Props) {
                     </Bar>
                 </BarChart>
             </ResponsiveContainer>
-        </div>
+        </CategoryChartContainer>
     );
 }
