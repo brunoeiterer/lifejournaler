@@ -19,6 +19,8 @@ import ForgotPasswordForm from '@/components/ForgotPasswordForm';
 import PrivacyPolicy from '@/components/PrivacyPolicy';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
 import DepressiveEpisodeWarning from '@/components/DepressiveEpisodeWarning';
+import { CalendarContainer, ClickTip, ContentContainer, DepressiveEpisodeWarningContainer, PageContainer, PageTitle } from './page.styles';
+import HamburgerButton from '@/components/HamburgerButton';
 
 const Page: React.FC = () => {
     const { translations } = useLanguage();
@@ -113,18 +115,10 @@ const Page: React.FC = () => {
         Object.keys(entries).sort().slice(-4).every(day => entries[day].Mood === "Tired");
 
     return (
-        <div className="relative min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 overflow-auto">
-            <button className="fixed top-4 left-4 z-[100] p-2 rounded-md hover:bg-gray-100" onClick={() => setIsDrawerVisible(!isDrawerVisible)}>
-                <svg
-                    className="w-6 h-6 text-gray-700"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    viewBox="0 0 24 24"
-                >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
+        <PageContainer>
+            <HamburgerButton
+                onClick={() => setIsDrawerVisible(!isDrawerVisible)}
+            />
 
             <Drawer
                 isVisible={isDrawerVisible}
@@ -133,67 +127,104 @@ const Page: React.FC = () => {
                 onDeleteAccountClick={() => setIsDeleteAccountVisible(true)}
                 onMonthlyStatisticsClick={() => setIsMonthlyStatsChartModalVisible(true)}
                 onPrivacyPolicyClick={() => setIsPrivacyPolicyVisible(true)}
-                onClose={() => setIsDrawerVisible(false)} />
+                onClose={() => setIsDrawerVisible(false)}
+            />
 
-            <div className="flex flex-col items-center justify-center gap-4">
-                <h1 className="text-2xl font-semibold text-center mb-4">LifeJournaler</h1>
-                <p className="text-gray-500 text-center">{translations['ClickTip']}</p>
+            <ContentContainer>
+                <PageTitle>LifeJournaler</PageTitle>
+                <ClickTip>{translations['ClickTip']}</ClickTip>
 
-                <div className="mb-2">
+                <DepressiveEpisodeWarningContainer>
                     {shouldDisplayEpisodeWarning && <DepressiveEpisodeWarning />}
-                </div>
+                </DepressiveEpisodeWarningContainer>
 
-                <div className="bg-white p-6 rounded-2xl shadow-md max-w-md mx-auto">
-                    <Calendar entries={entries} onDateClick={(date) => setCurrentDate(date)} />
-                </div>
+                <CalendarContainer>
+                    <Calendar
+                        entries={entries}
+                        onDateClick={(date) => setCurrentDate(date)}
+                    />
+                </CalendarContainer>
                 {showEntryEditor &&
-                    <Modal onClose={() => setCurrentDate(null)} >
-                        <EntryEditor date={currentDate} originalEntry={entries[currentDate]} 
-                        onClose={() => setCurrentDate(null)} updateEntry={updateEntry}/>
+                    <Modal
+                        onClose={() => setCurrentDate(null)}
+                    >
+                        <EntryEditor
+                            date={currentDate}
+                            originalEntry={entries[currentDate]}
+                            onClose={() => setCurrentDate(null)} updateEntry={updateEntry}
+                        />
                     </Modal>
                 }
                 {isSignInVisibile &&
                     <ModalErrorProvider>
-                        <Modal onClose={() => setIsSignInVisible(false)} title={translations['SignIn']}>
-                            <SignInForm onSuccess={() => setIsSignInVisible(false)} onForgotPassword={onForgotPassword} />
+                        <Modal
+                            onClose={() => setIsSignInVisible(false)}
+                            title={translations['SignIn']}
+                        >
+                            <SignInForm
+                                onSuccess={() => setIsSignInVisible(false)}
+                                onForgotPassword={onForgotPassword}
+                            />
                         </Modal>
                     </ModalErrorProvider>
                 }
                 {isSignUpVisibile &&
                     <ModalErrorProvider>
-                        <Modal onClose={() => setIsSignUpVisible(false)} title={translations['SignUp']} >
-                            <SignUpForm onSuccess={() => setIsSignUpVisible(false)} />
+                        <Modal
+                            onClose={() => setIsSignUpVisible(false)}
+                            title={translations['SignUp']}
+                        >
+                            <SignUpForm
+                                onSuccess={() => setIsSignUpVisible(false)}
+                            />
                         </Modal>
                     </ModalErrorProvider>
                 }
                 {isDeleteAccountVisible &&
                     <ModalErrorProvider>
-                        <Modal onClose={() => setIsDeleteAccountVisible(false)} title={translations['DeleteAccount']}>
-                            <DeleteAccount onSuccess={() => setIsDeleteAccountVisible(false)} />
+                        <Modal
+                            onClose={() => setIsDeleteAccountVisible(false)}
+                            title={translations['DeleteAccount']}
+                        >
+                            <DeleteAccount
+                                onSuccess={() => setIsDeleteAccountVisible(false)}
+                            />
                         </Modal>
                     </ModalErrorProvider>
                 }
                 {isMonthlyStatsChartModalVisible &&
                     <ModalErrorProvider>
-                        <Modal onClose={() => setIsMonthlyStatsChartModalVisible(false)} title={translations['MonthlyStatistics']}>
-                            <MonthlyStatsChart entries={entries} />
+                        <Modal
+                            onClose={() => setIsMonthlyStatsChartModalVisible(false)}
+                            title={translations['MonthlyStatistics']}
+                        >
+                            <MonthlyStatsChart
+                                entries={entries}
+                            />
                         </Modal>
                     </ModalErrorProvider>
                 }
                 {isForgotPasswordVisible &&
                     <ModalErrorProvider>
-                        <Modal onClose={() => setIsForgotPasswordVisible(false)} title={translations['ResetPassword']}>
-                            <ForgotPasswordForm onSuccess={() => setIsForgotPasswordVisible(false)}  />
+                        <Modal
+                            onClose={() => setIsForgotPasswordVisible(false)}
+                            title={translations['ResetPassword']}
+                        >
+                            <ForgotPasswordForm
+                                onSuccess={() => setIsForgotPasswordVisible(false)}
+                            />
                         </Modal>
                     </ModalErrorProvider>    
                 }
                 {isPrivacyPolicyVisible &&
-                    <Modal onClose={() => setIsPrivacyPolicyVisible(false)}>
+                    <Modal
+                        onClose={() => setIsPrivacyPolicyVisible(false)}
+                    >
                         <PrivacyPolicy />
                     </Modal>
                 }
-            </div>
-        </div>
+            </ContentContainer>
+        </PageContainer>
     );
 };
 
