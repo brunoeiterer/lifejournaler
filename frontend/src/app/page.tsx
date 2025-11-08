@@ -18,6 +18,7 @@ import MonthlyStatsChart from '@/components/MonthlyStatsChart';
 import ForgotPasswordForm from '@/components/ForgotPasswordForm';
 import PrivacyPolicy from '@/components/PrivacyPolicy';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
+import DepressiveEpisodeWarning from '@/components/DepressiveEpisodeWarning';
 
 const Page: React.FC = () => {
     const { translations } = useLanguage();
@@ -108,6 +109,9 @@ const Page: React.FC = () => {
         return <LoadingScreen />
     }
 
+    const shouldDisplayEpisodeWarning = Object.keys(entries).length >= 4 &&
+        Object.keys(entries).sort().slice(-4).every(day => entries[day].Mood === "Tired");
+
     return (
         <div className="relative min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
             <button className="fixed top-4 left-4 z-[100] p-2 rounded-md hover:bg-gray-100" onClick={() => setIsDrawerVisible(!isDrawerVisible)}>
@@ -132,7 +136,11 @@ const Page: React.FC = () => {
 
             <div className="flex flex-col items-center justify-center gap-4">
                 <h1 className="text-2xl font-semibold text-center mb-4">LifeJournaler</h1>
-                <p className="text-gray-500 text-center mb-8">{translations['ClickTip']}</p>
+                <p className="text-gray-500 text-center">{translations['ClickTip']}</p>
+
+                <div className="mb-2">
+                    {shouldDisplayEpisodeWarning && <DepressiveEpisodeWarning />}
+                </div>
 
                 <div className="bg-white p-6 rounded-2xl shadow-md max-w-md mx-auto">
                     <Calendar entries={entries} onDateClick={(date) => setCurrentDate(date)} />
