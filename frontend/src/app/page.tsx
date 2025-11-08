@@ -18,7 +18,7 @@ import MonthlyStats from '@/components/MonthlyStats/MonthlyStats';
 import ForgotPasswordForm from '@/components/ForgotPasswordForm';
 import PrivacyPolicy from '@/components/PrivacyPolicy';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
-import DepressiveEpisodeWarning from '@/components/DepressiveEpisodeWarning';
+import DepressiveEpisodeWarning from '@/components/DepressiveEpisodeWarning/DepressiveEpisodeWarning';
 import { CalendarContainer, ClickTip, ContentContainer, DepressiveEpisodeWarningContainer, PageContainer, PageTitle } from './page.styles';
 import HamburgerButton from '@/components/HamburgerButton';
 
