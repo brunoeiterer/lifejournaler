@@ -15,7 +15,7 @@ import SignUpForm from '@/components/SignUpForm';
 import { ModalErrorProvider } from './contexts/ModalErrorContext';
 import DeleteAccount from '@/components/DeleteAccount/DeleteAccount';
 import MonthlyStats from '@/components/MonthlyStats/MonthlyStats';
-import ForgotPasswordForm from '@/components/ForgotPasswordForm';
+import ForgotPasswordForm from '@/components/ForgotPasswordForm/ForgotPasswordForm';
 import PrivacyPolicy from '@/components/PrivacyPolicy';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
 import DepressiveEpisodeWarning from '@/components/DepressiveEpisodeWarning/DepressiveEpisodeWarning';
