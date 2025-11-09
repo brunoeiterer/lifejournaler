@@ -11,7 +11,7 @@ import { getEntries } from '@/services/BackendApiService';
 import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
 import Modal from '@/components/Modal/Modal';
 import SignInForm from '@/components/SignInForm/SignInForm';
-import SignUpForm from '@/components/SignUpForm';
+import SignUpForm from '@/components/SignUpForm/SignUpForm';
 import { ModalErrorProvider } from './contexts/ModalErrorContext';
 import DeleteAccount from '@/components/DeleteAccount/DeleteAccount';
 import MonthlyStats from '@/components/MonthlyStats/MonthlyStats';
