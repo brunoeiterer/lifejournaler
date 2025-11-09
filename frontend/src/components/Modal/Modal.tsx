@@ -38,7 +38,6 @@ export default function Modal({ onClose, children, title }: ModalProps) {
             onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.stopPropagation()}>
             <ModalCloseButtonContainer>
                 <ModalCloseButton
-                    className=""
                     onClick={onClose}
                 >
                     ✕

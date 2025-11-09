@@ -27,7 +27,7 @@ export const ModalCloseButtonContainer = tw.div`
     justify-end
 `;
 
-export const ModalCloseButton = tw.div`
+export const ModalCloseButton = tw.button`
     bg-white
     rounded-full
     shadow-md
