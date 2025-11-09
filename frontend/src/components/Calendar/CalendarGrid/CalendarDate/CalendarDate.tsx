@@ -3,7 +3,7 @@ import { CalendarButton, CalendarDateGrid, CalendarDateGridRowFiveCols, Calendar
 import clsx from 'clsx';
 import { DailyEntry } from "@/app/models/DailyEntry";
 import { useLanguage } from "@/app/contexts/LanguageContext";
-import Tooltip from "@/components/Tooltip";
+import Tooltip from "@/components/Calendar/CalendarGrid/CalendarDate/Tooltip/Tooltip";
 import { Emojis } from "@/components/Emojis";
 import { ColorClasses, ColorZones } from "@/components/ColorZones";
 
@@ -40,43 +40,76 @@ export default function CalendarDate({ day, onCalendarDateClick, isCurrentMonth,
             {entry && 
                 <CalendarDateGrid>
                     <CalendarDateGridRowThreeCols>
-                        <Tooltip label={translations['Mood'] + ': ' + translations[entry.Mood]} setToolTipActive={setIsToolTipActive}>
+                        <Tooltip
+                            label={translations['Mood'] + ': ' + translations[entry.Mood]}
+                            setToolTipActive={setIsToolTipActive}
+                        >
                             <span>{Emojis[entry.Mood]}</span>
                         </Tooltip>
-                        <Tooltip label={translations['Weather'] + ': ' + translations[entry.Weather]} setToolTipActive={setIsToolTipActive}>
+                        <Tooltip
+                            label={translations['Weather'] + ': ' + translations[entry.Weather]}
+                            setToolTipActive={setIsToolTipActive}
+                        >
                             <span>{Emojis[entry.Weather]}</span>
                         </Tooltip>
-                        <Tooltip label={translations['SleepQuality'] + ': ' + translations[entry.SleepQuality]} setToolTipActive={setIsToolTipActive}>
+                        <Tooltip
+                            label={translations['SleepQuality'] + ': ' + translations[entry.SleepQuality]}
+                            setToolTipActive={setIsToolTipActive}
+                        >
                             <span>{Emojis[entry.SleepQuality]}</span>
                         </Tooltip>
                     </CalendarDateGridRowThreeCols>
 
                     <CalendarDateGridRowThreeCols>
-                        <Tooltip label={translations['Menstruation'] + ': ' + translations[entry.Menstruation]} setToolTipActive={setIsToolTipActive}>
+                        <Tooltip
+                            label={translations['Menstruation'] + ': ' + translations[entry.Menstruation]}
+                            setToolTipActive={setIsToolTipActive}
+                        >
                             <span>{entry.Menstruation == 'Yes' ? Emojis['YesMenstruation'] : Emojis[entry.Menstruation]}</span>
                         </Tooltip>
-                        <Tooltip label={translations['Exercise'] + ': ' + translations[entry.Exercise]} setToolTipActive={setIsToolTipActive}>
+                        <Tooltip
+                            label={translations['Exercise'] + ': ' + translations[entry.Exercise]}
+                            setToolTipActive={setIsToolTipActive}
+                        >
                             <span>{Emojis[entry.Exercise]}</span>
                         </Tooltip>
-                        <Tooltip label={translations['AppetiteLevel'] + ': ' + translations[entry.AppetiteLevel]} setToolTipActive={setIsToolTipActive}>
+                        <Tooltip
+                            label={translations['AppetiteLevel'] + ': ' + translations[entry.AppetiteLevel]}
+                            setToolTipActive={setIsToolTipActive}
+                        >
                             <span>{Emojis[entry.AppetiteLevel]}</span>
                         </Tooltip>
                     </CalendarDateGridRowThreeCols>
 
                     <CalendarDateGridRowFiveCols>
-                        <Tooltip label={translations['AnxietyThoughts'] + ': ' + entry.AnxietyThoughts} setToolTipActive={setIsToolTipActive}>
+                        <Tooltip
+                            label={translations['AnxietyThoughts'] + ': ' + entry.AnxietyThoughts}
+                            setToolTipActive={setIsToolTipActive}
+                        >
                             <div className={`w-2 h-2 rounded-full ${getColor(entry.AnxietyThoughts)}`} />
                         </Tooltip>
-                        <Tooltip label={translations['DepressiveThoughts'] + ': ' + entry.DepressiveThoughts} setToolTipActive={setIsToolTipActive}>
+                        <Tooltip
+                            label={translations['DepressiveThoughts'] + ': ' + entry.DepressiveThoughts}
+                            setToolTipActive={setIsToolTipActive}
+                        >
                             <div className={`w-2 h-2 rounded-full ${getColor(entry.DepressiveThoughts)}`} />
                         </Tooltip>
-                        <Tooltip label={translations['Autocriticism'] + ': ' + entry.Autocriticism} setToolTipActive={setIsToolTipActive}>
+                        <Tooltip
+                            label={translations['Autocriticism'] + ': ' + entry.Autocriticism}
+                            setToolTipActive={setIsToolTipActive}
+                        >
                             <div className={`w-2 h-2 rounded-full ${getColor(entry.Autocriticism)}`} />
                         </Tooltip>
-                        <Tooltip label={translations['SensorialOverload'] + ': ' + entry.SensorialOverload} setToolTipActive={setIsToolTipActive}>
+                        <Tooltip
+                            label={translations['SensorialOverload'] + ': ' + entry.SensorialOverload}
+                            setToolTipActive={setIsToolTipActive}
+                        >
                             <div className={`w-2 h-2 rounded-full ${getColor(entry.SensorialOverload)}`} />
                         </Tooltip>
-                        <Tooltip label={translations['RacingThoughts'] + ': ' + entry.RacingThoughts} setToolTipActive={setIsToolTipActive}>
+                        <Tooltip
+                            label={translations['RacingThoughts'] + ': ' + entry.RacingThoughts}
+                            setToolTipActive={setIsToolTipActive}
+                        >
                             <div className={`w-2 h-2 rounded-full ${getColor(entry.RacingThoughts)}`} />
                         </Tooltip>
                     </CalendarDateGridRowFiveCols>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { TooltipContainer, TooltipContentContainer } from './Tooltip.styles';
 
 interface TooltipProps {
   label: string,
@@ -36,20 +37,19 @@ export default function Tooltip({ label, children, setToolTipActive}: TooltipPro
   };
 
   return (
-    <div
-      className="relative cursor-pointer"
+    <TooltipContainer
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
-      onClick={(e) => {onClick(e)}}
+      onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {onClick(e)}}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
       {children}
       {visible && (
-        <div className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs px-2 py-1 rounded shadow">
+        <TooltipContentContainer>
           {label}
-        </div>
+        </TooltipContentContainer>
       )}
-    </div>
+    </TooltipContainer>
   );
 }

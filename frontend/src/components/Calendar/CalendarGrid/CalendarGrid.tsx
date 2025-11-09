@@ -2,7 +2,7 @@ import { useLanguage } from "@/app/contexts/LanguageContext";
 import { CalendarGridBody, CalendarGridHeader } from "./CalendarGrid.styles";
 import dayjs from "dayjs";
 import { DailyEntry } from "@/app/models/DailyEntry";
-import CalendarDate from "./CalendarDay/CalendarDate";
+import CalendarDate from "./CalendarDate/CalendarDate";
 
 interface CalendarGridProps {
     days: dayjs.Dayjs[];
