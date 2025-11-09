@@ -4,7 +4,7 @@ import { useLanguage } from './contexts/LanguageContext';
 import { DailyEntry } from './models/DailyEntry';
 import Calendar from '@/components/Calendar/Calendar';
 import { useEffect, useState } from 'react';
-import EntryEditor from '@/components/EntryEditor';
+import EntryEditor from '@/components/EntryEditor/EntryEditor';
 import Drawer from '@/components/Drawer/Drawer';
 import { useAuth } from './contexts/AuthContext';
 import { getEntries } from '@/services/BackendApiService';
@@ -151,7 +151,8 @@ const Page: React.FC = () => {
                         <EntryEditor
                             date={currentDate}
                             originalEntry={entries[currentDate]}
-                            onClose={() => setCurrentDate(null)} updateEntry={updateEntry}
+                            onClose={() => setCurrentDate(null)}
+                            updateEntry={updateEntry}
                         />
                     </Modal>
                 }

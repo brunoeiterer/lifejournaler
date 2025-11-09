@@ -159,9 +159,6 @@ const fetchWrapper = async (url: string, method: string = 'GET', data: string = 
             return response;
         } catch (error) {
             console.log(error);
-            if(error instanceof Error) {
-                console.error(error.message);
-            }
         }
     } while(retry);
 

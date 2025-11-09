@@ -1,6 +1,6 @@
 'use client';
 import { ReactNode, useEffect } from 'react';
-import Toast from './Toast';
+import Toast from './Common/Toast/Toast';
 import React from 'react';
 import { useModalError } from '@/app/contexts/ModalErrorContext';
 

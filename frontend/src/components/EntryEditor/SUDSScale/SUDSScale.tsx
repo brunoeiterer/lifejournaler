@@ -3,7 +3,8 @@
 import { useLanguage } from '@/app/contexts/LanguageContext';
 import { DailyEntry } from '@/app/models/DailyEntry';
 import React, { useEffect, useRef, useState } from 'react';
-import { ColorZones, ColorClasses } from './ColorZones';
+import { ColorZones, ColorClasses } from '@/components/ColorZones';
+import { SUDSScaleContainer, SUDSScaleContentContainer, SUDSScaleInput, SUDSScaleLabel, SUDSScaleLabelsContainer, SUDSScaleTitle } from './SUDSScale.styles';
 
 type SUDSScaleProps = {
     title: string;
@@ -47,24 +48,23 @@ export default function SUDSScale({ title, label, initialValue, onChange }: SUDS
     }, [value]);
 
     return (
-        <div className="w-full max-w-xl p-6 bg-white rounded-xl shadow-md border space-y-4">
-            <h2 className="text-xl font-semibold text-center">{title}</h2>
+        <SUDSScaleContainer>
+            <SUDSScaleTitle>{title}</SUDSScaleTitle>
 
-            <div className="relative w-full space-y-4">
-                <input
-                ref={sliderRef}
-                type="range"
-                min="0"
-                max="10"
-                step="1"
-                value={value}
-                onChange={handleChange}
-                className={`suds-slider w-full appearance-none h-2 rounded-lg outline-none ${bgColor} ${textColor}`}
-                style={{ position: 'relative' }}
+            <SUDSScaleContentContainer>
+                <SUDSScaleInput
+                    ref={sliderRef}
+                    type="range"
+                    min="0"
+                    max="10"
+                    step="1"
+                    value={value}
+                    onChange={handleChange}
+                    className={`${bgColor} ${textColor}`}
+                    style={{ position: 'relative' }}
                 />
 
-                <div
-                    className="suds-value-label"
+                <SUDSScaleLabel
                     style={{
                         top: '-2.5px',
                         left: `${thumbX}px`,
@@ -72,9 +72,9 @@ export default function SUDSScale({ title, label, initialValue, onChange }: SUDS
                     }}
                 >
                     {value}
-                </div>
+                </SUDSScaleLabel>
 
-                <div className="flex justify-between text-xs font-medium text-gray-600">
+                <SUDSScaleLabelsContainer>
                     {ColorZones.map((zone) => (
                         <span
                             key={zone.labelKey}
@@ -83,8 +83,8 @@ export default function SUDSScale({ title, label, initialValue, onChange }: SUDS
                             {translations[zone.labelKey]}
                         </span>
                     ))}
-                </div>
-            </div>
-        </div>
+                </SUDSScaleLabelsContainer>
+            </SUDSScaleContentContainer>
+        </SUDSScaleContainer>
     );
 }

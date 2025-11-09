@@ -38,14 +38,3 @@ input.suds-slider::-moz-range-thumb {
   border: 0px solid black;
   cursor: pointer;
 }
-
-.suds-value-label {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-weight: bold;
-  font-size: 0.9rem;
-  pointer-events: none;
-}

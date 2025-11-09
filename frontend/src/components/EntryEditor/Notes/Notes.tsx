@@ -2,6 +2,7 @@
 
 import { DailyEntry } from '@/app/models/DailyEntry';
 import React, { useRef, useState } from 'react';
+import { NotesContainter, NotesInput, NotesTtile } from './Notes.styles';
 
 type NoteInputProps = {
   title: string;
@@ -20,14 +21,13 @@ export default function Notes({ title, label, initialValue, onChange }: NoteInpu
   }
 
   return (
-    <div className="w-full max-w-xl p-6 bg-white rounded-xl shadow-md border space-y-4">
-      <h2 className="text-xl font-semibold text-center">{title}</h2>
-      <textarea
+    <NotesContainter>
+      <NotesTtile>{title}</NotesTtile>
+      <NotesInput
         value={note}
-        onChange={(e) => updateValue(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateValue(e.target.value)}
         rows={4}
-        className="w-full p-3 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
-    </div>
+    </NotesContainter>
   );
 }
