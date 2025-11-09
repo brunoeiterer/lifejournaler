@@ -8,7 +8,7 @@ import EntryEditor from '@/components/EntryEditor/EntryEditor';
 import Drawer from '@/components/Drawer/Drawer';
 import { useAuth } from './contexts/AuthContext';
 import { getEntries } from '@/services/BackendApiService';
-import LoadingScreen from '@/components/LoadingScreen';
+import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
 import Modal from '@/components/Modal';
 import SignInForm from '@/components/SignInForm';
 import SignUpForm from '@/components/SignUpForm';
