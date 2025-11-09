@@ -20,7 +20,7 @@ import PrivacyPolicy from '@/components/PrivacyPolicy';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
 import DepressiveEpisodeWarning from '@/components/DepressiveEpisodeWarning/DepressiveEpisodeWarning';
 import { CalendarContainer, ClickTip, ContentContainer, DepressiveEpisodeWarningContainer, PageContainer, PageTitle } from './page.styles';
-import HamburgerButton from '@/components/HamburgerButton';
+import HamburgerButton from '@/components/HamburgerButton/HamburgerButton';
 
 const Page: React.FC = () => {
     const { translations } = useLanguage();
