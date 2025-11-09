@@ -9,7 +9,7 @@ import Drawer from '@/components/Drawer/Drawer';
 import { useAuth } from './contexts/AuthContext';
 import { getEntries } from '@/services/BackendApiService';
 import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
-import Modal from '@/components/Modal';
+import Modal from '@/components/Modal/Modal';
 import SignInForm from '@/components/SignInForm';
 import SignUpForm from '@/components/SignUpForm';
 import { ModalErrorProvider } from './contexts/ModalErrorContext';
