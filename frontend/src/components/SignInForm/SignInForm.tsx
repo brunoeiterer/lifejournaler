@@ -42,13 +42,13 @@ export default function SignInForm({ onSuccess, onForgotPassword }: SignInFormPr
                     className=""
                     value={username}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
-                    placeholder="Username"
+                    placeholder={translations["Username"]}
                 />
                 <SignInFormInput
                     type="password"
                     value={password}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                    placeholder="Password"
+                    placeholder={translations["Password"]}
                 />
                 <SignInFormButton
                     type="submit"
