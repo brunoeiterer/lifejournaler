@@ -13,7 +13,7 @@ import Modal from '@/components/Modal';
 import SignInForm from '@/components/SignInForm';
 import SignUpForm from '@/components/SignUpForm';
 import { ModalErrorProvider } from './contexts/ModalErrorContext';
-import DeleteAccount from '@/components/DeleteAccount';
+import DeleteAccount from '@/components/DeleteAccount/DeleteAccount';
 import MonthlyStats from '@/components/MonthlyStats/MonthlyStats';
 import ForgotPasswordForm from '@/components/ForgotPasswordForm';
 import PrivacyPolicy from '@/components/PrivacyPolicy';
