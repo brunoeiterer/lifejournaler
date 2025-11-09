@@ -16,7 +16,7 @@ import { ModalErrorProvider } from './contexts/ModalErrorContext';
 import DeleteAccount from '@/components/DeleteAccount/DeleteAccount';
 import MonthlyStats from '@/components/MonthlyStats/MonthlyStats';
 import ForgotPasswordForm from '@/components/ForgotPasswordForm/ForgotPasswordForm';
-import PrivacyPolicy from '@/components/PrivacyPolicy';
+import PrivacyPolicy from '@/components/PrivacyPolicy/PrivacyPolicy';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
 import DepressiveEpisodeWarning from '@/components/DepressiveEpisodeWarning/DepressiveEpisodeWarning';
 import { CalendarContainer, ClickTip, ContentContainer, DepressiveEpisodeWarningContainer, PageContainer, PageTitle } from './page.styles';

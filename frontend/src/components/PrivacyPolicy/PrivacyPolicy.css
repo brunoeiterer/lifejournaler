@@ -1,0 +1,39 @@
+ul {
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+ul ul {
+  list-style-type: circle;
+}
+
+li {
+  margin: 8px 0;
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+a {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: #d32f2f;
+  text-decoration: underline;
+}
+  
