@@ -4,9 +4,6 @@
 name: Build and deploy ASP.Net Core app to Azure Web App - lifejournalerbackend
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -24,10 +21,14 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: |
+          cd backend
+          dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: |
+          cd backend
+          dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -62,4 +63,5 @@ jobs:
           app-name: 'lifejournalerbackend'
           slot-name: 'Production'
           package: .
+
           
