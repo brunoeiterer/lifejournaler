@@ -17,9 +17,15 @@ using var client = new SshClient(url, sshUser, new PrivateKeyFile(privateKeyFile
 client.Connect();
 using var cmd = client.RunCommand($"PGPASSWORD={databasePassword} pg_dump -h {databaseUrl} -U {databaseUser} -d {databaseName}");
 
-File.WriteAllText(backupFilePath, cmd.Result);
-
-Console.WriteLine($"Database backup file created successfully at {backupFilePath}");
+if(cmd.Error != null && cmd.Error != string.Empty)
+{
+    Console.WriteLine(cmd.Error);
+}
+else
+{
+    File.WriteAllText(backupFilePath, cmd.Result);
+    Console.WriteLine($"Database backup file created successfully at {backupFilePath}");
+}
 
 static class Utils {
     public static string GetEnvironmentVariable(string environmentVariable) =>
