@@ -17,7 +17,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [isAllCriteriaMet, setIsAllCriteriaMet] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const { translations } = useLanguage();
+    const { language, translations } = useLanguage();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,7 +34,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
 
         setIsLoading(true);
 
-        const result = await register(username, password);
+        const result = await register(username, password, language);
 
         if (result) {
             onSuccess();

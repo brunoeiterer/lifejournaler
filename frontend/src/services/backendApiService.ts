@@ -16,10 +16,15 @@ export const login = async (username: string, password: string) => {
     return '';
 }
 
-export const register = async (username: string, password: string) => {
+export const register = async (username: string, password: string, language: string) => {
     const { error } = await supabase.auth.signUp({
         email: username,
         password: password,
+        options: {
+            data: {
+                language: language
+            }
+        }
     });
 
     return !error;
