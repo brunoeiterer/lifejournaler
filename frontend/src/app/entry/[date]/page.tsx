@@ -48,10 +48,6 @@ export default function EntryPage({ params }: EntryPageProps) {
         router.push('/');
     };
 
-    // The old EntryEditor required an updateEntry callback to update the main page's state. 
-    // Now it will just redirect home, and the home calendar will refetch entries.
-    const emptyUpdateCallback = () => {};
-
     return (
         <PageContainer>
             <BackButton />
@@ -61,7 +57,6 @@ export default function EntryPage({ params }: EntryPageProps) {
                     date={date}
                     originalEntry={entry ?? null}
                     onClose={unmountAndGoHome}
-                    updateEntry={emptyUpdateCallback}
                 />
             </ContentContainer>
         </PageContainer>

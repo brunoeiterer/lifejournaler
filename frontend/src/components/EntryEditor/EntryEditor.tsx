@@ -14,10 +14,9 @@ interface EntryEditorProps {
     date: string;
     originalEntry?: DailyEntry | null;
     onClose: () => void;
-    updateEntry: (date: string, entry: DailyEntry) => void;
 }
 
-export default function EntryEditor({date, originalEntry, onClose, updateEntry} : EntryEditorProps) {
+export default function EntryEditor({date, originalEntry, onClose} : EntryEditorProps) {
     const [ errorMessage, setErrorMessage ] = useState('');
     const [ isSavingInProgress, setIsSavingInProgress ] = useState(false);
     const {translations} = useLanguage();
@@ -40,7 +39,6 @@ export default function EntryEditor({date, originalEntry, onClose, updateEntry} 
             setErrorMessage(translations['ErrorSavingEntry']);
         }
         else {
-            updateEntry(date, entry);
             onClose();
         }
 
