@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { LanguageProvider } from "./contexts/LanguageContext";
-import { PublicEnvScript } from 'next-runtime-env';
 import { AuthProvider } from "./contexts/AuthContext";
 
 const geistSans = localFont({
@@ -29,9 +28,7 @@ export default function RootLayout({
 
     return (
         <html>
-            <head>
-                <PublicEnvScript />
-            </head>
+            <head />
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >

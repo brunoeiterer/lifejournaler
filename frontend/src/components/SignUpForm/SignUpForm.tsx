@@ -1,8 +1,8 @@
 'use client';
 import { ChangeEvent, useState } from 'react';
 import { useLanguage } from '@/app/contexts/LanguageContext';
-import { register } from '@/services/BackendApiService';
-import { useModalError } from '@/app/contexts/ModalErrorContext';
+import { register } from '@/services/backendApiService';
+import Toast from '../Common/Toast/Toast';
 import { SignUpFormContainer, SignUpFormInput, SignUpFormSubmitButton, SignUpFormSubmitButtonInProgressContent } from './SignUpForm.styles';
 import PasswordStrengthCriteria from '../Common/PasswordStrengthCriteria/PasswordStrengthCriteria';
 
@@ -16,19 +16,19 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
     const [confirm, setConfirm] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isAllCriteriaMet, setIsAllCriteriaMet] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const { translations } = useLanguage();
-    const { setErrorMessage } = useModalError();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (password !== confirm) {
-            setErrorMessage(translations['PasswordsDoNotMatch']);
+            setErrorMessage(translations['PasswordsDoNotMatch'] || 'Passwords do not match');
             return;
         }
 
         if (!isAllCriteriaMet) {
-            setErrorMessage(translations['PasswordDoesntMeetAllCriteria']);
+            setErrorMessage(translations['PasswordDoesntMeetAllCriteria'] || 'Password does not meet all criteria');
             return;
         }
 
@@ -39,7 +39,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
         if (result) {
             onSuccess();
         } else {
-            setErrorMessage(translations['SignUpError']);
+            setErrorMessage(translations['SignUpError'] || 'An error occurred during sign up');
         }
 
         setIsLoading(false);
@@ -82,6 +82,13 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
                 password={password}
                 setIsAllCriteriaMet={setIsAllCriteriaMet}
             />
+
+            {errorMessage != '' && 
+                <Toast 
+                    message={errorMessage}
+                    onClose={() => setErrorMessage('')}
+                />
+            }
         </div>
     );
 }

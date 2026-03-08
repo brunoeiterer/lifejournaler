@@ -6,13 +6,13 @@ import SaveButton from "./SaveButton/SaveButton";
 import SUDSScale from "./SUDSScale/SUDSScale";
 import { useState } from "react";
 import { DailyEntry } from "@/app/models/DailyEntry";
-import { addEntry, editEntry } from "@/services/BackendApiService";
+import { addEntry, editEntry } from "@/services/backendApiService";
 import Toast from "../Common/Toast/Toast";
 import { EntryEditorContainer } from "./EntryEditor.styles";
 
 interface EntryEditorProps {
     date: string;
-    originalEntry: DailyEntry;
+    originalEntry?: DailyEntry | null;
     onClose: () => void;
     updateEntry: (date: string, entry: DailyEntry) => void;
 }

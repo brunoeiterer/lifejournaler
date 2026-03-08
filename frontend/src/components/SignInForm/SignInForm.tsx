@@ -2,9 +2,9 @@
 
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useAuth } from '@/app/contexts/AuthContext';
-import { login } from '@/services/BackendApiService';
+import { login } from '@/services/backendApiService';
 import { useLanguage } from '@/app/contexts/LanguageContext';
-import { useModalError } from '@/app/contexts/ModalErrorContext';
+import Toast from '../Common/Toast/Toast';
 import { ForgotPasswordLink, SignInFormButton, SignInFormButtonInProgressContent, SignInFormContainer, SignInFormInput } from './SignInForm.styles';
 
 interface SignInFormProps {
@@ -17,9 +17,8 @@ export default function SignInForm({ onSuccess, onForgotPassword }: SignInFormPr
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const { signIn } = useAuth();
-
-    const { setErrorMessage } = useModalError();
 
     const handleSubmit = async (event : FormEvent) => {
         setIsLoading(true);
@@ -67,6 +66,13 @@ export default function SignInForm({ onSuccess, onForgotPassword }: SignInFormPr
             >
                 {translations["ForgotPassword"]}
             </ForgotPasswordLink>
+            
+            {errorMessage != '' && 
+                <Toast 
+                    message={errorMessage}
+                    onClose={() => setErrorMessage('')}
+                />
+            }
         </>
     );
 }

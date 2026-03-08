@@ -1,165 +1,177 @@
 import { DailyEntry } from "@/app/models/DailyEntry";
-import { env } from 'next-runtime-env';
-
-const API_BASE_URL = env('NEXT_PUBLIC_API_BASE_URL') ?? '';
+import { supabase } from "./supabaseClient";
 
 export const login = async (username: string, password: string) => {
-    const response = await fetchWrapper('api/auth/login', 'POST', JSON.stringify({Username: username, Password: password}));
-    if(response == undefined) {
-        return 'There was an error logging in. Please try again later.';
+    const { error } = await supabase.auth.signInWithPassword({
+        email: username,
+        password: password,
+    });
+
+    if (error) {
+        return error.message === 'Invalid login credentials'
+            ? 'Invalid username or password.'
+            : 'There was an error logging in. Please try again later.';
     }
 
-    if(!response.ok) {
-        return 'Invalid username or password.'
-    }
-
-    const json = await response.json();
-    sessionStorage.setItem('loginToken', json['Token']);
     return '';
 }
 
 export const register = async (username: string, password: string) => {
-    const response = await fetchWrapper('api/auth/register', 'POST', 
-        JSON.stringify({ Username: username, Password: password }));
+    const { error } = await supabase.auth.signUp({
+        email: username,
+        password: password,
+    });
 
-    return response && response.ok;
+    return !error;
 }
 
 export const getEntries = async () => {
-    const token = sessionStorage.getItem('loginToken');
-    if(token == null) {
-        return false;
-    }
-
-    const response = await fetchWrapper('api/journaler', 'GET', '', token);
-    if(response == undefined) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
         return {};
     }
 
-    const data = await response.json();
-    return data['entries'];
+    const { data, error } = await supabase
+        .from('entries')
+        .select('*');
+
+    if (error) {
+        console.log(error);
+        return {};
+    }
+
+    const entries: Record<string, DailyEntry> = {};
+    for (const row of data) {
+        entries[row.date] = {
+            Mood: row.mood,
+            Weather: row.weather,
+            SleepQuality: row.sleep_quality,
+            Menstruation: row.menstruation,
+            Exercise: row.exercise,
+            AppetiteLevel: row.appetite_level,
+            AnxietyThoughts: row.anxiety_thoughts,
+            DepressiveThoughts: row.depressive_thoughts,
+            Autocriticism: row.autocriticism,
+            SensorialOverload: row.sensorial_overload,
+            RacingThoughts: row.racing_thoughts,
+            Notes: row.notes,
+        };
+    }
+
+    return entries;
 }
 
 export const addEntry = async (date: string, entry: DailyEntry) => {
-    const token = sessionStorage.getItem("loginToken");
-    if(token == null) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
         return false;
     }
 
-    const response = await fetchWrapper('api/journaler', 'POST', JSON.stringify({ entry: entry, date: date}), token);
-    if(response == undefined || !response.ok) {
+    const { error } = await supabase
+        .from('entries')
+        .insert({
+            user_id: session.user.id,
+            date: date,
+            mood: entry.Mood,
+            weather: entry.Weather,
+            sleep_quality: entry.SleepQuality,
+            menstruation: entry.Menstruation,
+            exercise: entry.Exercise,
+            appetite_level: entry.AppetiteLevel,
+            anxiety_thoughts: entry.AnxietyThoughts,
+            depressive_thoughts: entry.DepressiveThoughts,
+            autocriticism: entry.Autocriticism,
+            sensorial_overload: entry.SensorialOverload,
+            racing_thoughts: entry.RacingThoughts,
+            notes: entry.Notes,
+        });
+
+    if (error) {
+        console.log(error);
         return false;
     }
 
     return true;
 }
 
-export const requestPasswordReset = async (email: string, locale: string) => {
-    const response = await fetchWrapper('api/auth/request-password-reset', 'POST', JSON.stringify({
-        Email: email, Locale: locale}));
-
-    return response && response.ok;
+export const requestPasswordReset = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+    });
+    return !error;
 }
 
-export const resetPassword = async (email: string, authenticationCode: string, newPassword: string) => {
-    const response = await fetchWrapper('api/auth/reset-password', 'POST', JSON.stringify({
-        Email: email, AuthenticationCode: authenticationCode, NewPassword: newPassword}));
-    
-    return response && response.ok;
+export const resetPassword = async (_email: string, _authenticationCode: string, newPassword: string) => {
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    return !error;
 }
 
-export const deleteEntry = async (id: number, token: string) => {
-    const response = await fetchWrapper('api/journaler', 'DELETE', JSON.stringify({Id: id}), token);
+export const deleteEntry = async (id: number) => {
+    const { error } = await supabase
+        .from('entries')
+        .delete()
+        .eq('id', id);
 
-    console.log(response);
-    return response && response.ok;
-}
-
-export const editEntry = async (date: string, entry: DailyEntry) => {
-    const token = sessionStorage.getItem('loginToken');
-
-    if(token == null) {
+    if (error) {
+        console.log(error);
         return false;
     }
 
-    const response = await fetchWrapper('api/journaler', 'PUT', JSON.stringify({ date: date, entry: entry}), token);
-    
-    if(response == undefined || !response.ok) {
-        return false
+    return true;
+}
+
+export const editEntry = async (date: string, entry: DailyEntry) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+        return false;
+    }
+
+    const { error } = await supabase
+        .from('entries')
+        .update({
+            mood: entry.Mood,
+            weather: entry.Weather,
+            sleep_quality: entry.SleepQuality,
+            menstruation: entry.Menstruation,
+            exercise: entry.Exercise,
+            appetite_level: entry.AppetiteLevel,
+            anxiety_thoughts: entry.AnxietyThoughts,
+            depressive_thoughts: entry.DepressiveThoughts,
+            autocriticism: entry.Autocriticism,
+            sensorial_overload: entry.SensorialOverload,
+            racing_thoughts: entry.RacingThoughts,
+            notes: entry.Notes,
+        })
+        .eq('user_id', session.user.id)
+        .eq('date', date);
+
+    if (error) {
+        console.log(error);
+        return false;
     }
 
     return true;
 }
 
 export const deleteAccount = async () => {
-    const token = sessionStorage.getItem('loginToken');
-    if(token == null) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
         return false;
     }
 
-    const response = await fetchWrapper('api/auth/delete-account', 'DELETE', '', token);
-    return response && response.ok;
+    const response = await supabase.functions.invoke('delete-account');
+    return !response.error;
 }
 
 export const refresh = async () => {
-    const response = await fetchWrapper('api/auth/refresh', 'POST');
-    if(response?.ok) {
-        const json = await response.json();
-        sessionStorage.setItem('loginToken', json['Token']);
-        return json['Username'];
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+        return session.user.email ?? '';
     }
 
     return '';
 }
 
 export const signOut = async () => {
-    const token = sessionStorage.getItem('loginToken');
-
-    if(token == null) {
-        return false;
-    }
-
-    await fetchWrapper('api/auth/logout', 'POST', '', token);
+    await supabase.auth.signOut();
 }
-
-const fetchWrapper = async (url: string, method: string = 'GET', data: string = '', token: string = '') => {
-    const headers: Headers = new Headers();
-    if (data != '') {
-        headers.set('Content-Type', 'application/json');
-    }
-    if (token != '') {
-        headers.set('Authorization', 'Bearer ' + token);
-    }
-
-    let retry = false;
-    let hasRetried = false;
-
-    do {
-        retry = false;
-        try {
-            const response = await fetch(`${API_BASE_URL}${url}`, {
-                headers: headers,
-                method: method,
-                credentials: 'include',
-                ...(data != '' && {body: data})
-            });
-
-            if (!response.ok) {
-                console.log(`Error: ${response.statusText}`);
-            }
-
-            if(response.status == 401 && !url.includes('refresh')) {
-                await refresh();
-                if(!hasRetried) {
-                    retry = true;
-                    hasRetried = true;
-                }
-            }
-
-            return response;
-        } catch (error) {
-            console.log(error);
-        }
-    } while(retry);
-
-};

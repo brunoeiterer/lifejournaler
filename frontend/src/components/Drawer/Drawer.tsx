@@ -7,16 +7,10 @@ import NavigationLink from "./NavigationLink/NavigationLink";
 
 interface DrawerProps {
   isVisible : boolean;
-  onSignInClick: () => void;
-  onSignUpClick: () => void;
-  onDeleteAccountClick: () => void;
-  onMonthlyStatisticsClick: () => void;
-  onPrivacyPolicyClick: () => void;
   onClose: () => void;
 }
 
-const Drawer: React.FC<DrawerProps> = ({ isVisible, onSignInClick, onSignUpClick, onDeleteAccountClick, onMonthlyStatisticsClick, 
-  onPrivacyPolicyClick, onClose }) => {
+const Drawer: React.FC<DrawerProps> = ({ isVisible, onClose }) => {
   const { translations } = useLanguage();
   const { isSignedIn, username, signOut } = useAuth();
   const { language, setLanguage } = useLanguage();
@@ -41,18 +35,18 @@ const Drawer: React.FC<DrawerProps> = ({ isVisible, onSignInClick, onSignUpClick
               {isSignedIn ? (
               <>
                 <SignedInContainer>{translations['SignedInAs']} <b>{username}</b></SignedInContainer>
-                <NavigationLink icon='📈' text={translations['MonthlyStatistics']} click={onMonthlyStatisticsClick} />
-                <NavigationLink icon='🚪' text={translations['SignOut']} click={signOut} />
-                <NavigationLink icon='🗑️' text={translations['DeleteAccount']} click={onDeleteAccountClick} variation='red' />
+                <NavigationLink icon='📈' text={translations['MonthlyStatistics']} href='/statistics' click={onClose} />
+                <NavigationLink icon='🚪' text={translations['SignOut']} click={() => { signOut(); onClose(); }} />
+                <NavigationLink icon='🗑️' text={translations['DeleteAccount']} href='/delete-account' click={onClose} variation='red' />
               </>
               ) : (
                 <>
-                  <NavigationLink icon='🚪' text={translations['SignIn']} click={onSignInClick} />
-                  <NavigationLink icon='📝' text={translations['SignUp']} click={onSignUpClick} />
+                  <NavigationLink icon='🚪' text={translations['SignIn']} href='/sign-in' click={onClose} />
+                  <NavigationLink icon='📝' text={translations['SignUp']} href='/sign-up' click={onClose} />
                 </>
               )}
 
-              <NavigationLink icon='🛡️' text={translations['PrivacyPolicyTitle']} click={onPrivacyPolicyClick} />
+              <NavigationLink icon='🛡️' text={translations['PrivacyPolicyTitle']} href='/privacy' click={onClose} />
               <NavigationLinkContainer>
                   <label htmlFor="language-select">
                     🌐

@@ -2,8 +2,9 @@
 
 import { useAuth } from '@/app/contexts/AuthContext';
 import { useLanguage } from '@/app/contexts/LanguageContext';
-import { useModalError } from '@/app/contexts/ModalErrorContext';
-import { deleteAccount } from '@/services/BackendApiService';
+import { useState } from 'react';
+import { deleteAccount } from '@/services/backendApiService';
+import Toast from '../Common/Toast/Toast';
 import { DeleteAccountButton, DeleteAccountConfirmation, DeleteAccountConfirmationContainer, DeleteAccountContainer } from './DeleteAccount.styles';
 
 interface DeleteAccountProps {
@@ -13,7 +14,7 @@ interface DeleteAccountProps {
 export default function DeleteAccount({ onSuccess} : DeleteAccountProps) {
     const { translations } = useLanguage();
     const { signOut } = useAuth();
-    const { setErrorMessage } = useModalError();
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleDelete = async () => {
         const success = await deleteAccount();
@@ -23,7 +24,7 @@ export default function DeleteAccount({ onSuccess} : DeleteAccountProps) {
             signOut();
         }
         else {
-            setErrorMessage(translations['ErrorDeletingAccount']);
+            setErrorMessage(translations['ErrorDeletingAccount'] || 'Error deleting account');
         }
     }
 
@@ -38,6 +39,13 @@ export default function DeleteAccount({ onSuccess} : DeleteAccountProps) {
             >
                 {translations['DeleteAccount']}
             </DeleteAccountButton>
+
+            {errorMessage != '' && 
+                <Toast 
+                    message={errorMessage}
+                    onClose={() => setErrorMessage('')}
+                />
+            }
         </DeleteAccountContainer>
     );
 }

@@ -31,7 +31,7 @@ export default function PasswordStrengthCriteria({ password, setIsAllCriteriaMet
 
     useEffect(() => {
         setIsAllCriteriaMet(Object.entries(criteria).every(met => met));
-    }, [password]);
+    }, [password, criteria, setIsAllCriteriaMet]);
 
     return(
         <PasswordStrengthCriteriaList>

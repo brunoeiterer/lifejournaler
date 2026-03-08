@@ -1,5 +1,5 @@
 'use client';
-import { refresh, signOut as backendApiServiceSignOut } from '@/services/BackendApiService';
+import { supabase } from '@/services/supabaseClient';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 type AuthContextType = {
@@ -33,23 +33,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signOut = async () => {
     setisSignedIn(false);
     setUsername('');
-
-    await backendApiServiceSignOut();
-
-    sessionStorage.removeItem('loginToken');
+    await supabase.auth.signOut();
   };
 
   useEffect(() => {
-    const callRefresh = async () => {
-        const username = await refresh();
-        if(username != '') {
-          signIn(username);
-        }
-
-        setIsAuthLoading(false);
+    const initAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        signIn(session.user.email ?? '');
       }
+      setIsAuthLoading(false);
+    };
 
-    callRefresh();
+    initAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        signIn(session.user.email ?? '');
+      } else {
+        setisSignedIn(false);
+        setUsername('');
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   return (
