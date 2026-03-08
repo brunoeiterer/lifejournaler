@@ -29,7 +29,7 @@ export default function StatisticsPage() {
             <ContentContainer>
                 <PageTitle>LifeJournaler</PageTitle>
                 <h2 style={{ textAlign: 'center', marginBottom: '1rem', marginTop: '1rem' }}>
-                    {translations['MonthlyStatistics'] || 'Monthly Statistics'}
+                    {translations['MonthlyStatistics']}
                 </h2>
                 <MonthlyStats entries={entries} />
             </ContentContainer>

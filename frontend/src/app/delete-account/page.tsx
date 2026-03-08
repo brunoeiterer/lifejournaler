@@ -16,7 +16,7 @@ export default function DeleteAccountPage() {
             <ContentContainer>
                 <PageTitle>LifeJournaler</PageTitle>
                 <h2 style={{ textAlign: 'center', marginBottom: '1rem', marginTop: '1rem' }}>
-                    {translations['DeleteAccount'] || 'Delete Account'}
+                    {translations['DeleteAccount']}
                 </h2>
                 <DeleteAccount
                     onSuccess={() => router.push('/')}

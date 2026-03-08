@@ -30,15 +30,15 @@ export default function AuthErrorPage() {
                 <PageTitle>LifeJournaler</PageTitle>
                 <div style={{ textAlign: 'center', marginTop: '2rem', padding: '1rem' }}>
                     <h2 style={{ marginBottom: '1rem' }}>
-                        {translations['AuthenticationError'] || 'Authentication Error'}
+                        {translations['AuthenticationError']}
                     </h2>
                     <p style={{ marginBottom: '2rem', color: 'gray' }}>
-                        {errorMsg || translations['AuthenticationErrorMessage'] || 'The magic link is invalid, has expired, or has already been used.'}
+                        {errorMsg || translations['AuthenticationErrorMessage']}
                     </p>
                     
                     <Link href="/forgot-password" style={{ textDecoration: 'none' }}>
                         <ForgotPasswordButton type="button">
-                            {translations['RequestNewLink'] || 'Request a new link'}
+                            {translations['RequestNewLink']}
                         </ForgotPasswordButton>
                     </Link>
                 </div>

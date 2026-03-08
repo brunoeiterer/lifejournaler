@@ -23,12 +23,12 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
         e.preventDefault();
 
         if (password !== confirm) {
-            setErrorMessage(translations['PasswordsDoNotMatch'] || 'Passwords do not match');
+            setErrorMessage(translations['PasswordsDoNotMatch']);
             return;
         }
 
         if (!isAllCriteriaMet) {
-            setErrorMessage(translations['PasswordDoesntMeetAllCriteria'] || 'Password does not meet all criteria');
+            setErrorMessage(translations['PasswordDoesntMeetAllCriteria']);
             return;
         }
 
@@ -39,7 +39,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
         if (result) {
             onSuccess();
         } else {
-            setErrorMessage(translations['SignUpError'] || 'An error occurred during sign up');
+            setErrorMessage(translations['SignUpError']);
         }
 
         setIsLoading(false);
@@ -52,7 +52,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
                     type='email'
                     value={username}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
-                    placeholder='Email'
+                    placeholder={translations['EnterYourEmail']}
                 />
                 <SignUpFormInput
                     type="password"

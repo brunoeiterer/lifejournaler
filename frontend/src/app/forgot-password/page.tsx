@@ -14,7 +14,7 @@ export default function ForgotPasswordPage() {
             <ContentContainer>
                 <PageTitle>LifeJournaler</PageTitle>
                 <h2 style={{ textAlign: 'center', marginBottom: '1rem', marginTop: '1rem' }}>
-                    {translations['ResetPassword'] || 'Reset Password'}
+                    {translations['ResetPassword']}
                 </h2>
                 <ForgotPasswordForm />
             </ContentContainer>

@@ -22,7 +22,7 @@ export default function ForgotPasswordForm() {
             setPasswordResetRequested(true);
         }
         else {
-            setErrorMessage(translations['FailedToSendResetCode'] || 'Failed to send reset code');
+            setErrorMessage(translations['FailedToSendResetCode']);
         }
     }
 
@@ -30,8 +30,8 @@ export default function ForgotPasswordForm() {
         passwordResetRequested ? (
         <>
             <div style={{ padding: '2rem', textAlign: 'center' }}>
-                <p>{translations['PasswordResetEmailSent'] || 'A password reset link has been sent to your email.'}</p>
-                <p>{translations['PleaseCheckYourInbox'] || 'Please check your inbox and click the link to set a new password.'}</p>
+                <p>{translations['PasswordResetEmailSent']}</p>
+                <p>{translations['PleaseCheckYourInbox']}</p>
             </div>
         </>
         ) :
@@ -43,7 +43,7 @@ export default function ForgotPasswordForm() {
                 <ForgotPasswordInput
                     value={username}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
-                    placeholder="Email"
+                    placeholder={translations['EnterYourEmail']}
                 />
                 <ForgotPasswordButton
                     type="submit"

@@ -57,12 +57,12 @@ function ResetPasswordForm() {
         event.preventDefault();
 
         if (newPassword !== confirmNewPassword) {
-            setErrorMessage(translations['PasswordsDoNotMatch'] || 'Passwords do not match');
+            setErrorMessage(translations['PasswordsDoNotMatch']);
             return;
         }
 
         if (!isAllCriteriaMet) {
-            setErrorMessage(translations['PasswordDoesntMeetAllCriteria'] || 'Password does not meet all criteria');
+            setErrorMessage(translations['PasswordDoesntMeetAllCriteria']);
             return;
         }
 
@@ -73,7 +73,7 @@ function ResetPasswordForm() {
         setIsLoading(false);
 
         if (error) {
-            setErrorMessage(error.message || translations['FailedToResetPassword'] || 'Failed to reset password');
+            setErrorMessage(error.message || translations['FailedToResetPassword']);
         } else {
             setIsSuccess(true);
             router.push('/');
@@ -83,8 +83,8 @@ function ResetPasswordForm() {
     if (isSuccess) {
         return (
             <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                <p>{translations['PasswordResetSuccess'] || 'Password successfully reset!'}</p>
-                <p>Redirecting to login...</p>
+                <p>{translations['PasswordResetSuccessfully']}</p>
+                <p>{translations['RedirectingToLogin']}</p>
             </div>
         );
     }
@@ -93,26 +93,26 @@ function ResetPasswordForm() {
         <ContentContainer>
             <PageTitle>LifeJournaler</PageTitle>
             <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>
-                {translations['ResetPassword'] || 'Reset Password'}
+                {translations['ResetPassword']}
             </h2>
             <ForgotPasswordFormContainer onSubmit={handleSubmitReset}>
                 <ForgotPasswordInput
                     type="password"
                     value={newPassword}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}
-                    placeholder={translations["NewPassword"] || 'New Password'}
+                    placeholder={translations["NewPassword"]}
                 />
                 <ForgotPasswordInput
                     type="password"
                     value={confirmNewPassword}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmNewPassword(e.target.value)}
-                    placeholder={translations["ConfirmNewPassword"] || 'Confirm New Password'}
+                    placeholder={translations["ConfirmNewPassword"]}
                 />
                 <ForgotPasswordButton type="submit" disabled={isLoading}>
                     {isLoading ? (
                         <ForgotPasswordButtonInProgressContent />
                     ) : (
-                        translations['ResetPassword'] || 'Reset Password'
+                        translations['ResetPassword']
                     )}
                 </ForgotPasswordButton>
             </ForgotPasswordFormContainer>
@@ -133,10 +133,12 @@ function ResetPasswordForm() {
 }
 
 export default function ResetPasswordPage() {
+    const { translations } = useLanguage();
+    
     return (
         <PageContainer>
             <BackButton />
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>{translations['Loading']}</div>}>
                 <ResetPasswordForm />
             </Suspense>
         </PageContainer>

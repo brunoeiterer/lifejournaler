@@ -24,7 +24,7 @@ export default function DeleteAccount({ onSuccess} : DeleteAccountProps) {
             signOut();
         }
         else {
-            setErrorMessage(translations['ErrorDeletingAccount'] || 'Error deleting account');
+            setErrorMessage(translations['ErrorDeletingAccount']);
         }
     }
 
