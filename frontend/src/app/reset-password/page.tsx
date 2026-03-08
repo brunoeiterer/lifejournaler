@@ -27,7 +27,6 @@ function ResetPasswordForm() {
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
-        // Supabase passes errors in the hash fragment for implicit flow
         if (typeof window !== 'undefined' && window.location.hash) {
             const hashParams = new URLSearchParams(window.location.hash.substring(1));
             if (hashParams.get('error')) {
@@ -36,8 +35,6 @@ function ResetPasswordForm() {
             }
         }
         
-        // Supabase implicitly creates a session when we arrive via a recovery link
-        // with the type 'recovery' in the hash fragment. We establish it here implicitly.
         const checkSession = async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
@@ -73,7 +70,7 @@ function ResetPasswordForm() {
         setIsLoading(false);
 
         if (error) {
-            setErrorMessage(error.message || translations['FailedToResetPassword']);
+            setErrorMessage(translations['FailedToResetPassword']);
         } else {
             setIsSuccess(true);
             router.push('/');
