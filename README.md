@@ -14,22 +14,28 @@ The app provides mood statistics based on the user's entries.
 - View your mood statistics on the dashboard.
 
 ## Tech Stack
-- Frontend: Next.js (TypeScript).
-- Backend: ASP.NET Core with PostgreSQL database
+- Frontend: Next.js (TypeScript)
+- Backend: Supabase (Auth, PostgreSQL Database, Edge Functions)
 
 ## Running the build locally
 
 ### Prerequisites
 - Node.js and npm installed
-- NET Core SDK 8 or higher installed
-- PostgreSQL database installed
+- A Supabase project (create one at [supabase.com](https://supabase.com))
 
 ### Steps
-- Set up the following required environment variables:
-  - JWTKey: The key used to generate the jwt tokens for authorization
-  - DatabaseConnectionString: The database connection string in the format "Host={hostAddress};Username={username};Password={password};Database=postgres"
-  - ZohoMailPassword: The password for the zoho mail service, which sends the password reset codes. Currently the zoho mail address is hardcoded, perhaps in the future it can be obtained from an environment variable as well
-  - NEXT_PUBLIC_API_BASE_URL: The base url for the backend api (for example, https://localhost:5000/)
+- Set up the following required environment variables in `frontend/.env.local`:
+  - `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous/public key
+- Set up the database schema by running the SQL migration in `supabase/migrations/001_create_entries.sql` in the Supabase SQL editor
+- Deploy the Edge Function for account deletion:
+```
+cd supabase
+supabase functions deploy delete-account
+```
+- Configure authentication in the Supabase dashboard:
+  - Enable email/password sign-up
+  - (Optional) Configure custom SMTP for password reset emails
 - Clone the repository:
 ```
 git clone https://github.com/brunoeiterer/lifejournaler.git  
@@ -40,15 +46,6 @@ cd lifejournaler
 cd frontend  
 npm install
 npm run dev
-```
-- Apply the database migrations:
-```
-cd ../backend
-dotnet ef database update
-```
-- Set up and run the backend:
-```
-dotnet run
 ```
 
 ## License
