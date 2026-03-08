@@ -30,6 +30,19 @@ export const register = async (username: string, password: string, language: str
     return !error;
 }
 
+export const updateUserLanguage = async (language: string) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+        return false;
+    }
+
+    const { error } = await supabase.auth.updateUser({
+        data: { language: language }
+    });
+
+    return !error;
+}
+
 export const getEntries = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
