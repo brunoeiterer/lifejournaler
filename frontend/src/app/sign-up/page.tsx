@@ -14,7 +14,7 @@ export default function SignUpPage() {
             <ContentContainer>
                 <PageTitle>LifeJournaler</PageTitle>
                 <SignUpForm
-                    onSuccess={() => router.push('/')}
+                    onSuccess={() => router.push('/verify-email')}
                 />
             </ContentContainer>
         </PageContainer>
